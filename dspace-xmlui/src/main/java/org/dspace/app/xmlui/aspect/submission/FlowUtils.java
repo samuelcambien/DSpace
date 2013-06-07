@@ -19,7 +19,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.log4j.Logger;
-import org.dspace.app.util.DCInput;
 import org.dspace.app.util.SubmissionConfig;
 import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionInfo;
@@ -327,30 +326,7 @@ public class FlowUtils {
 	        context.commit();
 		}
 	}
-	
 
-	/**
-	 * Return the HTML / DRI field name for the given input.
-	 * 
-	 * @param input
-	 * @return field name as a String (e.g. dc_contributor_editor)
-	 */
-	public static String getFieldName(DCInput input)
-	{
-		String dcSchema = input.getSchema();
-		String dcElement = input.getElement();
-		String dcQualifier = input.getQualifier();
-		if (dcQualifier != null && ! dcQualifier.equals(Item.ANY))
-		{
-			return dcSchema + "_" + dcElement + '_' + dcQualifier;
-		}
-		else
-		{
-			return dcSchema + "_" + dcElement;
-		}
-
-	}
-    
     /**
      * Retrieves a list of all steps and pages within the
      * current submission process.

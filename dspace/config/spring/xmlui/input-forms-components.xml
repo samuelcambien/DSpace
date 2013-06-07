@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <util:map id="inputFormXmluiMap" map-class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.InputFormXmluiMap">
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormOneBox" value-ref="inputFormOneBox"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormDate" value-ref="inputFormDate"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormDropdown" value-ref="inputFormDropdown"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormName" value-ref="inputFormName"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormQualdropValue" value-ref="inputFormQualdropValue"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormSeries" value-ref="inputFormSeries"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormTextArea" value-ref="inputFormTextArea"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormTwoBox" value-ref="inputFormOneBox"/>
+        <entry key="org.dspace.submit.inputForms.components.fields.InputFormList" value-ref="inputFormList"/>
+        <!--Special case the authority control choice select field-->
+        <entry key="inputFormChoiceSelectField" value-ref="inputFormChoiceSelectField"/>
+    </util:map>
+
+    <bean id="inputFormOneBox" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormOneBox"/>
+    <bean id="inputFormDate" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormDate"/>
+    <bean id="inputFormDropdown" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormDropdown"/>
+    <bean id="inputFormName" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormName"/>
+    <bean id="inputFormQualdropValue" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormQualdropValue"/>
+    <bean id="inputFormSeries" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormSeries"/>
+    <bean id="inputFormTextArea" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormTextArea"/>
+    <bean id="inputFormList" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormList"/>
+    <bean id="inputFormChoiceSelectField" class="org.dspace.app.xmlui.aspect.submission.submit.inputForms.components.fields.InputFormChoiceSelectField"/>
+
+</beans>

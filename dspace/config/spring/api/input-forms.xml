@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config /> <!-- allows us to use spring annotations in beans -->
+
+    <bean id="org.dspace.submit.inputForms.components.InputFormMap" class="org.dspace.submit.inputForms.components.InputFormMap">
+        <util:map>
+            <entry key="default" value-ref="traditional" />
+
+        </util:map>
+    </bean>
+
+    <bean name="traditional" class="org.dspace.submit.inputForms.components.InputForm">
+         <property name="pages">
+             <list>
+                 <ref bean="traditionalFirstPage"/>
+                 <ref bean="traditionalSecondPage"/>
+             </list>
+         </property>
+   </bean>
+
+    <bean id="traditionalFirstPage" class="org.dspace.submit.inputForms.components.InputFormPage">
+        <property name="metadataFields">
+            <list>
+                <ref bean="dcContributorAuthorField"/>
+                <ref bean="dcTitleField"/>
+                <ref bean="dcTitleAlternativeField"/>
+                <ref bean="dcDateIssuedField"/>
+                <ref bean="dcPublisherField"/>
+                <ref bean="dcIdentifierCitationField"/>
+                <ref bean="dcRelationIspartofseriesField"/>
+                <ref bean="dcIdentifierField"/>
+                <ref bean="dcTypeField"/>
+                <ref bean="dcLanguageISOField"/>
+            </list>
+        </property>
+        <property name="metadataFilters">
+            <list>
+                <bean class="org.dspace.submit.inputForms.components.filters.InputFormMultipleTitlesFilter">
+                    <property name="metadataField">
+                        <list>
+                            <ref bean="dcTitleAlternative"/>
+                        </list>
+                    </property>
+                </bean>
+                <bean class="org.dspace.submit.inputForms.components.filters.InputFormWorkflowPublishedBeforeFilter">
+                    <property name="metadataField">
+                        <list>
+                            <ref bean="dcPublisher"/>
+                            <ref bean="dcDateIssued"/>
+                            <ref bean="dcIdentifierCitation"/>
+                        </list>
+                    </property>
+                </bean>
+                <!--TODO: add dc.type filter example and create filter-->
+            </list>
+        </property>
+    </bean>
+
+    <bean id="traditionalSecondPage" class="org.dspace.submit.inputForms.components.InputFormPage">
+        <property name="metadataFields">
+            <list>
+                <ref bean="dcSubjectField" />
+                <ref bean="dcDescriptionAbstractField" />
+                <ref bean="dcDescriptionSponsorshipField" />
+                <ref bean="dcDescriptionField" />
+            </list>
+        </property>
+    </bean>
+
+
+    <!--First page fields-->
+    <bean id="dcContributorAuthorField" class="org.dspace.submit.inputForms.components.fields.InputFormName">
+        <property name="metadataField" ref="dcContributorAuthor"/>
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.contributor.author"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.contributor.author"/>
+    </bean>
+
+    <bean id="dcTitleField" class="org.dspace.submit.inputForms.components.fields.InputFormOneBox">
+        <property name="metadataField" ref="dcTitle"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.title"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.title"/>
+        <property name="requiredMessageKey" value="submit.input.required.dc.title"/>
+    </bean>
+
+    <bean id="dcTitleAlternativeField" class="org.dspace.submit.inputForms.components.fields.InputFormOneBox">
+        <property name="metadataField" ref="dcTitleAlternative"/>
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.title.alternative"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.title.alternative"/>
+    </bean>
+
+    <bean id="dcDateIssuedField" class="org.dspace.submit.inputForms.components.fields.InputFormDate">
+        <property name="metadataField" ref="dcDateIssued"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.date.issued"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.date.issued"/>
+        <property name="requiredMessageKey" value="submit.input.required.dc.date.issued"/>
+    </bean>
+
+    <bean id="dcPublisherField" class="org.dspace.submit.inputForms.components.fields.InputFormOneBox">
+        <property name="metadataField" ref="dcPublisher"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.publisher"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.publisher"/>
+    </bean>
+
+    <bean id="dcIdentifierCitationField" class="org.dspace.submit.inputForms.components.fields.InputFormOneBox">
+        <property name="metadataField" ref="dcIdentifierCitation"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.identifier.citation"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.identifier.citation"/>
+    </bean>
+
+    <bean id="dcRelationIspartofseriesField" class="org.dspace.submit.inputForms.components.fields.InputFormSeries">
+        <property name="metadataField" ref="dcRelationIspartofseries" />
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.relation.ispartofseries"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.relation.ispartofseries"/>
+    </bean>
+
+    <bean id="dcIdentifierField" class="org.dspace.submit.inputForms.components.fields.InputFormQualdropValue">
+        <property name="metadataField" ref="dcIdentifier"/>
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.identifier"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.identifier"/>
+        <property name="valuePairs" ref="common_identifiers"/>
+    </bean>
+
+    <bean id="dcTypeField" class="org.dspace.submit.inputForms.components.fields.InputFormDropdown">
+        <property name="metadataField" ref="dcType"/>
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.type"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.type"/>
+        <property name="valuePairs" ref="common_types"/>
+    </bean>
+
+    <bean id="dcLanguageISOField" class="org.dspace.submit.inputForms.components.fields.InputFormDropdown">
+        <property name="metadataField" ref="dcLanguageISO"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.language.iso"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.language.iso"/>
+        <property name="valuePairs" ref="common_iso_languages"/>
+    </bean>
+
+
+    <!--Second page fields-->
+    <bean id="dcSubjectField" class="org.dspace.submit.inputForms.components.fields.InputFormTwoBox">
+        <property name="metadataField" ref="dcSubject"/>
+        <property name="repeatable" value="true"/>
+        <property name="labelMessageKey" value="submit.input.dc.subject"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.subject"/>
+        <property name="vocabulary" value="srsc"/>
+    </bean>
+
+    <bean id="dcDescriptionAbstractField" class="org.dspace.submit.inputForms.components.fields.InputFormTextArea">
+        <property name="metadataField" ref="dcDescriptionAbstract"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.description.abstract"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.description.abstract"/>
+    </bean>
+
+    <bean id="dcDescriptionSponsorshipField" class="org.dspace.submit.inputForms.components.fields.InputFormTextArea">
+        <property name="metadataField" ref="dcDescriptionSponsorship"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.description.sponsorship"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.description.sponsorship"/>
+    </bean>
+
+    <bean id="dcDescriptionField" class="org.dspace.submit.inputForms.components.fields.InputFormTextArea">
+        <property name="metadataField" ref="dcDescription"/>
+        <property name="repeatable" value="false"/>
+        <property name="labelMessageKey" value="submit.input.dc.description"/>
+        <property name="hintMessageKey" value="submit.input.hint.dc.description"/>
+    </bean>
+
+
+
+    <!--Identifiers used in dropdowns & qual drop values-->
+    <util:map id="common_identifiers">
+        <entry key="issn" value="ISSN"/>
+        <entry key="other" value="Other"/>
+        <entry key="ismn" value="ISMN"/>
+        <entry key="govdoc" value="Gov't Doc #"/>
+        <entry key="uri" value="URI"/>
+        <entry key="isbn" value="ISBN"/>
+    </util:map>
+
+    <util:map id="common_types">
+        <entry key="Animation" value="Animation"/>
+        <entry key="Article" value="Article"/>
+        <entry key="Book" value="Book"/>
+        <entry key="Book chapter" value="Book chapter"/>
+        <entry key="Dataset" value="Dataset"/>
+        <entry key="Learning Object" value="Learning Object"/>
+        <entry key="Image" value="Image"/>
+        <entry key="Image, 3-D" value="Image, 3-D"/>
+        <entry key="Map" value="Map"/>
+        <entry key="Musical Score" value="Musical Score"/>
+        <entry key="Plan or blueprint" value="Plan or blueprint"/>
+        <entry key="Preprint" value="Preprint"/>
+        <entry key="Presentation" value="Presentation"/>
+        <entry key="Recording, acoustical" value="Recording, acoustical"/>
+        <entry key="Recording, musical" value="Recording, musical"/>
+        <entry key="Recording, oral" value="Recording, oral"/>
+        <entry key="Software" value="Software"/>
+        <entry key="Technical Report" value="Technical Report"/>
+        <entry key="Thesis" value="Thesis"/>
+        <entry key="Video" value="Video"/>
+        <entry key="Working Paper" value="Working Paper"/>
+        <entry key="Other" value="Other"/>
+    </util:map>
+
+    <util:map id="common_iso_languages">
+        <entry key="" value="N/A"/>
+        <entry key="en_US" value="English (United States)"/>
+        <entry key="en" value="English"/>
+        <entry key="es" value="Spanish"/>
+        <entry key="de" value="German"/>
+        <entry key="fr" value="French"/>
+        <entry key="it" value="Italian"/>
+        <entry key="ja" value="Japanese"/>
+        <entry key="zh" value="Chinese"/>
+        <entry key="other" value="(Other)"/>
+    </util:map>
+
+    <!--Metadata fields-->
+    <bean id="dcContributorAuthor" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="contributor"/>
+        <property name="qualifier" value="author"/>
+    </bean>
+
+    <bean id="dcTitle" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="title"/>
+    </bean>
+
+    <bean id="dcTitleAlternative" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="title"/>
+        <property name="qualifier" value="alternative"/>
+    </bean>
+
+    <bean id="dcDateIssued" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="date"/>
+        <property name="qualifier" value="issued"/>
+    </bean>
+
+    <bean id="dcPublisher" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="publisher"/>
+    </bean>
+
+    <bean id="dcIdentifierCitation" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="identifier"/>
+        <property name="qualifier" value="citation"/>
+    </bean>
+
+    <bean id="dcRelationIspartofseries" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="relation"/>
+        <property name="qualifier" value="ispartofseries"/>
+    </bean>
+
+    <bean id="dcIdentifier" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="identifier"/>
+    </bean>
+
+    <bean id="dcType" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="type"/>
+    </bean>
+
+    <bean id="dcLanguageISO" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="language"/>
+        <property name="qualifier" value="iso"/>
+    </bean>
+
+    <bean id="dcSubject" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="subject"/>
+    </bean>
+
+    <bean id="dcDescriptionAbstract" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="description"/>
+        <property name="qualifier" value="abstract"/>
+    </bean>
+
+    <bean id="dcDescriptionSponsorship" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="description"/>
+        <property name="qualifier" value="sponsorship"/>
+    </bean>
+
+    <bean id="dcDescription" class="org.dspace.submit.inputForms.components.MetadataField">
+        <property name="schema" value="dc"/>
+        <property name="element" value="description"/>
+    </bean>
+
+
+
+</beans>

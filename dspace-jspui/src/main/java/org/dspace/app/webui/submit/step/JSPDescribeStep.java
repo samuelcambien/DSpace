@@ -29,7 +29,9 @@ import org.dspace.content.Collection;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
+import org.dspace.submit.inputForms.components.InputFormMap;
 import org.dspace.submit.step.DescribeStep;
+import org.dspace.utils.DSpace;
 
 /**
  * Describe step for DSpace JSP-UI submission process. Handles the pages that gather
@@ -74,11 +76,17 @@ public class JSPDescribeStep extends JSPStep
     /** log4j logger */
     private static Logger log = Logger.getLogger(JSPDescribeStep.class);
 
+    /** hash of all submission forms details */
+    private static InputFormMap inputFormsMap;
+
+
     /** Constructor */
     public JSPDescribeStep() throws ServletException
     {
         //just call DescribeStep's constructor
         super();
+        //load the Input forms map
+        inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
     }
 
     /**
@@ -207,15 +215,7 @@ public class JSPDescribeStep extends JSPStep
         Collection c = subInfo.getSubmissionItem().getCollection();
 
         // requires configurable form info per collection
-        try
-        {
-            request.setAttribute("submission.inputs", DescribeStep.getInputsReader(formFileName).getInputs(c
-                    .getHandle()));
-        }
-        catch (DCInputsReaderException e)
-        {
-            throw new ServletException(e);
-        }
+        request.setAttribute("submission.inputs", inputFormsMap.getInputForm(c));
 
 
         // forward to edit-metadata JSP

@@ -140,9 +140,15 @@ public abstract class AbstractProcessingStep
      *            current servlet request object
      * @return List of error fields (as Strings)
      */
-    public static final List<String> getErrorFields(HttpServletRequest request)
+    public static List<String> getErrorFields(HttpServletRequest request)
     {
-        return (List<String>) request.getAttribute(ERROR_FIELDS_ATTRIBUTE);
+        List<String> errorFields = (List<String>) request.getAttribute(ERROR_FIELDS_ATTRIBUTE);
+
+        if (errorFields == null)
+        {
+            errorFields = new ArrayList<String>();
+        }
+        return errorFields;
     }
     
     /**
@@ -159,7 +165,7 @@ public abstract class AbstractProcessingStep
      * @param errorFields
      *            List of all fields (as Strings) which had errors
      */
-    private static final void setErrorFields(HttpServletRequest request, List<String> errorFields)
+    protected static void setErrorFields(HttpServletRequest request, List<String> errorFields)
     {
         if(errorFields==null)
         {
@@ -172,34 +178,6 @@ public abstract class AbstractProcessingStep
     }
 
     /**
-     * Add a single UI field to the list of all error fields (which can
-     * later be retrieved using getErrorFields())
-     * <P>
-     * The list of fields which had errors should be set by the AbstractProcessingStep's
-     * doProcessing() method, so that it can be accessed later by whatever UI is
-     * generated.
-     * 
-     * @param fieldName
-     *            the name of the field which had an error
-     */
-    protected static final void addErrorField(HttpServletRequest request, String fieldName)
-    {
-        //get current list
-        List<String> errorFields = getErrorFields(request);
-        
-        if (errorFields == null)
-        {
-            errorFields = new ArrayList<String>();
-        }
-
-        //add this field
-        errorFields.add(fieldName);
-        
-        //save updated list
-        setErrorFields(request, errorFields);
-    }
-
-    /**
      * Clears the list of all fields that errored out during the previous step's
      * processing.
      * 
@@ -207,7 +185,7 @@ public abstract class AbstractProcessingStep
      *        current servlet request object
      * 
      */
-    protected static final void clearErrorFields(HttpServletRequest request)
+    protected static void clearErrorFields(HttpServletRequest request)
     {
         //get current list
         List<String> errorFields = getErrorFields(request);
