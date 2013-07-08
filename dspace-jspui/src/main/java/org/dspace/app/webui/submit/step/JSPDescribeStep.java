@@ -10,7 +10,6 @@ package org.dspace.app.webui.submit.step;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,17 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.app.webui.submit.JSPStep;
 import org.dspace.app.webui.submit.JSPStepManager;
+import org.dspace.app.webui.submit.inputForms.components.InputFormField;
+import org.dspace.app.webui.submit.inputForms.components.InputFormJspuiMap;
 import org.dspace.app.webui.util.JSPManager;
 import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.core.Context;
-import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
+import org.dspace.kernel.ServiceManager;
 import org.dspace.submit.inputForms.components.InputFormMap;
 import org.dspace.submit.step.DescribeStep;
 import org.dspace.utils.DSpace;
@@ -78,6 +78,7 @@ public class JSPDescribeStep extends JSPStep
 
     /** hash of all submission forms details */
     private static InputFormMap inputFormsMap;
+    private static InputFormJspuiMap<String, InputFormField> inputFormJspuiMap;
 
 
     /** Constructor */
@@ -86,7 +87,9 @@ public class JSPDescribeStep extends JSPStep
         //just call DescribeStep's constructor
         super();
         //load the Input forms map
-        inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
+        ServiceManager serviceManager = new DSpace().getServiceManager();
+        inputFormsMap = serviceManager.getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
+        inputFormJspuiMap = serviceManager.getServiceByName("inputFormXmluiMap", InputFormJspuiMap.class);
     }
 
     /**
@@ -207,15 +210,12 @@ public class JSPDescribeStep extends JSPStep
             HttpServletResponse response, SubmissionInfo subInfo)
             throws SQLException, ServletException, IOException
     {
-        Locale sessionLocale = null;
-        sessionLocale = UIUtil.getSessionLocale(request);
-        String formFileName = I18nUtil.getInputFormsFileName(sessionLocale);
-        
         // determine collection
         Collection c = subInfo.getSubmissionItem().getCollection();
 
         // requires configurable form info per collection
         request.setAttribute("submission.inputs", inputFormsMap.getInputForm(c));
+        request.setAttribute("submission.jspui.map", inputFormJspuiMap);
 
 
         // forward to edit-metadata JSP

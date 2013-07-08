@@ -14,10 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dspace.app.util.DCInput;
-import org.dspace.app.util.DCInputSet;
-import org.dspace.app.util.DCInputsReader;
-import org.dspace.app.util.DCInputsReaderException;
+import org.dspace.content.Collection;
 import org.dspace.content.DCValue;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
@@ -25,6 +22,8 @@ import org.dspace.core.Constants;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
 import org.dspace.curate.Suspendable;
+import org.dspace.submit.inputForms.components.*;
+import org.dspace.utils.DSpace;
 
 /**
  * RequiredMetadata task compares item metadata with fields 
@@ -38,7 +37,7 @@ import org.dspace.curate.Suspendable;
 public class RequiredMetadata extends AbstractCurationTask
 {
     // map of DCInputSets
-    private DCInputsReader reader = null;
+    private InputFormMap inputFormsMap = null;
     // map of required fields
     private Map<String, List<String>> reqMap = new HashMap<String, List<String>>();
     
@@ -46,14 +45,7 @@ public class RequiredMetadata extends AbstractCurationTask
     public void init(Curator curator, String taskId) throws IOException
     {
         super.init(curator, taskId);
-        try
-        {
-            reader = new DCInputsReader();
-        }
-        catch (DCInputsReaderException dcrE)
-        {
-            throw new IOException(dcrE.getMessage(), dcrE);
-        }
+        inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
     }
 
     /**
@@ -79,7 +71,7 @@ public class RequiredMetadata extends AbstractCurationTask
                     handle = "in workflow";
                 }
                 sb.append("Item: ").append(handle);
-                for (String req : getReqList(item.getOwningCollection().getHandle()))
+                for (String req : getReqList(item.getOwningCollection()))
                 {
                     DCValue[] vals = item.getMetadata(req);
                     if (vals.length == 0)
@@ -95,10 +87,6 @@ public class RequiredMetadata extends AbstractCurationTask
                 report(sb.toString());
                 setResult(sb.toString());
             }
-            catch (DCInputsReaderException dcrE)
-            {
-                throw new IOException(dcrE.getMessage(), dcrE);
-            }
             catch (SQLException sqlE)
             {
                 throw new IOException(sqlE.getMessage(), sqlE);
@@ -112,27 +100,26 @@ public class RequiredMetadata extends AbstractCurationTask
         }
     }
     
-    private List<String> getReqList(String handle) throws DCInputsReaderException
-    {
-        List<String> reqList = reqMap.get(handle);
-        if (reqList == null)
-        {
-            reqList = reqMap.get("default");
-        }
+    private List<String> getReqList(Collection collection) throws SQLException {
+        List<String> reqList = reqMap.get(collection.getHandle());
         if (reqList == null)
         {
             reqList = new ArrayList<String>();
-            DCInputSet inputs = reader.getInputs(handle);
-            for (int i = 0; i < inputs.getNumberPages(); i++)
+            InputForm inputForm = inputFormsMap.getInputForm(collection);
+
+            for (int i = 0; i < inputForm.getPages().size(); i++)
             {
-                for (DCInput input : inputs.getPageRows(i, true, true))
+                InputFormPage page = inputForm.getPages().get(i);
+
+                for (InputFormField inputFormField : page.getAllMetadataFields())
                 {
-                    if (input.isRequired())
+                    if (inputFormField.isRequired())
                     {
+                        MetadataField metadataField = inputFormField.getMetadataField();
                         StringBuilder sb = new StringBuilder();
-                        sb.append(input.getSchema()).append(".");
-                        sb.append(input.getElement()).append(".");
-                        String qual = input.getQualifier();
+                        sb.append(metadataField.getSchema()).append(".");
+                        sb.append(metadataField.getElement()).append(".");
+                        String qual = metadataField.getQualifier();
                         if (qual == null)
                         {
                             qual = "";
@@ -142,7 +129,7 @@ public class RequiredMetadata extends AbstractCurationTask
                     }
                 }
             }
-            reqMap.put(inputs.getFormName(), reqList);
+            reqMap.put(collection.getHandle(), reqList);
         }
         return reqList;
     }

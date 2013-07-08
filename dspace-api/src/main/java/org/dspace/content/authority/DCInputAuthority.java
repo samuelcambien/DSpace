@@ -15,9 +15,9 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
-import org.dspace.app.util.DCInputsReader;
-import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.core.SelfNamedPlugin;
+import org.dspace.submit.inputForms.components.InputFormMap;
+import org.dspace.utils.DSpace;
 
 /**
  * ChoiceAuthority source that reads the same input-forms which drive
@@ -46,7 +46,7 @@ public class DCInputAuthority extends SelfNamedPlugin implements ChoiceAuthority
     private String values[] = null;
     private String labels[] = null;
 
-    private static DCInputsReader dci = null;
+    private static InputFormMap inputFormsMap = null;
     private static String pluginNames[] = null;
 
     public DCInputAuthority()
@@ -68,16 +68,9 @@ public class DCInputAuthority extends SelfNamedPlugin implements ChoiceAuthority
     {
         if (pluginNames == null)
         {
-            try
+            if (inputFormsMap == null)
             {
-                if (dci == null)
-                {
-                    dci = new DCInputsReader();
-                }
-            }
-            catch (DCInputsReaderException e)
-            {
-                log.error("Failed reading DCInputs initialization: ",e);
+                inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
             }
             List<String> names = new ArrayList<String>();
             Iterator pi = dci.getPairsNameIterator();

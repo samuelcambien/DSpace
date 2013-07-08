@@ -7,6 +7,7 @@ import org.dspace.content.MetadataField;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.MetadataAuthorityManager;
 import org.dspace.submit.inputForms.components.InputFormField;
+import org.dspace.submit.inputForms.components.InputFormVocabularyField;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
@@ -17,20 +18,9 @@ import java.util.List;
  * Date: 29/05/13
  * Time: 12:43
  */
-public class InputFormOneBox extends InputFormField {
+public class InputFormOneBox extends InputFormVocabularyField {
 
     private static final Logger log = Logger.getLogger(InputFormOneBox.class);
-
-    private String vocabulary;
-
-    public String getVocabulary() {
-        return vocabulary;
-    }
-
-    public void setVocabulary(String vocabulary) {
-        this.vocabulary = vocabulary;
-    }
-
 
     /**
      * Fill out an item's metadata values from a plain standard text field. If

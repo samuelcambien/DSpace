@@ -66,7 +66,6 @@ import org.dspace.handle.HandleManager;
 import org.dspace.sort.SortOption;
 import org.dspace.sort.OrderFormat;
 
-import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
 
 /**
@@ -255,7 +254,7 @@ public class DSIndexer
      * @throws SQLException
      * @throws IOException
      */
-    public static void indexContent(Context context, DSpaceObject dso) throws SQLException, DCInputsReaderException
+    public static void indexContent(Context context, DSpaceObject dso) throws SQLException
     {
     	indexContent(context, dso, false);
     }
@@ -271,7 +270,7 @@ public class DSIndexer
      * @throws SQLException
      * @throws IOException
      */
-    public static void indexContent(Context context, DSpaceObject dso, boolean force) throws SQLException, DCInputsReaderException
+    public static void indexContent(Context context, DSpaceObject dso, boolean force) throws SQLException
     {
         try
         {
@@ -653,7 +652,7 @@ public class DSIndexer
     }
 
 
-    static IndexingTask prepareIndexingTask(Context context, DSpaceObject dso, boolean force) throws SQLException, IOException, DCInputsReaderException
+    static IndexingTask prepareIndexingTask(Context context, DSpaceObject dso, boolean force) throws SQLException, IOException
     {
         String handle = HandleManager.findHandle(context, dso);
         Term term = new Term("handle", handle);
@@ -1041,7 +1040,7 @@ public class DSIndexer
      * @throws SQLException
      * @throws IOException
      */
-    private static Document buildDocumentForItem(Context context, Item item) throws SQLException, IOException, DCInputsReaderException
+    private static Document buildDocumentForItem(Context context, Item item) throws SQLException, IOException
     {
     	String handle = HandleManager.findHandle(context, item);
 

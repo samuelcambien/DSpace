@@ -24,13 +24,8 @@
 <%@ page import="org.dspace.app.util.SubmissionInfo" %>
 <%@ page import="org.dspace.content.InProgressSubmission" %>
 <%@ page import="org.dspace.app.webui.util.UIUtil" %>
-<%@ page import="org.dspace.app.util.DCInputsReader" %>
-<%@ page import="org.dspace.app.util.DCInputsReaderException" %>
-<%@ page import="org.dspace.app.util.DCInputSet" %>
-<%@ page import="org.dspace.app.util.DCInput" %>
 <%@ page import="org.dspace.content.Collection" %>
 <%@ page import="org.dspace.content.DCDate" %>
-<%@ page import="org.dspace.content.DCLanguage" %>
 <%@ page import="org.dspace.content.DCValue" %>
 <%@ page import="org.dspace.content.Item" %>
 <%@ page import="org.dspace.core.Context" %>
@@ -60,145 +55,59 @@
         //extract out the step & page numbers from the stepJump (format: stepNum.pageNum)
         //(since there are multiple pages, we need to know which page we are reviewing!)
     String[] fields = stepJump.split("\\.");  //split on period
-    int stepNum = Integer.parseInt(fields[0]);
         int pageNum = Integer.parseInt(fields[1]);
 
     Item item = subInfo.getSubmissionItem().getItem();
-    
-    // determine collection
-    Collection c = subInfo.getSubmissionItem().getCollection();
-
-    DCInputSet inputSet = null;
-
-    try
-    {
-        //get the inputs reader
-        DCInputsReader inputsReader = DescribeStep.getInputsReader();
-
-        //load the input set for the current collection
-        inputSet = inputsReader.getInputs(c.getHandle());
-    }
-    catch (DCInputsReaderException e)
-    {
-        throw new ServletException(e);
-    }
 %>
 
 <%!void layoutSection(HttpServletRequest request,
                        javax.servlet.jsp.JspWriter out,
-                       DCInputSet inputSet,
                        SubmissionInfo subInfo,
                        Item item,
                        int pageNum,
                        PageContext pageContext)
-        throws ServletException, IOException
-    {
-       InProgressSubmission ip = subInfo.getSubmissionItem();
-
-           //need to actually get the rows for pageNum-1 (since first page is index 0)
-           DCInput[] inputs = inputSet.getPageRows(pageNum-1,
-                                                   ip.hasMultipleTitles(),
-                                                   ip.isPublishedBefore());
+        throws ServletException, IOException, SQLException {
+        InputFormMap inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
+        InProgressSubmission ip = subInfo.getSubmissionItem();
+        InputForm inputForm = inputFormsMap.getInputForm(ip.getCollection());
 
         MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
 
 
-       for (int z = 0; z < inputs.length; z++)
+        InputFormPage inputFormPage = inputForm.getPages().get(pageNum);
+        for (int z = 0; z < inputFormPage.getAllMetadataFields().size(); z++)
        {
-          String scope = subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE : DCInput.SUBMISSION_SCOPE;
-          if (!inputs[z].isVisible(scope) && !inputs[z].isReadOnly(scope))
-          {
-              continue;
-          }
-          String inputType = inputs[z].getInputType();
-          String pairsName = inputs[z].getPairsType();
-          String value;
+           InputFormField formField = inputFormPage.getAllMetadataFields().get(z);
+
           DCValue[] values;
-          StringBuffer row = new StringBuffer();
+          StringBuilder row = new StringBuilder();
           
           row.append("<tr>");
           row.append("<td width=\"40%\" class=\"metadataFieldLabel\">");
-          row.append(inputs[z].getLabel());
+          row.append(LocaleSupport.getLocalizedMessage(pageContext, formField.getLabelMessageKey()));
           row.append("</td>");
           row.append("<td width=\"60%\" class=\"metadataFieldValue\">");
 
-          if (inputType.equals("qualdrop_value"))
-          {
-             values = item.getMetadata(inputs[z].getSchema(), inputs[z].getElement(), Item.ANY, Item.ANY);
-          }
-          else
-          {
-             values = item.getMetadata(inputs[z].getSchema(), inputs[z].getElement(), inputs[z].getQualifier(), Item.ANY);
-          }
+          values = formField.getMetadataValues(item);
+
           if (values.length == 0)
           {
              row.append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.review.no_md"));
           }
           else
           {
-             boolean isAuthorityControlled = mam.isAuthorityControlled(inputs[z].getSchema(),
-                                                    inputs[z].getElement(),inputs[z].getQualifier());
+              MetadataField metadataField = formField.getMetadataField();
+              boolean isAuthorityControlled = mam.isAuthorityControlled(metadataField.getSchema(), metadataField.getElement(),metadataField.getQualifier());
 
-             for (int i = 0; i < values.length; i++)
-             {
-                boolean newline = true;
-                if (inputType.equals("date"))
-                {
-                   DCDate date = new DCDate(values[i].value);
-                   row.append(UIUtil.displayDate(date, false, true, request));
-                }
-                else if (inputType.equals("dropdown") || inputType.equals("list"))
-                {
-                   String storedVal = values[i].value;
-                   String displayVal = inputs[z].getDisplayString(pairsName,
-                                                                storedVal);
-                   if (displayVal != null && !displayVal.equals(""))
-                   {
-                       row.append(Utils.addEntities(displayVal));
-                   }
-                   else if (storedVal != null && !storedVal.equals(""))
-                   {
-                       // use the stored value as label rather than null
-                       row.append(Utils.addEntities(storedVal));
-                   }
-                }
-                else if (inputType.equals("qualdrop_value"))
-                {
-                   String qual = values[i].qualifier;
-                   if(qual==null)
-                   {
-                       qual = "";
-                       newline = false;
-                   }
-                   else
-                   {
-                        String displayQual = inputs[z].getDisplayString(pairsName,qual);
-                        String displayValue = Utils.addEntities(values[i].value);
-                        if (displayQual != null)
-                        {
-                            row.append(displayQual + ":" + displayValue);
-                        }
-                        else
-                        {
-                            newline = false;
-                        }
-                   }
-                }
-                else
-                {
-                   row.append(Utils.addEntities(values[i].value));
-                }
-                                if (isAuthorityControlled)
-                {
-                    row.append("<span class=\"ds-authority-confidence cf-")
-                       .append(values[i].confidence).append("\">")
-                       .append(" </span>");
-                }
-                if (newline)
-                {
-                    row.append("<br />");
-                }
-             }
+              for (DCValue value : values) {
+                  row.append(Utils.addEntities(formField.getDisplayedValue(value)));
+                  if (isAuthorityControlled) {
+                      row.append("<span class=\"ds-authority-confidence cf-")
+                              .append(value.confidence).append("\">")
+                              .append(" </span>");
+                  }
+                  row.append("<br />");
+              }
           }
           row.append("</td>");
           row.append("</tr>");
@@ -212,13 +121,18 @@
 <%--             DESCRIBE ITEM ELEMENTS                     --%>
 <%-- ====================================================== --%>
             
-<%@page import="org.dspace.workflow.WorkflowItem"%><table width="100%">
+<%@page import="org.dspace.workflow.WorkflowItem"%>
+<%@ page import="org.dspace.kernel.ServiceManager" %>
+<%@ page import="org.dspace.utils.DSpace" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="org.dspace.submit.inputForms.components.*" %>
+<table width="100%">
                <tr>
                    <td width="100%">
                    <table width="700px">
 
 <%
-            layoutSection(request, out, inputSet, subInfo, item, pageNum, pageContext);
+            layoutSection(request, out, subInfo, item, pageNum, pageContext);
 %>
                                         </table>
                                     </td>

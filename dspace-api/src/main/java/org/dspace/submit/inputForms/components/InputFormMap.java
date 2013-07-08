@@ -18,6 +18,11 @@ public class InputFormMap {
 
 
     public InputForm getInputForm(Collection collection) throws SQLException {
+        if(collection == null)
+        {
+            //No collection, use the default
+            return inputFormMap.get(DEFAULT);
+        }
         InputForm inputForm = inputFormMap.get(collection.getHandle());
         if(inputForm == null)
         {

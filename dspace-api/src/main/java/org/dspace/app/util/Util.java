@@ -26,6 +26,8 @@ import org.dspace.content.DCValue;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 import org.dspace.core.I18nUtil;
+import org.dspace.submit.inputForms.components.*;
+import org.dspace.utils.DSpace;
 
 
 /**
@@ -378,61 +380,47 @@ public class Util {
 
     public static List<String> getControlledVocabulariesDisplayValueLocalized(
             Item item, DCValue[] values, String schema, String element,
-            String qualifier, Locale locale) throws SQLException,
-            DCInputsReaderException
+            String qualifier, Locale locale) throws SQLException
+
     {
         List<String> toReturn = new ArrayList<String>();
-        DCInput myInputs = null;
+        InputFormField myInputs = null;
         boolean myInputsFound = false;
-        String formFileName = I18nUtil.getInputFormsFileName(locale);
-        String col_handle = "";
 
         Collection collection = item.getOwningCollection();
 
-        if (collection == null)
-        {
-            // set an empty handle so to get the default input set
-            col_handle = "";
-        }
-        else
-        {
-            col_handle = collection.getHandle();
-        }
-
         // Read the input form file for the specific collection
-        DCInputsReader inputsReader = new DCInputsReader(formFileName);
-
-        DCInputSet inputSet = inputsReader.getInputs(col_handle);
+        InputFormMap inputFormsMap = new DSpace().getServiceManager().getServiceByName(InputFormMap.class.getName(), InputFormMap.class);
+        InputForm inputForm = inputFormsMap.getInputForm(collection);
 
         // Replace the values of DCValue[] with the correct ones in case of
         // controlled vocabularies
         String currentField = schema + "." + element
                 + (qualifier == null ? "" : "." + qualifier);
 
-        if (inputSet != null)
+        if (inputForm != null)
         {
 
-            int pageNums = inputSet.getNumberPages();
-
-            for (int p = 0; p < pageNums; p++)
+            for (InputFormPage inputFormPage : inputForm.getPages())
             {
 
-                DCInput[] inputs = inputSet.getPageRows(p, false, false);
+                List<InputFormField> inputFields = inputFormPage.getAllMetadataFields();
 
-                if (inputs != null)
+                if (inputFields != null)
                 {
 
-                    for (int i = 0; i < inputs.length; i++)
+                    for (InputFormField formField : inputFields)
                     {
-                        String inputField = inputs[i].getSchema()
+                        MetadataField metadataField = formField.getMetadataField();
+                        String inputField = metadataField.getSchema()
                                 + "."
-                                + inputs[i].getElement()
-                                + (inputs[i].getQualifier() == null ? "" : "."
-                                        + inputs[i].getQualifier());
+                                + metadataField.getElement()
+                                + (metadataField.getQualifier() == null ? "" : "."
+                                        + metadataField.getQualifier());
                         if (currentField.equals(inputField))
                         {
 
-                            myInputs = inputs[i];
+                            myInputs = formField;
                             myInputsFound = true;
                             break;
 
@@ -447,16 +435,10 @@ public class Util {
         if (myInputsFound)
         {
 
-            for (int j = 0; j < values.length; j++)
-            {
+            for (DCValue value : values) {
 
-                String pairsName = myInputs.getPairsType();
-                String stored_value = values[j].value;
-                String displayVal = myInputs.getDisplayString(pairsName,
-                        stored_value);
-
-                if (displayVal != null && !"".equals(displayVal))
-                {
+                String displayVal = myInputs.getDisplayedValue(value);
+                if (displayVal != null && !"".equals(displayVal)) {
 
                     toReturn.add(displayVal);
                 }
