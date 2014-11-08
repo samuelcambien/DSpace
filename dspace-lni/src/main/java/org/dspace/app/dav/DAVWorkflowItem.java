@@ -20,8 +20,8 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 import org.jdom.Element;
 
 
@@ -110,7 +110,7 @@ class DAVWorkflowItem extends DAVInProgressSubmission
      * 
      * @return the path elt
      */
-    protected static String getPathElt(WorkflowItem wfi)
+    protected static String getPathElt(BasicWorkflowItem wfi)
     {
         return getPathElt(wfi.getID());
     }
@@ -159,7 +159,7 @@ class DAVWorkflowItem extends DAVInProgressSubmission
 
                 // get this WFI
                 int id = Integer.parseInt(pathElt[1].substring(7));
-                InProgressSubmission ips = WorkflowItem.find(context, id);
+                InProgressSubmission ips = BasicWorkflowItem.find(context, id);
                 if (ips == null)
                 {
                     log.warn("invalid WorkflowItem DB ID in DAV URI, " + "id="
@@ -205,7 +205,7 @@ class DAVWorkflowItem extends DAVInProgressSubmission
         }
         else if (elementsEqualIsh(property, ownerProperty))
         {
-            EPerson ep = ((WorkflowItem) this.inProgressItem).getOwner();
+            EPerson ep = ((BasicWorkflowItem) this.inProgressItem).getOwner();
             if (ep != null)
             {
                 value = hrefToEPerson(ep);
@@ -214,7 +214,7 @@ class DAVWorkflowItem extends DAVInProgressSubmission
 
         else if (elementsEqualIsh(property, stateProperty))
         {
-            value = WorkflowManager.getWorkflowText(((WorkflowItem) this.inProgressItem).getState());
+            value = BasicWorkflowServiceImpl.getWorkflowText(((BasicWorkflowItem) this.inProgressItem).getState());
         }
         else
         {
@@ -256,39 +256,39 @@ class DAVWorkflowItem extends DAVInProgressSubmission
 
             if (key.equalsIgnoreCase("abort"))
             {
-                WorkflowManager.abort(this.context, (WorkflowItem) this.inProgressItem,
+                BasicWorkflowServiceImpl.abort(this.context, (BasicWorkflowItem) this.inProgressItem,
                         this.inProgressItem.getSubmitter());
             }
             else if (key.equalsIgnoreCase("reject"))
             {
                 EPerson cu = this.context.getCurrentUser();
                 String who = cu == null ? "nobody" : cu.getFullName();
-                WorkflowManager.reject(this.context, (WorkflowItem) this.inProgressItem,
+                BasicWorkflowServiceImpl.reject(this.context, (BasicWorkflowItem) this.inProgressItem,
                         this.inProgressItem.getSubmitter(), "Rejected by " + who
                                 + ", via WebDAV Network Interface");
 
             }
             else if (key.equalsIgnoreCase("advance"))
             {
-                WorkflowManager.advance(this.context, (WorkflowItem) this.inProgressItem,
+                BasicWorkflowServiceImpl.advance(this.context, (BasicWorkflowItem) this.inProgressItem,
                         this.context.getCurrentUser());
             }
             else if (key.equalsIgnoreCase("claim"))
             {
-                WorkflowManager.claim(this.context, (WorkflowItem) this.inProgressItem,
+                BasicWorkflowServiceImpl.claim(this.context, (BasicWorkflowItem) this.inProgressItem,
                         this.context.getCurrentUser());
             }
             else if (key.equalsIgnoreCase("unclaim"))
             {
-                WorkflowManager.unclaim(this.context, (WorkflowItem) this.inProgressItem,
+                BasicWorkflowServiceImpl.unclaim(this.context, (BasicWorkflowItem) this.inProgressItem,
                         this.context.getCurrentUser());
             }
             else
             {
-                newState = WorkflowManager.getWorkflowID(key);
+                newState = BasicWorkflowServiceImpl.getWorkflowID(key);
                 if (newState >= 0)
                 {
-                    ((WorkflowItem) this.inProgressItem).setState(newState);
+                    ((BasicWorkflowItem) this.inProgressItem).setState(newState);
                 }
                 else
                 {

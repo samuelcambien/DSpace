@@ -1,0 +1,43 @@
+package org.dspace.authorize.dao;
+
+import org.dspace.authorize.ResourcePolicy;
+import org.dspace.content.DSpaceObject;
+import org.dspace.core.Context;
+import org.dspace.core.GenericDAO;
+import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
+
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * User: kevin (kevin at atmire.com)
+ * Date: 23/10/14
+ * Time: 09:54
+ */
+public interface ResourcePolicyDAO extends GenericDAO<ResourcePolicy> {
+
+    public List<ResourcePolicy> findByDso(Context context, DSpaceObject dso) throws SQLException;
+
+    public List<ResourcePolicy> findByDsoAndType(Context context, DSpaceObject dSpaceObject, String type) throws SQLException;
+
+    public List<ResourcePolicy> findByGroup(Context context, Group group) throws SQLException;
+
+    public List<ResourcePolicy> findByDSoAndAction(Context context, DSpaceObject dso, int actionId) throws SQLException;
+
+    public List<ResourcePolicy> findByTypeIdGroupAction(Context context, DSpaceObject dso, Group group, int action, int notPolicyID) throws SQLException;
+
+    public void deleteByDso(Context context, DSpaceObject dso) throws SQLException;
+
+    public void deleteByDsoAndAction(Context context, DSpaceObject dso, int actionId) throws SQLException;
+
+    public void deleteByDsoAndType(Context context, DSpaceObject dSpaceObject, String type) throws SQLException;
+
+    public void deleteByGroup(Context context, Group group) throws SQLException;
+
+    public void deleteByDsoGroupPolicies(Context context, DSpaceObject dso, Group group) throws SQLException;
+
+    public void deleteByDsoEPersonPolicies(Context context, DSpaceObject dso, EPerson ePerson) throws SQLException;
+
+    public void deleteByDsoAndTypeNotEqualsTo(Context c, DSpaceObject o, String type) throws SQLException;
+}

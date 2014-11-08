@@ -16,10 +16,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.log4j.Logger;
 import org.dspace.app.xmlui.aspect.administrative.SystemwideAlerts;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
@@ -92,7 +92,7 @@ public class AuthenticationUtil
                 .get(HttpEnvironment.HTTP_REQUEST_OBJECT);
         Context context = ContextUtil.obtainContext(objectModel);
 
-        int implicitStatus = AuthenticationManager.authenticateImplicit(
+        int implicitStatus = AuthenticationServiceImpl.authenticateImplicit(
                 context, null, null, null, request);
 
         if (implicitStatus == AuthenticationMethod.SUCCESS)
@@ -104,7 +104,7 @@ public class AuthenticationUtil
         {
             // If implicit authentication failed, fall over to explicit.
 
-            int explicitStatus = AuthenticationManager.authenticate(context,
+            int explicitStatus = AuthenticationServiceImpl.authenticate(context,
                     email, password, realm, request);
 
             if (explicitStatus == AuthenticationMethod.SUCCESS)
@@ -145,7 +145,7 @@ public class AuthenticationUtil
                 .get(HttpEnvironment.HTTP_REQUEST_OBJECT);
         Context context = ContextUtil.obtainContext(objectModel);
 
-        int implicitStatus = AuthenticationManager.authenticateImplicit(
+        int implicitStatus = AuthenticationServiceImpl.authenticateImplicit(
                 context, null, null, null, request);
 
         if (implicitStatus == AuthenticationMethod.SUCCESS)
@@ -181,7 +181,7 @@ public class AuthenticationUtil
         context.setCurrentUser(eperson);
 
         // Check to see if systemwide alerts is restricting sessions
-        if (!AuthorizeManager.isAdmin(context) && !SystemwideAlerts.canUserStartSession())
+        if (!AuthorizeServiceImpl.isAdmin(context) && !SystemwideAlerts.canUserStartSession())
         {
         	// Do not allow this user to login because sessions are being restricted by a systemwide alert.
         	context.setCurrentUser(null);
@@ -189,7 +189,7 @@ public class AuthenticationUtil
         }
         
         // Set any special groups - invoke the authentication manager.
-        int[] groupIDs = AuthenticationManager.getSpecialGroups(context,
+        int[] groupIDs = AuthenticationServiceImpl.getSpecialGroups(context,
                 request);
         for (int groupID : groupIDs)
         {
@@ -257,7 +257,7 @@ public class AuthenticationUtil
                     context.setCurrentUser(eperson);
                     
                     // Check to see if systemwide alerts is restricting sessions
-                    if (!AuthorizeManager.isAdmin(context) && !SystemwideAlerts.canUserMaintainSession())
+                    if (!AuthorizeServiceImpl.isAdmin(context) && !SystemwideAlerts.canUserMaintainSession())
                     {
                     	// Normal users can not maintain their sessions, check to see if this is really an
                     	// administrator logging in as someone else.
@@ -274,7 +274,7 @@ public class AuthenticationUtil
                     
 
                     // Set any special groups - invoke the authentication mgr.
-                    int[] groupIDs = AuthenticationManager.getSpecialGroups(context, request);
+                    int[] groupIDs = AuthenticationServiceImpl.getSpecialGroups(context, request);
                     for (int groupID : groupIDs)
                     {
                         context.setSpecialGroup(groupID);
@@ -312,7 +312,7 @@ public class AuthenticationUtil
         }
     	
     	// Only super administrators can login as someone else.
-    	if (!AuthorizeManager.isAdmin(context))
+    	if (!AuthorizeServiceImpl.isAdmin(context))
         {
             throw new AuthorizeException("xmlui.utils.AuthenticationUtil.onlyAdmins");
         }
@@ -341,7 +341,7 @@ public class AuthenticationUtil
 	    context.setCurrentUser(loginAs);
 	
         // Set any special groups - invoke the authentication mgr.
-        int[] groupIDs = AuthenticationManager.getSpecialGroups(context,request);
+        int[] groupIDs = AuthenticationServiceImpl.getSpecialGroups(context, request);
         for (int groupID : groupIDs)
         {
             context.setSpecialGroup(groupID);
@@ -407,7 +407,7 @@ public class AuthenticationUtil
         
         if (SystemwideAlerts.canUserStartSession())
         {
-            return AuthenticationManager.canSelfRegister(context, request, email);
+            return AuthenticationServiceImpl.canSelfRegister(context, request, email);
         }
         else
         {
@@ -432,7 +432,7 @@ public class AuthenticationUtil
         final HttpServletRequest request = (HttpServletRequest) objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
         Context context = ContextUtil.obtainContext(objectModel);
         
-        return AuthenticationManager.allowSetPassword(context, request, email);
+        return AuthenticationServiceImpl.allowSetPassword(context, request, email);
     }
     
     /**
@@ -463,7 +463,7 @@ public class AuthenticationUtil
         context.setIgnoreAuthorization(false);
         
         // Give site auth a chance to set/override appropriate fields
-        AuthenticationManager.initEPerson(context, request, eperson);
+        AuthenticationServiceImpl.initEPerson(context, request, eperson);
         
         return eperson;   
     }

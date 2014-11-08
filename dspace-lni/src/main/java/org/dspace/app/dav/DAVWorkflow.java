@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 import org.jdom.Element;
 
 
@@ -81,7 +81,7 @@ class DAVWorkflow extends DAVResource
      * 
      * @return URI path to this object.
      */
-    protected static String getPath(WorkflowItem wfi)
+    protected static String getPath(BasicWorkflowItem wfi)
     {
         return "workflow_pool/" + DAVWorkflowItem.getPathElt(wfi);
     }
@@ -145,14 +145,14 @@ class DAVWorkflow extends DAVResource
         EPerson ep = this.context.getCurrentUser();
         if (ep != null)
         {
-            List<WorkflowItem> wi = null;
+            List<BasicWorkflowItem> wi = null;
             if (this.pathElt[0].equals("workflow_own"))
             {
-                wi = WorkflowManager.getOwnedTasks(this.context, ep);
+                wi = BasicWorkflowServiceImpl.getOwnedTasks(this.context, ep);
             }
             else if (this.pathElt[0].equals("workflow_pool"))
             {
-                wi = WorkflowManager.getPooledTasks(this.context, ep);
+                wi = BasicWorkflowServiceImpl.getPooledTasks(this.context, ep);
             }
             if (wi != null)
             {
@@ -163,7 +163,7 @@ class DAVWorkflow extends DAVResource
                 int i = 0;
                 while (wii.hasNext())
                 {
-                    WorkflowItem wfi = (WorkflowItem) wii.next();
+                    BasicWorkflowItem wfi = (BasicWorkflowItem) wii.next();
                     result[i++] = new DAVWorkflowItem(this.context, this.request,
                             this.response, makeChildPath(DAVWorkflowItem
                                     .getPathElt(wfi.getID())), wfi);

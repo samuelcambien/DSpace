@@ -34,12 +34,11 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.content.Collection;
-import org.dspace.content.Community;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.Group;
-import org.dspace.eperson.Subscribe;
+import org.dspace.eperson.SubscribeServiceImpl;
 import org.xml.sax.SAXException;
 
 
@@ -365,7 +364,7 @@ public class EditProfile extends AbstractDSpaceTransformer
            
            subscribe.addItem(T_subscriptions_help);
            
-           Collection[] currentList = Subscribe.getSubscriptions(context, context.getCurrentUser());
+           Collection[] currentList = SubscribeServiceImpl.getSubscriptions(context, context.getCurrentUser());
            Collection[] possibleList = Collection.findAll(context);
            
            Select subscriptions = subscribe.addItem().addSelect("subscriptions");

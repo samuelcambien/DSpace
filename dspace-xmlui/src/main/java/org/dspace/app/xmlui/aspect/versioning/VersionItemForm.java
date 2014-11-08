@@ -14,10 +14,10 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Item;
 import org.dspace.utils.DSpace;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 
 import java.sql.SQLException;
 
@@ -63,7 +63,7 @@ public class VersionItemForm extends AbstractDSpaceTransformer {
         Item item = getItem();
 
         //Only (collection) admins should be able to create a new version
-        if(!AuthorizeManager.isAdmin(context, item.getOwningCollection())){
+        if(!AuthorizeServiceImpl.isAdmin(context, item.getOwningCollection())){
             throw new AuthorizeException();
         }
 

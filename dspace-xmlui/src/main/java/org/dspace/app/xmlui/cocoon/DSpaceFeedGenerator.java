@@ -34,11 +34,12 @@ import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.FeedUtils;
 import org.dspace.app.util.SyndicationFeed;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.browse.BrowseEngine;
 import org.dspace.browse.BrowseException;
 import org.dspace.browse.BrowseIndex;
 import org.dspace.browse.BrowserScope;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.sort.SortException;
 import org.dspace.sort.SortOption;
 import org.dspace.content.Collection;
@@ -49,7 +50,6 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
-import org.dspace.handle.HandleManager;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -152,7 +152,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
                 
                 if (handle != null && !handle.contains("site"))
                 {
-                    dso = HandleManager.resolveToObject(context, handle);
+                    dso = HandleServiceImpl.resolveToObject(context, handle);
                 }
                 
                 validity.add(dso);
@@ -213,7 +213,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
             
             if (handle != null && !handle.contains("site"))
             {
-                dso = HandleManager.resolveToObject(context, handle);
+                dso = HandleServiceImpl.resolveToObject(context, handle);
                 if (dso == null)
                 {
                     // If we were unable to find a handle then return page not found.
@@ -297,7 +297,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
                 for (Item item : this.recentSubmissionItems)
                 {
                 checkAccess:
-                    for (Group group : AuthorizeManager.getAuthorizedGroups(context, item, Constants.READ))
+                    for (Group group : AuthorizeServiceImpl.getAuthorizedGroups(context, item, Constants.READ))
                     {
                         if ((group.getID() == Group.ANONYMOUS_ID))
                         {

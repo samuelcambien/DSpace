@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -1104,7 +1104,7 @@ abstract class DAVResource
             Element c = (Element) current_user_privilege_setProperty.clone();
 
             // if we're an admin we have all privs everywhere.
-            if (AuthorizeManager.isAdmin(this.context))
+            if (AuthorizeServiceImpl.isAdmin(this.context))
             {
                 addPrivilege(c, new Element("all", DAV.NS_DAV));
             }

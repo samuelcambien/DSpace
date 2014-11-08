@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.log4j.Logger;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 
@@ -95,7 +95,7 @@ public class ContextUtil
             AuthenticationUtil.resumeLogin(context, request);
 
             // Set any special groups - invoke the authentication mgr.
-            int[] groupIDs = AuthenticationManager.getSpecialGroups(context, request);
+            int[] groupIDs = AuthenticationServiceImpl.getSpecialGroups(context, request);
 
             for (int i = 0; i < groupIDs.length; i++)
             {

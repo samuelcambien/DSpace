@@ -15,12 +15,12 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bundle;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.xoai.data.DSpaceItem;
 import org.dspace.xoai.filter.results.DatabaseFilterResult;
 import org.dspace.xoai.filter.results.SolrFilterResult;
@@ -53,10 +53,10 @@ public class DSpaceAuthorizationFilter extends DSpaceFilter
         {
             String handle = DSpaceItem.parseHandle(item.getIdentifier());
             if (handle == null) return false;
-            Item dspaceItem = (Item) HandleManager.resolveToObject(context, handle);
-            AuthorizeManager.authorizeAction(context, dspaceItem, Constants.READ);
+            Item dspaceItem = (Item) HandleServiceImpl.resolveToObject(context, handle);
+            AuthorizeServiceImpl.authorizeAction(context, dspaceItem, Constants.READ);
             for (Bundle b : dspaceItem.getBundles())
-                AuthorizeManager.authorizeAction(context, b, Constants.READ);
+                AuthorizeServiceImpl.authorizeAction(context, b, Constants.READ);
             return true;
         }
         catch (AuthorizeException ex)

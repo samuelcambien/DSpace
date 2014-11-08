@@ -24,7 +24,7 @@ import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.dspace.app.util.OpenSearch;
+import org.dspace.app.util.OpenSearchServiceImpl;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
@@ -92,7 +92,7 @@ public class DescriptionOpenSearchGenerator extends AbstractGenerator
         Request request = ObjectModelHelper.getRequest(objectModel);
         String scopeParam = request.getParameter("scope");
         try {
-            scope = OpenSearch.resolveScope(context, scopeParam);
+            scope = OpenSearchServiceImpl.resolveScope(context, scopeParam);
         }
         catch (SQLException e)
         {
@@ -106,7 +106,7 @@ public class DescriptionOpenSearchGenerator extends AbstractGenerator
     public void generate() throws IOException, SAXException, ProcessingException
     {
         // Create the description document
-        Document retDoc = OpenSearch.getDescriptionDoc( scope == null ? null : scope.getHandle() );
+        Document retDoc = OpenSearchServiceImpl.getDescriptionDoc(scope == null ? null : scope.getHandle());
 
         // Send the SAX events
         DOMStreamer streamer = new DOMStreamer(contentHandler, lexicalHandler);

@@ -59,11 +59,12 @@ public class DayTableEmbargoSetter extends DefaultEmbargoSetter
      * @param terms the embargo terms
      * @return parsed date in DCDate format
      */
+    @Override
     public DCDate parseTerms(Context context, Item item, String terms)
-        throws SQLException, AuthorizeException, IOException {
+        throws SQLException, AuthorizeException {
     	if (terms != null) {
             if (termsOpen.equals(terms)) {
-                return EmbargoManager.FOREVER;
+                return EmbargoServiceImpl.FOREVER;
             }
             String days = termProps.getProperty(terms);
             if (days != null && days.length() > 0) {

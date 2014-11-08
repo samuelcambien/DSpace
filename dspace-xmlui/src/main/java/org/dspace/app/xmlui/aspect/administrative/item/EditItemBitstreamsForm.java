@@ -25,7 +25,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -165,11 +165,11 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
                 CheckBox remove = row.addCell().addCheckBox("remove");
                 remove.setLabel("remove");
                 remove.addOption(bundle.getID() + "/" + bitstream.getID());
-                if (!AuthorizeManager.authorizeActionBoolean(context, item, Constants.REMOVE)) {
+                if (!AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.REMOVE)) {
                     remove.setDisabled();
                 }
 
-                if (AuthorizeManager.authorizeActionBoolean(context, bitstream, Constants.WRITE)) {
+                if (AuthorizeServiceImpl.authorizeActionBoolean(context, bitstream, Constants.WRITE)) {
                     // The user can edit the bitstream give them a link.
                     Cell cell = row.addCell();
                     cell.addXref(editURL, name);
@@ -196,7 +196,7 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
                 highlight.addXref(viewURL, T_view_link);
                 highlight.addContent("]");
 
-                if (AuthorizeManager.authorizeActionBoolean(context, bundle, Constants.WRITE)) {
+                if (AuthorizeServiceImpl.authorizeActionBoolean(context, bundle, Constants.WRITE)) {
                     Cell cell = row.addCell("bitstream_order_" + bitstream.getID(), Cell.ROLE_DATA, "");
                     //Add the +1 to make it more human readable
                     cell.addHidden("order_" + bitstream.getID()).setValue(String.valueOf(bitstreamIndex + 1));
@@ -223,7 +223,7 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
             }
 		}
 
-		if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.ADD))
+		if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.ADD))
 		{
 			Cell cell = files.addRow().addCell(1, 5);
 			cell.addXref(contextPath+"/admin/item?administrative-continue="+knot.getId()+"&submit_add",T_submit_add);
@@ -245,7 +245,7 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
         }
 
         // Only System Administrators can delete bitstreams
-		if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.REMOVE))
+		if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.REMOVE))
         {
             actions.addButton("submit_delete").setValue(T_submit_delete);
         }

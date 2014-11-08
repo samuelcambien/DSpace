@@ -21,7 +21,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
-import org.dspace.app.itemexport.ItemExport;
+import org.dspace.app.itemexport.ItemExportServiceImpl;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.HandleUtil;
@@ -31,7 +31,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
@@ -178,7 +178,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         {
             try
             {
-                availableExports = ItemExport.getExportsAvailable(context.getCurrentUser());
+                availableExports = ItemExportServiceImpl.getExportsAvailable(context.getCurrentUser());
             }
             catch (Exception e)
             {
@@ -208,7 +208,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         }
 
         //Check if a system administrator
-        boolean isSystemAdmin = AuthorizeManager.isAdmin(this.context);
+        boolean isSystemAdmin = AuthorizeServiceImpl.isAdmin(this.context);
 
         // Context Administrative options
         DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
@@ -219,7 +219,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
     		{
                     context.setHead(T_context_head);
                     context.addItem().addXref(contextPath+"/admin/item?itemID="+item.getID(), T_context_edit_item);
-                    if (AuthorizeManager.isAdmin(this.context, dso))
+                    if (AuthorizeServiceImpl.isAdmin(this.context, dso))
                     {
                         context.addItem().addXref(contextPath+"/admin/export?itemID="+item.getID(), T_context_export_item );
                         context.addItem().addXref(contextPath+ "/csv/handle/"+dso.getHandle(),T_context_export_metadata );
@@ -236,7 +236,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             	context.setHead(T_context_head);
             	context.addItemXref(contextPath+"/admin/collection?collectionID=" + collection.getID(), T_context_edit_collection);            	
             	context.addItemXref(contextPath+"/admin/mapper?collectionID="+collection.getID(), T_context_item_mapper); 
-            	if (AuthorizeManager.isAdmin(this.context, dso))
+            	if (AuthorizeServiceImpl.isAdmin(this.context, dso))
                 {
                     context.addItem().addXref(contextPath+"/admin/export?collectionID="+collection.getID(), T_context_export_collection );
                     context.addItem().addXref(contextPath+ "/csv/handle/"+dso.getHandle(),T_context_export_metadata );
@@ -252,7 +252,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             {
             	context.setHead(T_context_head);
             	context.addItemXref(contextPath+"/admin/community?communityID=" + community.getID(), T_context_edit_community); 
-            	if (AuthorizeManager.isAdmin(this.context, dso))
+            	if (AuthorizeServiceImpl.isAdmin(this.context, dso))
                 {
                     context.addItem().addXref(contextPath + "/admin/export?communityID=" + community.getID(), T_context_export_community);
                 }
@@ -260,7 +260,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             }
             
             // can they add to this community?
-            if (AuthorizeManager.authorizeActionBoolean(this.context, community,Constants.ADD))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(this.context, community, Constants.ADD))
             {
             	context.setHead(T_context_head);
             	context.addItemXref(contextPath+"/admin/collection?createNew&communityID=" + community.getID(), T_context_create_collection);
@@ -334,7 +334,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
     		
     		
     		// can they admin this collection?
-            if (AuthorizeManager.authorizeActionBoolean(this.context, collection, Constants.ADMIN))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(this.context, collection, Constants.ADMIN))
             {            	
             	context.addItemXref(contextPath+"/admin/collection?collectionID=" + collection.getID(), T_context_edit_collection);
             	context.addItemXref(contextPath+"/admin/mapper?collectionID="+collection.getID(), T_context_item_mapper);            	
@@ -353,7 +353,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             }
             
             // can they add to this community?
-            if (AuthorizeManager.authorizeActionBoolean(this.context, community,Constants.ADD))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(this.context, community, Constants.ADD))
             {        	
             	context.addItemXref(contextPath+"/admin/collection?createNew&communityID=" + community.getID(), T_context_create_collection);         	
             	context.addItemXref(contextPath+"/admin/community?createNew&communityID=" + community.getID(), T_context_create_subcommunity);
@@ -361,7 +361,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
             }
     	}
     	
-    	if (("community-list".equals(this.sitemapURI) || "".equals(this.sitemapURI)) && AuthorizeManager.isAdmin(this.context))
+    	if (("community-list".equals(this.sitemapURI) || "".equals(this.sitemapURI)) && AuthorizeServiceImpl.isAdmin(this.context))
     	{
             context.addItemXref(contextPath+"/admin/community?createNew", T_context_create_community);
             options++;

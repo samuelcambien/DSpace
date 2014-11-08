@@ -45,13 +45,13 @@ import org.dspace.browse.BrowseIndex;
 import org.dspace.browse.BrowseInfo;
 import org.dspace.browse.BrowseItem;
 import org.dspace.browse.BrowserScope;
+import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
 import org.dspace.sort.SortOption;
 import org.dspace.sort.SortException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DCDate;
 import org.dspace.content.DSpaceObject;
-import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
@@ -890,7 +890,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
             {
                 if (bix.isAuthorityIndex())
                 {
-                    ChoiceAuthorityManager cm = ChoiceAuthorityManager.getManager();
+                    ChoiceAuthorityServiceImpl cm = ChoiceAuthorityServiceImpl.getManager();
                     String fk = cm.makeFieldKey(bix.getMetadata(0));
                     value = "\""+cm.getLabel(fk, info.getValue(), null)+"\"";
                 }

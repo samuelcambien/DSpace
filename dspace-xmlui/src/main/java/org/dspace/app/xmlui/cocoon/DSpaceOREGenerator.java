@@ -21,7 +21,7 @@ import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.crosswalk.DisseminationCrosswalk;
 import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.SAXOutputter;
@@ -85,7 +85,7 @@ public class DSpaceOREGenerator extends AbstractGenerator
 		 if (handle != null)
          {
 			// Specified using a regular handle. 
-         	DSpaceObject dso = HandleManager.resolveToObject(context, handle);
+         	DSpaceObject dso = HandleServiceImpl.resolveToObject(context, handle);
          	
          	// Handles can be either items or containers.
          	if (dso instanceof Item)

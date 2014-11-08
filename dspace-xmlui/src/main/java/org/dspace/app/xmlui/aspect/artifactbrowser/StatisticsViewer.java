@@ -16,7 +16,7 @@ import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.statistics.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.ConfigurationManager;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.Request;
@@ -93,7 +93,7 @@ public class StatisticsViewer extends AbstractDSpaceTransformer implements Cache
                     try
                     {
                         // Administrators can always view reports
-                        showReport = AuthorizeManager.isAdmin(context);
+                        showReport = AuthorizeServiceImpl.isAdmin(context);
                     }
                     catch (SQLException sqle)
                     {
@@ -205,7 +205,7 @@ public class StatisticsViewer extends AbstractDSpaceTransformer implements Cache
         boolean publicise = ConfigurationManager.getBooleanProperty("report.public");
 
         // Check that the reports are either public, or user is an administrator
-        if (!publicise && !AuthorizeManager.isAdmin(context))
+        if (!publicise && !AuthorizeServiceImpl.isAdmin(context))
         {
             throw new AuthorizeException();
         }

@@ -20,7 +20,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 import org.jdom.Element;
 
 
@@ -227,11 +227,11 @@ class DAVWorkspaceItem extends DAVInProgressSubmission
 
             if (key.equalsIgnoreCase("start"))
             {
-                WorkflowManager.start(this.context, (WorkspaceItem) this.inProgressItem);
+                BasicWorkflowServiceImpl.start(this.context, (WorkspaceItem) this.inProgressItem);
             }
             else if (key.equalsIgnoreCase("start_without_notify"))
             {
-                WorkflowManager.startWithoutNotify(this.context,
+                BasicWorkflowServiceImpl.startWithoutNotify(this.context,
                         (WorkspaceItem) this.inProgressItem);
             }
         }

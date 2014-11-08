@@ -20,7 +20,7 @@ import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -110,7 +110,7 @@ public class StatisticsSearchResultTransformer extends AbstractDSpaceTransformer
         else
         {
             // Get the search scope from the location parameter
-            dso = HandleManager.resolveToObject(context, scopeString);
+            dso = HandleServiceImpl.resolveToObject(context, scopeString);
         }
 
         return dso;

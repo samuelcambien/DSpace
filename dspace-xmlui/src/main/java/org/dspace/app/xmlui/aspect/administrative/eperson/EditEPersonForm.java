@@ -27,7 +27,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
@@ -156,7 +156,7 @@ public class EditEPersonForm extends AbstractDSpaceTransformer
 	public void addBody(Body body) throws WingException, SQLException, AuthorizeException 
 	{
 		// Get all our parameters
-		boolean admin = AuthorizeManager.isAdmin(context);
+		boolean admin = AuthorizeServiceImpl.isAdmin(context);
 		
 		Request request = ObjectModelHelper.getRequest(objectModel);
 		

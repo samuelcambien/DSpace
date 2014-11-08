@@ -13,7 +13,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.content.Item;
 import org.dspace.utils.DSpace;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 
 import java.sql.SQLException;
 

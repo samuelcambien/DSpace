@@ -27,7 +27,7 @@ import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.app.xmlui.wing.element.Text;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.eperson.EPerson;
@@ -490,7 +490,7 @@ public class EditGroupForm extends AbstractDSpaceTransformer
         	Row row = table.addRow();
 	        	
         	row.addCell().addContent(groupID);
-        	if (AuthorizeManager.isAdmin(context))
+        	if (AuthorizeServiceImpl.isAdmin(context))
         		// Only administrators can edit other groups.
             {
                 row.addCell().addXref(url, name);
@@ -710,7 +710,7 @@ public class EditGroupForm extends AbstractDSpaceTransformer
     	
     	// Mark if this member is pending or not.
     	Cell nameCell = groupData.addCell();
-    	if (AuthorizeManager.isAdmin(context))
+    	if (AuthorizeServiceImpl.isAdmin(context))
         {
             nameCell.addHighlight("bold").addXref(url, T_members_group_name.parameterize(name));
         }

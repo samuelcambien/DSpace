@@ -15,7 +15,7 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DCDate;
 import org.dspace.utils.DSpace;
 import org.dspace.versioning.Version;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 
 /**
  *

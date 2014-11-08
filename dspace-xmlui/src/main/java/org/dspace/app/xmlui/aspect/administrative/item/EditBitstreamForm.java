@@ -22,7 +22,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -87,7 +87,7 @@ public class EditBitstreamForm extends AbstractDSpaceTransformer
                 // Administrator is allowed to see internal formats too.
 		Bitstream bitstream = Bitstream.find(context, bitstreamID);
 		BitstreamFormat currentFormat = bitstream.getFormat();
-                BitstreamFormat[] bitstreamFormats = AuthorizeManager.isAdmin(context) ?
+                BitstreamFormat[] bitstreamFormats = AuthorizeServiceImpl.isAdmin(context) ?
                     BitstreamFormat.findAll(context) :
                     BitstreamFormat.findNonInternal(context);
 		

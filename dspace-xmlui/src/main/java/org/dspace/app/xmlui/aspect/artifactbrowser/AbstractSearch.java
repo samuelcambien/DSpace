@@ -41,7 +41,7 @@ import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.core.Constants;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.search.DSQuery;
 import org.dspace.search.QueryArgs;
 import org.dspace.search.QueryResults;
@@ -185,7 +185,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
 	            java.util.List<String> handles = queryResults.getHitHandles();
 	            for (String handle : handles)
 	            {
-	                DSpaceObject resultDSO = HandleManager.resolveToObject(context, handle);
+	                DSpaceObject resultDSO = HandleServiceImpl.resolveToObject(context, handle);
 	                validity.add(resultDSO);
 	            }
 	            
@@ -287,7 +287,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
                 java.util.List<String> containerHandles = queryResults.getHitHandles();
                 for (String handle : containerHandles)
                 {
-                    DSpaceObject resultDSO = HandleManager.resolveToObject(
+                    DSpaceObject resultDSO = HandleServiceImpl.resolveToObject(
                             context, handle);
 
                     if (resultDSO instanceof Community
@@ -312,7 +312,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
                 java.util.List<String> itemHandles = queryResults.getHitHandles();
                 for (String handle : itemHandles)
                 {
-                    DSpaceObject resultDSO = HandleManager.resolveToObject(
+                    DSpaceObject resultDSO = HandleServiceImpl.resolveToObject(
                             context, handle);
 
                     if (resultDSO instanceof Item)
@@ -478,7 +478,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
         else
         {
             // Get the search scope from the location parameter
-            dso = HandleManager.resolveToObject(context, scopeString);
+            dso = HandleServiceImpl.resolveToObject(context, scopeString);
         }
 
         return dso;

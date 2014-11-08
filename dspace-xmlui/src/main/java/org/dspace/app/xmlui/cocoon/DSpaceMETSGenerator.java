@@ -27,7 +27,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 /**
@@ -136,7 +136,7 @@ public class DSpaceMETSGenerator extends AbstractGenerator
 		 if (handle != null)
          {
             // Specified using a regular handle.
-            DSpaceObject dso = HandleManager.resolveToObject(context, handle);
+            DSpaceObject dso = HandleServiceImpl.resolveToObject(context, handle);
 
             // Handles can be either items or containers.
             if (dso instanceof Item)
@@ -163,7 +163,7 @@ public class DSpaceMETSGenerator extends AbstractGenerator
                         // all non-repository types need integer IDs
                         if ("repository".equals(type))
                         {
-                                if (HandleManager.getPrefix().equals(strid))
+                                if (HandleServiceImpl.getPrefix().equals(strid))
                                 {
                                     adapter = new RepositoryAdapter(context, contextPath);
                                 }

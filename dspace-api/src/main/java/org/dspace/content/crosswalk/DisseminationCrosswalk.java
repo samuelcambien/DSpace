@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
+import org.dspace.core.Context;
 import org.jdom.Element;
 import org.jdom.Namespace;
 

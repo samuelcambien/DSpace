@@ -26,8 +26,8 @@ import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
-import org.dspace.handle.HandleManager;
-import org.dspace.storage.bitstore.BitstreamStorageManager;
+import org.dspace.handle.HandleServiceImpl;
+import org.dspace.storage.bitstore.BitstreamStorageServiceImpl;
 import org.dspace.utils.DSpace;
 
 import javax.mail.MessagingException;
@@ -163,7 +163,7 @@ public class ItemRequestResponseAction extends AbstractAction
 	        email.addRecipient(requestItemAuthor.getEmail());
 	        
 	        email.addArgument(Bitstream.find(context,requestItem.getBitstreamId()).getName());
-	        email.addArgument(HandleManager.getCanonicalForm(item.getHandle()));
+	        email.addArgument(HandleServiceImpl.getCanonicalForm(item.getHandle()));
 	        email.addArgument(requestItem.getToken());
 	        email.addArgument(name);    
 	        email.addArgument(mail);   
@@ -190,13 +190,13 @@ public class ItemRequestResponseAction extends AbstractAction
                 Bitstream[] bitstreams = bundles[i].getBitstreams();
                 for (int k = 0; k < bitstreams.length; k++){
                     if (!bitstreams[k].getFormat().isInternal() /*&& RequestItemManager.isRestricted(context, bitstreams[k])*/){
-                        email.addAttachment(BitstreamStorageManager.retrieve(context, bitstreams[k].getID()), bitstreams[k].getName(), bitstreams[k].getFormat().getMIMEType());
+                        email.addAttachment(BitstreamStorageServiceImpl.retrieve(context, bitstreams[k].getID()), bitstreams[k].getName(), bitstreams[k].getFormat().getMIMEType());
                     }
                 }
             }
         } else {
             Bitstream bit = Bitstream.find(context,requestItem.getBitstreamId());
-            email.addAttachment(BitstreamStorageManager.retrieve(context, requestItem.getBitstreamId()), bit.getName(), bit.getFormat().getMIMEType());
+            email.addAttachment(BitstreamStorageServiceImpl.retrieve(context, requestItem.getBitstreamId()), bit.getName(), bit.getFormat().getMIMEType());
         }     
         
         email.send();

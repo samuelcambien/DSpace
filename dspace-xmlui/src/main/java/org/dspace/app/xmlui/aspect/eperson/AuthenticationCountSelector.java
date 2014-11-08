@@ -18,7 +18,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.selection.Selector;
 import org.dspace.app.xmlui.utils.ContextUtil;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 
 /**
@@ -35,7 +35,7 @@ public class AuthenticationCountSelector implements Selector{
      */
 	public boolean select(String expression, Map objectModel, Parameters parameters) {
 		// get an iterator of all the AuthenticationMethods defined
-		final Iterator<AuthenticationMethod> authMethods = AuthenticationManager
+		final Iterator<AuthenticationMethod> authMethods = AuthenticationServiceImpl
 		    .authenticationMethodIterator();
 		
 		  final HttpServletResponse httpResponse = (HttpServletResponse) objectModel

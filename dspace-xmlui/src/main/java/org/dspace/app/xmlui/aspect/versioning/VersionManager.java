@@ -11,14 +11,14 @@ import org.dspace.app.xmlui.aspect.administrative.FlowResult;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.utils.DSpace;
 import org.dspace.versioning.Version;
 import org.dspace.versioning.VersionHistory;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -53,7 +53,7 @@ public class VersionManager {
 
             Item item = Item.find(context, itemID);
 
-            if (AuthorizeManager.isAdmin(context, item) || item.canEdit()) {
+            if (AuthorizeServiceImpl.isAdmin(context, item) || item.canEdit()) {
                 VersioningService versioningService = new DSpace().getSingletonService(VersioningService.class);
                 Version version = versioningService.createNewVersion(context, itemID, summary);
                 WorkspaceItem wsi = WorkspaceItem.findByItem(context, version.getItem());
@@ -89,7 +89,7 @@ public class VersionManager {
 
             Item item = Item.find(context, itemID);
 
-            if (AuthorizeManager.isAdmin(context, item)) {
+            if (AuthorizeServiceImpl.isAdmin(context, item)) {
                 VersioningService versioningService = new DSpace().getSingletonService(VersioningService.class);
                 versioningService.updateVersion(context, itemID, summary);
 

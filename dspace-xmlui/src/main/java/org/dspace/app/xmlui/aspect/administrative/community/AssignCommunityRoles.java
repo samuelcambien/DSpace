@@ -23,7 +23,7 @@ import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Community;
 import org.dspace.eperson.Group;
 
@@ -175,7 +175,7 @@ public class AssignCommunityRoles extends AbstractDSpaceTransformer
 	{
     	Button button = cell.addButton(buttonName);
     	button.setValue(buttonLabel);
-    	if (!AuthorizeManager.isAdmin(context))
+    	if (!AuthorizeServiceImpl.isAdmin(context))
     	{
     		// Only admins can create or delete
     		button.setDisabled();

@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Community;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
-import org.dspace.core.LicenseManager;
-import org.dspace.core.NewsManager;
+import org.dspace.core.LicenseServiceImpl;
+import org.dspace.core.NewsServiceImpl;
 import org.jdom.Element;
 
 
@@ -145,15 +145,15 @@ class DAVSite extends DAVResource
         }
         else if (elementsEqualIsh(property, news_topProperty))
         {
-            value = NewsManager.readNewsFile("news-top.html");
+            value = NewsServiceImpl.readNewsFile("news-top.html");
         }
         else if (elementsEqualIsh(property, news_sideProperty))
         {
-            value = NewsManager.readNewsFile("news-side.html");
+            value = NewsServiceImpl.readNewsFile("news-side.html");
         }
         else if (elementsEqualIsh(property, default_licenseProperty))
         {
-            value = LicenseManager.getDefaultSubmissionLicense();
+            value = LicenseServiceImpl.getDefaultSubmissionLicense();
         }
         else
         {
@@ -183,21 +183,21 @@ class DAVSite extends DAVResource
                 .getText();
         if (elementsEqualIsh(prop, news_topProperty))
         {
-            if (!AuthorizeManager.isAdmin(this.context))
+            if (!AuthorizeServiceImpl.isAdmin(this.context))
             {
                 throw new DAVStatusException(HttpServletResponse.SC_FORBIDDEN,
                         "Not authorized to modify this property.");
             }
-            NewsManager.writeNewsFile("news-top.html", newValue);
+            NewsServiceImpl.writeNewsFile("news-top.html", newValue);
         }
         else if (elementsEqualIsh(prop, news_sideProperty))
         {
-            if (!AuthorizeManager.isAdmin(this.context))
+            if (!AuthorizeServiceImpl.isAdmin(this.context))
             {
                 throw new DAVStatusException(HttpServletResponse.SC_FORBIDDEN,
                         "Not authorized to modify this property.");
             }
-            NewsManager.writeNewsFile("news-side.html", newValue);
+            NewsServiceImpl.writeNewsFile("news-side.html", newValue);
         }
         else if (elementsEqualIsh(prop, displaynameProperty))
         {

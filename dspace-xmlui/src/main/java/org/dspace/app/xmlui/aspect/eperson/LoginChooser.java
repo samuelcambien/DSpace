@@ -30,7 +30,7 @@ import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.Item;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.core.ConfigurationManager;
 import org.xml.sax.SAXException;
@@ -133,7 +133,7 @@ public class LoginChooser extends AbstractDSpaceTransformer implements
 	 */
 	public void addBody(Body body) throws SQLException, SAXException,
 			WingException {
-		Iterator authMethods = AuthenticationManager
+		Iterator authMethods = AuthenticationServiceImpl
 				.authenticationMethodIterator();
 		Request request = ObjectModelHelper.getRequest(objectModel);
 		HttpSession session = request.getSession();

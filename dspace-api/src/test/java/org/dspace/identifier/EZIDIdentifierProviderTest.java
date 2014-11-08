@@ -10,6 +10,8 @@ package org.dspace.identifier;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,13 +19,17 @@ import java.util.UUID;
 import org.dspace.AbstractUnitTest;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.identifier.ezid.DateToYear;
 import org.dspace.identifier.ezid.Transform;
 import org.dspace.kernel.ServiceManager;
 import org.dspace.services.ConfigurationService;
+import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflow.factory.WorkflowServiceFactory;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -58,8 +64,12 @@ public class EZIDIdentifierProviderTest
 
     private static Collection collection;
 
+    protected ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+    protected WorkspaceItemService workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
+
+
     /** The most recently created test Item's ID */
-    private static int itemID;
+    private static Item item;
 
     public EZIDIdentifierProviderTest()
     {
@@ -67,9 +77,6 @@ public class EZIDIdentifierProviderTest
 
     private static void dumpMetadata(Item eyetem)
     {
-        if (null == eyetem)
-            return;
-
         Metadatum[] metadata = eyetem.getMetadata("dc", Item.ANY, Item.ANY, Item.ANY);
         for (Metadatum metadatum : metadata)
             System.out.printf("Metadata:  %s.%s.%s(%s) = %s\n",
@@ -88,23 +95,25 @@ public class EZIDIdentifierProviderTest
      * @throws IOException
      */
     private Item newItem(Context ctx)
-            throws SQLException, AuthorizeException, IOException
-    {
+            throws SQLException, AuthorizeException, IOException, WorkflowException {
         ctx.turnOffAuthorisationSystem();
        
          //Install a fresh item
-        WorkspaceItem wsItem = WorkspaceItem.create(context, collection, false);
-        Item item = InstallItem.installItem(context, wsItem);
-       
-        itemID = item.getID();
+        context.turnOffAuthorisationSystem();
 
-        item.addMetadata("dc", "contributor", "author", null, "Author, A. N.");
-        item.addMetadata("dc", "title", null, null, "A Test Object");
-        item.addMetadata("dc", "publisher", null, null, "DSpace Test Harness");
-        item.update();
+        WorkspaceItem wsItem = workspaceItemService.create(context, collection, false);
+
+        WorkflowItem wfItem = WorkflowServiceFactory.getInstance().getWorkflowService().start(context, wsItem);
+
+        item = wfItem.getItem();
+
+        itemService.addMetadata(context, item, "dc", "contributor", "author", null, "Author, A. N.");
+        itemService.addMetadata(context, item, "dc", "title", null, null, "A Test Object");
+        itemService.addMetadata(context, item, "dc", "publisher", null, null, "DSpace Test Harness");
+
+        itemService.update(context, item);
 
         // Commit work, clean up
-        ctx.commit();
         ctx.restoreAuthSystemState();
 
         return item;

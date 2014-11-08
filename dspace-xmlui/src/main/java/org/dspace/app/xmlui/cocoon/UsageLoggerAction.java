@@ -11,13 +11,13 @@ import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.app.xmlui.utils.HandleUtil;
 import org.dspace.core.Context;
 import org.dspace.core.ConfigurationManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.usage.UsageEvent;
 import org.dspace.utils.DSpace;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Item;
 import org.dspace.content.Bundle;
-import org.dspace.handle.HandleManager;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
@@ -114,7 +114,7 @@ public class UsageLoggerAction extends AbstractAction {
         else if (handle != null)
         {
             // Reference by an item's handle.
-            dso = HandleManager.resolveToObject(context,handle);
+            dso = HandleServiceImpl.resolveToObject(context, handle);
 
             if (dso instanceof Item)
             {

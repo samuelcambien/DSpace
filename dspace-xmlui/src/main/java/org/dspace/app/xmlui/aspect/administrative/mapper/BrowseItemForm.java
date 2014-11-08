@@ -22,7 +22,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.Metadatum;
 import org.dspace.content.Item;
@@ -76,7 +76,7 @@ public class BrowseItemForm extends AbstractDSpaceTransformer {
 		Division div = body.addInteractiveDivision("browse-items",contextPath + "/admin/mapper", Division.METHOD_GET,"primary administrative mapper");
 		div.setHead(T_head1);
 		
-		if (AuthorizeManager.authorizeActionBoolean(context, collection, Constants.REMOVE))
+		if (AuthorizeServiceImpl.authorizeActionBoolean(context, collection, Constants.REMOVE))
 		{
 			Para actions = div.addPara();
 			actions.addButton("submit_unmap").setValue(T_submit_unmap);
@@ -133,7 +133,7 @@ public class BrowseItemForm extends AbstractDSpaceTransformer {
 			row.addCell().addXref(url,title);
 		}
 		
-		if (AuthorizeManager.authorizeActionBoolean(context, collection, Constants.REMOVE))
+		if (AuthorizeServiceImpl.authorizeActionBoolean(context, collection, Constants.REMOVE))
 		{
 			Para actions = div.addPara();
 			actions.addButton("submit_unmap").setValue(T_submit_unmap);

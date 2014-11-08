@@ -12,7 +12,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
-import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.DatabaseUtils;
 import org.flywaydb.core.api.migration.MigrationChecksumProvider;
 import org.flywaydb.core.api.migration.jdbc.JdbcMigration;
@@ -67,26 +66,31 @@ public class V5_0_2014_11_04__Enable_XMLWorkflow_Migration
 
                 // Get the contents of our DB Schema migration script, based on path & DB type
                 // (e.g. /src/main/resources/[path-to-this-class]/postgres/xml_workflow_migration.sql)
-                String dbMigrateSQL = new ClassPathResource(packagePath + "/" +
-                                                        DatabaseManager.getDbKeyword() +
-                                                        "/xml_workflow_migration.sql", getClass().getClassLoader()).loadAsString(Constants.DEFAULT_ENCODING);
+                //TODO: HIBERNATE FIX FLYWAY
+//                String dbMigrateSQL = new ClassPathResource(packagePath + "/" +
+//                                                        DatabaseManager.getDbKeyword() +
+//                                                        "/xml_workflow_migration.sql", getClass().getClassLoader()).loadAsString(Constants.DEFAULT_ENCODING);
 
                 // Actually execute the Database schema migration SQL
                 // This will create the necessary tables for the XMLWorkflow feature
-                DatabaseUtils.executeSql(connection, dbMigrateSQL);
+                //TODO: HIBERNATE FIX FLYWAY
+//                DatabaseUtils.executeSql(connection, dbMigrateSQL);
 
                 // Get the contents of our data migration script, based on path & DB type
                 // (e.g. /src/main/resources/[path-to-this-class]/postgres/data_workflow_migration.sql)
-                String dataMigrateSQL = new ClassPathResource(packagePath + "/" +
-                                                          DatabaseManager.getDbKeyword() +
-                                                          "/data_workflow_migration.sql", getClass().getClassLoader()).loadAsString(Constants.DEFAULT_ENCODING);
+                //TODO: HIBERNATE FIX FLYWAY
+//                String dataMigrateSQL = new ClassPathResource(packagePath + "/" +
+//                                                          DatabaseManager.getDbKeyword() +
+//                                                          "/data_workflow_migration.sql", getClass().getClassLoader()).loadAsString(Constants.DEFAULT_ENCODING);
 
                 // Actually execute the Data migration SQL
                 // This will migrate all existing traditional workflows to the new XMLWorkflow system & tables
-                DatabaseUtils.executeSql(connection, dataMigrateSQL);
+                //TODO: HIBERNATE FIX FLYWAY
+//                DatabaseUtils.executeSql(connection, dataMigrateSQL);
 
                 // Assuming both succeeded, save the size of the scripts for getChecksum() below
-                migration_file_size = dbMigrateSQL.length() + dataMigrateSQL.length();
+                //TODO: HIBERNATE FIX FLYWAY
+//                migration_file_size = dbMigrateSQL.length() + dataMigrateSQL.length();
             }
         }
     }

@@ -19,7 +19,7 @@ import org.dspace.content.MetadataSchema;
 import org.dspace.eperson.EPerson;
 import org.dspace.utils.DSpace;
 import org.dspace.versioning.Version;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 
 /**
  *

@@ -48,6 +48,7 @@ public class GoogleRecorderEventListener extends AbstractUsageEventListener {
         httpclient = HttpClients.createDefault();
     }
 
+    @Override
     public void receiveEvent(Event event) {
         if((event instanceof UsageEvent))
         {
@@ -74,7 +75,7 @@ public class GoogleRecorderEventListener extends AbstractUsageEventListener {
         }
     }
 
-    private void bitstreamDownload(UsageEvent ue) throws IOException {
+    protected void bitstreamDownload(UsageEvent ue) throws IOException {
         HttpPost httpPost = new HttpPost(GoogleURL);
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();

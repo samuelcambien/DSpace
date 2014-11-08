@@ -14,7 +14,7 @@ import org.dspace.content.packager.PackageDisseminator;
 import org.dspace.content.packager.PackageParameters;
 import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.sword.client.exceptions.HttpException;
 import org.dspace.sword.client.exceptions.InvalidHandleException;
 import org.dspace.sword.client.exceptions.PackageFormatException;
@@ -177,7 +177,7 @@ public class DSpaceSwordClient
         DSpaceObject dso = null;
         try
         {
-            dso = HandleManager.resolveToObject(context, handle);
+            dso = HandleServiceImpl.resolveToObject(context, handle);
         }
         catch (SQLException e)
         {

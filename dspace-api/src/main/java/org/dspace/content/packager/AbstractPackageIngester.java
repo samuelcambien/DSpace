@@ -23,10 +23,12 @@ import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.crosswalk.CrosswalkException;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.CollectionService;
+import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
-import org.dspace.handle.HandleManager;
 
 /**
  * An abstract implementation of a DSpace Package Ingester, which
@@ -66,6 +68,9 @@ public abstract class AbstractPackageIngester
 {
     /** log4j category */
     private static Logger log = Logger.getLogger(AbstractPackageIngester.class);
+
+    protected final CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
+    protected final ItemService itemService = ContentServiceFactory.getInstance().getItemService();
 
     /** 
      * References to other packages -- these are the next packages to ingest recursively
@@ -120,10 +125,9 @@ public abstract class AbstractPackageIngester
     @Override
     public List<String> ingestAll(Context context, DSpaceObject parent, File pkgFile,
                                 PackageParameters params, String license)
-        throws PackageException, UnsupportedOperationException,
-               CrosswalkException, AuthorizeException,
-               SQLException, IOException
-    {
+            throws PackageException, UnsupportedOperationException,
+            CrosswalkException, AuthorizeException,
+            SQLException, IOException, WorkflowException {
         //If unset, make sure the Parameters specifies this is a recursive ingest
         if(!params.recursiveModeEnabled())
         {
@@ -204,6 +208,11 @@ public abstract class AbstractPackageIngester
                             // it is mapped to this Collection.
                             String childHandle = getIngestedMap().get(childPkg);
                             if(childHandle!=null)
+                            // Since running 'ingestAll' on an item, will only ingest one Item at most,
+                            // Just make sure that item is mapped to this collection.
+                            Item childItem = (Item)dsoIngestedList.get(oldSize);
+                            Collection collection = (Collection)dso;
+                            if (!itemService.isIn(childItem, collection))
                             {
                                 Item childItem = (Item) HandleManager.resolveToObject(context, childHandle);
                                 // Ensure Item is mapped to Collection that referenced it
@@ -212,6 +221,7 @@ public abstract class AbstractPackageIngester
                                 {
                                     collection.addItem(childItem);
                                 }
+                                collectionService.addItem(context, collection, childItem);
                             }
                         }
                     }
@@ -261,10 +271,9 @@ public abstract class AbstractPackageIngester
     @Override
     public List<String> replaceAll(Context context, DSpaceObject dso,
                                 File pkgFile, PackageParameters params)
-        throws PackageException, UnsupportedOperationException,
-               CrosswalkException, AuthorizeException,
-               SQLException, IOException
-    {
+            throws PackageException, UnsupportedOperationException,
+            CrosswalkException, AuthorizeException,
+            SQLException, IOException, WorkflowException {
         //If unset, make sure the Parameters specifies this is a recursive replace
         if(!params.recursiveModeEnabled())
         {
@@ -328,6 +337,11 @@ public abstract class AbstractPackageIngester
                             // it is mapped to this Collection.
                             String childHandle = getIngestedMap().get(childPkg);
                             if(childHandle!=null)
+                            // Since running 'replaceAll' on an item, will only ingest one Item at most,
+                            // Just make sure that item is mapped to this collection.
+                            Item childItem = (Item)dsoIngestedList.get(oldSize);
+                            Collection collection = (Collection)replacedDso;
+                            if (!itemService.isIn(childItem, collection))
                             {
                                 Item childItem = (Item) HandleManager.resolveToObject(context, childHandle);
                                 // Ensure Item is mapped to Collection that referenced it
@@ -336,6 +350,7 @@ public abstract class AbstractPackageIngester
                                 {
                                     collection.addItem(childItem);
                                 }
+                                collectionService.addItem(context, collection, childItem);
                             }
                         }
                     }

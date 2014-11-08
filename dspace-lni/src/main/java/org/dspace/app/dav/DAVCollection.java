@@ -37,9 +37,9 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
 import org.dspace.core.Utils;
-import org.dspace.handle.HandleManager;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.handle.HandleServiceImpl;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 import org.jdom.Element;
 
 
@@ -508,7 +508,7 @@ class DAVCollection extends DAVDSpaceObject
             tempFile.deleteOnExit();
 
             //get the new workflowitem (if it exists)
-            WorkflowItem wfi = WorkflowItem.findByItem(context, item);
+            BasicWorkflowItem wfi = BasicWorkflowItem.findByItem(context, item);
 
             //Get status of item
             //  if we found a WorkflowItem, then it is still in-process
@@ -520,25 +520,25 @@ class DAVCollection extends DAVDSpaceObject
             }
             else
             {
-                state = WorkflowManager.WFSTATE_ARCHIVE;
+                state = BasicWorkflowServiceImpl.WFSTATE_ARCHIVE;
             }
 
             // get new item's location: if workflow completed, then look
             // for handle (but be ready for disappointment); otherwise,
             // return the workflow item's resource.
             String location = null;
-            if (state == WorkflowManager.WFSTATE_ARCHIVE)
+            if (state == BasicWorkflowServiceImpl.WFSTATE_ARCHIVE)
             {
                 // Item is already in the archive
-                String handle = HandleManager.findHandle(this.context, item);
+                String handle = HandleServiceImpl.findHandle(this.context, item);
                 String end = (handle != null) ? DAVDSpaceObject
                         .getPathElt(handle) : DAVItem.getPathElt(item);
                 DAVItem newItem = new DAVItem(this.context, this.request, this.response,
                         makeChildPath(end), item);
                 location = newItem.hrefURL();
             }
-            else if (state == WorkflowManager.WFSTATE_SUBMIT
-                    || state == WorkflowManager.WFSTATE_STEP1POOL)
+            else if (state == BasicWorkflowServiceImpl.WFSTATE_SUBMIT
+                    || state == BasicWorkflowServiceImpl.WFSTATE_STEP1POOL)
             {
                 // Item is still in-process in the workflow
                 location = hrefPrefix() + DAVWorkflow.getPath(wfi);

@@ -21,7 +21,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.UserMeta;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.LogManager;
-import org.dspace.xmlworkflow.WorkflowFactory;
+import org.dspace.xmlworkflow.XmlWorkflowFactoryImpl;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
@@ -58,7 +58,7 @@ public class WorkflowTransformer extends AbstractDSpaceTransformer {
             String actionID = parameters.getParameter("actionID");
             int workflowID = parameters.getParameterAsInteger("workflowID");
             XmlWorkflowItem wfi = XmlWorkflowItem.find(context, workflowID);
-            Workflow wf = WorkflowFactory.getWorkflow(wfi.getCollection());
+            Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(wfi.getCollection());
 
             Step step = wf.getStep(stepID);
             xmluiActionUI = (AbstractXMLUIAction) WorkflowXMLUIFactory.getActionInterface(actionID);

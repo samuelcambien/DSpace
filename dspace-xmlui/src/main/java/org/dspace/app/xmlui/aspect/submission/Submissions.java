@@ -32,7 +32,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Metadatum;
 import org.dspace.content.Item;
 import org.dspace.content.ItemIterator;
-import org.dspace.content.SupervisedItem;
+import org.dspace.content.SupervisedItemServiceImpl;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Constants;
 import org.dspace.eperson.EPerson;
@@ -168,7 +168,7 @@ public class Submissions extends AbstractDSpaceTransformer
 
         // User's WorkflowItems
     	WorkspaceItem[] unfinishedItems = WorkspaceItem.findByEPerson(context,context.getCurrentUser());
-    	SupervisedItem[] supervisedItems = SupervisedItem.findbyEPerson(context, context.getCurrentUser());
+    	SupervisedItemServiceImpl[] supervisedItems = SupervisedItemServiceImpl.findbyEPerson(context, context.getCurrentUser());
 
     	if (unfinishedItems.length <= 0 && supervisedItems.length <= 0)
     	{

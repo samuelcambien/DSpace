@@ -24,7 +24,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.*;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -288,9 +288,9 @@ public class XOAI {
 
     private boolean isPublic(Item item) {
         try {
-            AuthorizeManager.authorizeAction(context, item, Constants.READ);
+            AuthorizeServiceImpl.authorizeAction(context, item, Constants.READ);
             for (Bundle b : item.getBundles())
-                AuthorizeManager.authorizeAction(context, b, Constants.READ);
+                AuthorizeServiceImpl.authorizeAction(context, b, Constants.READ);
             return true;
         } catch (AuthorizeException ex) {
             log.debug(ex.getMessage());

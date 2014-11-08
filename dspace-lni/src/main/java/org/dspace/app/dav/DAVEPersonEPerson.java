@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.jdom.Element;
@@ -228,7 +228,7 @@ class DAVEPersonEPerson extends DAVResource
      */
     private boolean adminOrSelf(Context context) throws SQLException
     {
-        if (AuthorizeManager.isAdmin(context))
+        if (AuthorizeServiceImpl.isAdmin(context))
         {
             return true;
         }

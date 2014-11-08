@@ -17,8 +17,8 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.core.Context;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 
 /**
  * Claim all the selected workflows. This action is used by the 
@@ -49,15 +49,15 @@ public class ClaimTasksAction extends AbstractAction
     	{
     		for (String workflowID : workflowIDs)
     		{
-    			WorkflowItem workflowItem = WorkflowItem.find(context, Integer.valueOf(workflowID));
+    			BasicWorkflowItem workflowItem = BasicWorkflowItem.find(context, Integer.valueOf(workflowID));
     			
     			int state = workflowItem.getState();
     			// Only unclaim tasks that are already claimed.
-    			if ( state == WorkflowManager.WFSTATE_STEP1POOL || 
-    				 state == WorkflowManager.WFSTATE_STEP2POOL || 
-    				 state == WorkflowManager.WFSTATE_STEP3POOL)
+    			if ( state == BasicWorkflowServiceImpl.WFSTATE_STEP1POOL ||
+    				 state == BasicWorkflowServiceImpl.WFSTATE_STEP2POOL ||
+    				 state == BasicWorkflowServiceImpl.WFSTATE_STEP3POOL)
     			{
-    				WorkflowManager.claim(context, workflowItem, context.getCurrentUser());
+    				BasicWorkflowServiceImpl.claim(context, workflowItem, context.getCurrentUser());
     			}
     		}
 

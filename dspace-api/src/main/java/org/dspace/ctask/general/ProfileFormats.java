@@ -12,11 +12,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dspace.content.Bitstream;
-import org.dspace.content.BitstreamFormat;
-import org.dspace.content.Bundle;
-import org.dspace.content.DSpaceObject;
-import org.dspace.content.Item;
+import org.dspace.content.*;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.core.Context;
 import org.dspace.curate.AbstractCurationTask;
 import org.dspace.curate.Curator;
@@ -32,7 +30,8 @@ import org.dspace.curate.Distributive;
 public class ProfileFormats extends AbstractCurationTask
 {
     // map of formats to occurrences
-    private Map<String, Integer> fmtTable = new HashMap<String, Integer>();
+    protected Map<String, Integer> fmtTable = new HashMap<String, Integer>();
+    protected BitstreamFormatService bitstreamFormatService = ContentServiceFactory.getInstance().getBitstreamFormatService();
 
     /**
      * Perform the curation task upon passed DSO
@@ -54,8 +53,9 @@ public class ProfileFormats extends AbstractCurationTask
     {
         for (Bundle bundle : item.getBundles())
         {
-            for (Bitstream bs : bundle.getBitstreams())
+            for (BundleBitstream bundleBitstream : bundle.getBitstreams())
             {
+                Bitstream bs = bundleBitstream.getBitstream();
                 String fmt = bs.getFormat().getShortDescription();
                 Integer count = fmtTable.get(fmt);
                 if (count == null)
@@ -79,9 +79,9 @@ public class ProfileFormats extends AbstractCurationTask
             StringBuilder sb = new StringBuilder();
             for (String fmt : fmtTable.keySet())
             {
-                BitstreamFormat bsf = BitstreamFormat.findByShortDescription(c, fmt);
+                BitstreamFormat bsf = bitstreamFormatService.findByShortDescription(c, fmt);
                 sb.append(String.format("%6d", fmtTable.get(fmt))).append(" (").
-                append(bsf.getSupportLevelText().charAt(0)).append(") ").
+                append(bitstreamFormatService.getSupportLevelText(bsf).charAt(0)).append(") ").
                 append(bsf.getDescription()).append("\n");
             }
             report(sb.toString());

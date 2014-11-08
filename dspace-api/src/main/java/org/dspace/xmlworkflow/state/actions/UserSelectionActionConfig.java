@@ -23,6 +23,7 @@ public class UserSelectionActionConfig extends WorkflowActionConfig{
         super(id);
     }
 
+    @Override
     public UserSelectionAction getProcessingAction(){
         return (UserSelectionAction) processingAction;
     }

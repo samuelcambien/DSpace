@@ -40,7 +40,7 @@ import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.app.xmlui.wing.element.TextArea;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.eperson.EPerson;
 import org.dspace.harvest.HarvestedCollection;
@@ -228,7 +228,7 @@ public class ControlPanel extends AbstractDSpaceTransformer implements Serviceab
                     UIException, SQLException, IOException, AuthorizeException 
     {
 
-        if (!AuthorizeManager.isAdmin(context))
+        if (!AuthorizeServiceImpl.isAdmin(context))
         {
             throw new AuthorizeException("You are not authorized to view this page.");
         }

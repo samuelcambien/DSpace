@@ -13,7 +13,7 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.*;
 import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
@@ -21,8 +21,8 @@ import org.dspace.eperson.EPerson;
 import org.dspace.utils.DSpace;
 import org.dspace.versioning.Version;
 import org.dspace.versioning.VersionHistory;
-import org.dspace.versioning.VersioningService;
-import org.dspace.workflow.WorkflowItem;
+import org.dspace.versioning.service.VersioningService;
+import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 import java.sql.SQLException;
@@ -55,7 +55,7 @@ public class VersionHistoryForm extends AbstractDSpaceTransformer {
         boolean isItemView=parameters.getParameterAsInteger("itemID",-1) == -1;
         Item item = getItem();
 
-        if(item==null || !AuthorizeManager.isAdmin(this.context, item.getOwningCollection()))
+        if(item==null || !AuthorizeServiceImpl.isAdmin(this.context, item.getOwningCollection()))
         {
             if(isItemView)
             {
@@ -192,7 +192,7 @@ public class VersionHistoryForm extends AbstractDSpaceTransformer {
         {
             workflowItem = XmlWorkflowItem.findByItem(context, item);
         }else{
-            workflowItem = WorkflowItem.findByItem(context, item);
+            workflowItem = BasicWorkflowItem.findByItem(context, item);
         }
 
         return workspaceItem != null || workflowItem != null;

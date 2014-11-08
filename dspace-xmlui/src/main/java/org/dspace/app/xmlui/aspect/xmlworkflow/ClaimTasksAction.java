@@ -16,8 +16,8 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.dspace.app.util.Util;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.core.Context;
-import org.dspace.xmlworkflow.WorkflowFactory;
-import org.dspace.xmlworkflow.XmlWorkflowManager;
+import org.dspace.xmlworkflow.XmlWorkflowFactoryImpl;
+import org.dspace.xmlworkflow.XmlWorkflowServiceImpl;
 import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.state.actions.WorkflowActionConfig;
 import org.dspace.xmlworkflow.storedcomponents.PoolTask;
@@ -42,10 +42,10 @@ public class ClaimTasksAction extends AbstractAction {
             {
                 PoolTask poolTask = PoolTask.findByWorkflowIdAndEPerson(context, workflowID, context.getCurrentUser().getID());
                 XmlWorkflowItem workflowItem = XmlWorkflowItem.find(context, workflowID);
-                Workflow workflow = WorkflowFactory.getWorkflow(workflowItem.getCollection());
+                Workflow workflow = XmlWorkflowFactoryImpl.getWorkflow(workflowItem.getCollection());
 
                 WorkflowActionConfig currentAction = workflow.getStep(poolTask.getStepID()).getActionConfig(poolTask.getActionID());
-                XmlWorkflowManager.doState(context, context.getCurrentUser(), request, workflowID, workflow, currentAction);
+                XmlWorkflowServiceImpl.doState(context, context.getCurrentUser(), request, workflowID, workflow, currentAction);
             }
             context.commit();
         }

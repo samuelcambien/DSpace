@@ -17,10 +17,10 @@ import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -55,17 +55,17 @@ public class FlowUtils {
 	 */
 	public static boolean processApproveTask(Context context, String id) throws SQLException, UIException, ServletException, AuthorizeException, IOException
 	{
-		WorkflowItem workflowItem = findWorkflow(context, id);
+		BasicWorkflowItem workflowItem = findWorkflow(context, id);
 		Item item = workflowItem.getItem();
 
 		// Advance the item along the workflow
-        WorkflowManager.advance(context, workflowItem, context.getCurrentUser());
+        BasicWorkflowServiceImpl.advance(context, workflowItem, context.getCurrentUser());
 
         // FIXME: This should be a return value from advance()
         // See if that gave the item a Handle. If it did,
         // the item made it into the archive, so we
         // should display a suitable page.
-        String handle = HandleManager.findHandle(context, item);
+        String handle = HandleServiceImpl.findHandle(context, item);
 
         context.commit();
 
@@ -90,10 +90,10 @@ public class FlowUtils {
 	 */
 	public static void processUnclaimTask(Context context, String id) throws SQLException, UIException, ServletException, AuthorizeException, IOException
 	{
-		WorkflowItem workflowItem = findWorkflow(context, id);
+		BasicWorkflowItem workflowItem = findWorkflow(context, id);
 
         // Return task to pool
-        WorkflowManager.unclaim(context, workflowItem, context.getCurrentUser());
+        BasicWorkflowServiceImpl.unclaim(context, workflowItem, context.getCurrentUser());
 
         context.commit();
 
@@ -114,16 +114,16 @@ public class FlowUtils {
 	 */
 	public static void processClaimTask(Context context, String id) throws SQLException, UIException, ServletException, AuthorizeException, IOException
 	{
-		WorkflowItem workflowItem = findWorkflow(context, id);
-        if(workflowItem.getState() != WorkflowManager.WFSTATE_STEP1POOL &&
-                workflowItem.getState() != WorkflowManager.WFSTATE_STEP2POOL &&
-                workflowItem.getState() != WorkflowManager.WFSTATE_STEP3POOL){
+		BasicWorkflowItem workflowItem = findWorkflow(context, id);
+        if(workflowItem.getState() != BasicWorkflowServiceImpl.WFSTATE_STEP1POOL &&
+                workflowItem.getState() != BasicWorkflowServiceImpl.WFSTATE_STEP2POOL &&
+                workflowItem.getState() != BasicWorkflowServiceImpl.WFSTATE_STEP3POOL){
             // Only allow tasks in the pool to be claimed !
             throw new AuthorizeException("Error while claiming task: this task has already been claimed !");
         }
 
        // Claim the task
-       WorkflowManager.claim(context, workflowItem, context.getCurrentUser());
+       BasicWorkflowServiceImpl.claim(context, workflowItem, context.getCurrentUser());
 
        context.commit();
 
@@ -143,19 +143,19 @@ public class FlowUtils {
      * @throws java.sql.SQLException is thrown when something is wrong with the database
      */
     public static void authorizeWorkflowItem(Context context, String workflowItemId) throws AuthorizeException, SQLException {
-        WorkflowItem workflowItem = WorkflowItem.find(context, Integer.parseInt(workflowItemId.substring(1)));
-        if((workflowItem.getState() == WorkflowManager.WFSTATE_STEP1 ||
-                workflowItem.getState() == WorkflowManager.WFSTATE_STEP2 ||
-                workflowItem.getState() == WorkflowManager.WFSTATE_STEP3) && workflowItem.getOwner().getID() != context.getCurrentUser().getID()){
+        BasicWorkflowItem workflowItem = BasicWorkflowItem.find(context, Integer.parseInt(workflowItemId.substring(1)));
+        if((workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP1 ||
+                workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP2 ||
+                workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP3) && workflowItem.getOwner().getID() != context.getCurrentUser().getID()){
             throw new AuthorizeException("You are not allowed to perform this task.");
         }else
-        if((workflowItem.getState() == WorkflowManager.WFSTATE_STEP1POOL ||
-                workflowItem.getState() == WorkflowManager.WFSTATE_STEP2POOL ||
-                workflowItem.getState() == WorkflowManager.WFSTATE_STEP3POOL)){
+        if((workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP1POOL ||
+                workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP2POOL ||
+                workflowItem.getState() == BasicWorkflowServiceImpl.WFSTATE_STEP3POOL)){
             // Verify if the current user has the current workflowItem among his pooled tasks
             boolean hasPooledTask = false;
-            List<WorkflowItem> pooledTasks = WorkflowManager.getPooledTasks(context, context.getCurrentUser());
-            for (WorkflowItem pooledItem : pooledTasks) {
+            List<BasicWorkflowItem> pooledTasks = BasicWorkflowServiceImpl.getPooledTasks(context, context.getCurrentUser());
+            for (BasicWorkflowItem pooledItem : pooledTasks) {
                 if(pooledItem.getID() == workflowItem.getID()){
                     hasPooledTask = true;
                 }
@@ -178,13 +178,13 @@ public class FlowUtils {
 	 */
 	public static String processRejectTask(Context context, String id,Request request) throws SQLException, UIException, ServletException, AuthorizeException, IOException
 	{
-		WorkflowItem workflowItem = findWorkflow(context, id);
+		BasicWorkflowItem workflowItem = findWorkflow(context, id);
 
 		String reason = request.getParameter("reason");
 
 		if (reason != null && reason.length() > 1)
 		{
-            WorkspaceItem wsi = WorkflowManager.reject(context, workflowItem,context.getCurrentUser(), reason);
+            WorkspaceItem wsi = BasicWorkflowServiceImpl.reject(context, workflowItem, context.getCurrentUser(), reason);
 
             // Load the Submission Process for the collection this WSI is associated with
             Collection c = wsi.getCollection();
@@ -227,8 +227,8 @@ public class FlowUtils {
      * @param inProgressSubmissionID
      * @return The found workflowitem or null if none found.
      */
-    public static WorkflowItem findWorkflow(Context context, String inProgressSubmissionID) throws SQLException, AuthorizeException, IOException {
+    public static BasicWorkflowItem findWorkflow(Context context, String inProgressSubmissionID) throws SQLException, AuthorizeException, IOException {
         int id = Integer.valueOf(inProgressSubmissionID.substring(1));
-        return WorkflowItem.find(context, id);
+        return BasicWorkflowItem.find(context, id);
     }
 }

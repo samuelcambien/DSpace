@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -281,7 +281,7 @@ class DAVBitstream extends DAVDSpaceObject
          * read auth, Bitstream may contain sensitive data and should always
          * check for READ permission.
          */
-        AuthorizeManager.authorizeAction(this.context, this.bitstream, Constants.READ);
+        AuthorizeServiceImpl.authorizeAction(this.context, this.bitstream, Constants.READ);
 
         // displayname - title or handle.
         if (elementsEqualIsh(property, displaynameProperty))

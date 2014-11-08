@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
@@ -37,7 +37,7 @@ import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
 import org.dspace.core.Utils;
 import org.dspace.eperson.EPerson;
-import org.dspace.license.CreativeCommons;
+import org.dspace.license.CreativeCommonsServiceImpl;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -244,7 +244,7 @@ class DAVItem extends DAVDSpaceObject
     protected DAVResource[] children() throws SQLException
     {
         // Check for overall read permission on Item
-        if (!AuthorizeManager.authorizeActionBoolean(this.context, this.item,
+        if (!AuthorizeServiceImpl.authorizeActionBoolean(this.context, this.item,
                 Constants.READ))
         {
             return new DAVResource[0];
@@ -255,7 +255,7 @@ class DAVItem extends DAVDSpaceObject
         for (Bundle element : bundles)
         {
             // check read permission on this Bundle
-            if (!AuthorizeManager.authorizeActionBoolean(this.context, element,
+            if (!AuthorizeServiceImpl.authorizeActionBoolean(this.context, element,
                     Constants.READ))
             {
                 continue;
@@ -293,7 +293,7 @@ class DAVItem extends DAVDSpaceObject
          */
         if (!elementsEqualIsh(property, withdrawnProperty))
         {
-            AuthorizeManager.authorizeAction(this.context, this.item, Constants.READ);
+            AuthorizeServiceImpl.authorizeAction(this.context, this.item, Constants.READ);
         }
 
         if (elementsEqualIsh(property, withdrawnProperty))
@@ -336,15 +336,15 @@ class DAVItem extends DAVDSpaceObject
         }
         else if (elementsEqualIsh(property, cc_license_textProperty))
         {
-            value = CreativeCommons.getLicenseText(this.item);
+            value = CreativeCommonsServiceImpl.getLicenseText(this.item);
         }
         else if (elementsEqualIsh(property, cc_license_rdfProperty))
         {
-            value = CreativeCommons.getLicenseRDF(this.item);
+            value = CreativeCommonsServiceImpl.getLicenseRDF(this.item);
         }
         else if (elementsEqualIsh(property, cc_license_urlProperty))
         {
-            value = CreativeCommons.getLicenseURL(this.item);
+            value = CreativeCommonsServiceImpl.getLicenseURL(this.item);
         }
         else
         {
@@ -446,7 +446,7 @@ class DAVItem extends DAVDSpaceObject
             IOException, DAVStatusException
     {
         // Check for overall read permission on Item, because nothing else will
-        AuthorizeManager.authorizeAction(this.context, this.item, Constants.READ);
+        AuthorizeServiceImpl.authorizeAction(this.context, this.item, Constants.READ);
 
         String packageType = this.request.getParameter("package");
 
@@ -574,7 +574,7 @@ class DAVItem extends DAVDSpaceObject
         }
 
         // access check
-        AuthorizeManager.authorizeAction(context, item, Constants.READ);
+        AuthorizeServiceImpl.authorizeAction(context, item, Constants.READ);
 
         // make sure item doesn't belong to this collection
         Collection destColl = ((DAVCollection) destination).getCollection();

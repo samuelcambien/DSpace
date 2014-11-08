@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -22,7 +22,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.jdom.Element;
 
 
@@ -141,7 +141,7 @@ abstract class DAVDSpaceObject extends DAVResource
                 handle = String.copyValueOf(hc);
             }
 
-            DSpaceObject dso = HandleManager.resolveToObject(context, handle);
+            DSpaceObject dso = HandleServiceImpl.resolveToObject(context, handle);
             if (dso == null)
             {
                 throw new DAVStatusException(HttpServletResponse.SC_NOT_FOUND,
@@ -230,7 +230,7 @@ abstract class DAVDSpaceObject extends DAVResource
             Element c = (Element) current_user_privilege_setProperty.clone();
 
             // if we're an admin we have all privs everywhere.
-            if (AuthorizeManager.isAdmin(this.context))
+            if (AuthorizeServiceImpl.isAdmin(this.context))
             {
                 addPrivilege(c, new Element("all", DAV.NS_DAV));
             }
@@ -238,7 +238,7 @@ abstract class DAVDSpaceObject extends DAVResource
             {
                 for (int i = 0; i < Constants.actionText.length; ++i)
                 {
-                    if (AuthorizeManager
+                    if (AuthorizeServiceImpl
                             .authorizeActionBoolean(this.context, this.dso, i))
                     {
                         Element priv = actionToPrivilege(i);

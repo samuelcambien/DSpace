@@ -47,6 +47,7 @@ public class AIPDIMCrosswalk
      *
      * @return array of namespaces, which may be empty.
      */
+    @Override
     public Namespace[] getNamespaces()
     {
         Namespace result[] = new Namespace[1];
@@ -65,6 +66,7 @@ public class AIPDIMCrosswalk
      * @return SchemaLocation string, including URI namespace, followed by
      *  whitespace and URI of XML schema document, or empty string if unknown.
      */
+    @Override
     public String getSchemaLocation()
     {
         return "";
@@ -77,6 +79,7 @@ public class AIPDIMCrosswalk
      * @param dso  dspace object, e.g. an <code>Item</code>.
      * @return true when disseminator is capable of producing metadata.
      */
+    @Override
     public boolean canDisseminate(DSpaceObject dso)
     {
         return true;
@@ -96,6 +99,7 @@ public class AIPDIMCrosswalk
      *
      * @return true when disseminator prefers you call disseminateList().
      */
+    @Override
     public boolean preferList()
     {
         return false;
@@ -120,6 +124,7 @@ public class AIPDIMCrosswalk
      * @throws SQLException  Database failure in services this calls
      * @throws AuthorizeException current user not authorized for this operation.
      */
+    @Override
     public List<Element> disseminateList(DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
@@ -143,6 +148,7 @@ public class AIPDIMCrosswalk
      * @throws SQLException  Database failure in services this calls
      * @throws AuthorizeException current user not authorized for this operation.
      */
+    @Override
     public Element disseminateElement(DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
@@ -155,20 +161,22 @@ public class AIPDIMCrosswalk
      * and feed that to the transformation, since it may get handled
      * differently than a List of metadata elements.
      */
-    public void ingest(Context context, DSpaceObject dso, Element root)
+    @Override
+    public void ingest(Context context, DSpaceObject dso, Element root, boolean createMissingMetadataFields)
         throws CrosswalkException, IOException, SQLException, AuthorizeException
     {
-        ingest(context, dso, root.getChildren());
+        ingest(context, dso, root.getChildren(), createMissingMetadataFields);
     }
 
     /**
      * Fields correspond directly to Item.addMetadata() calls so
      * they are simply executed.
      */
-    public void ingest(Context context, DSpaceObject dso, List<Element> dimList)
+    @Override
+    public void ingest(Context context, DSpaceObject dso, List<Element> dimList, boolean createMissingMetadataFields)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
-        XSLTIngestionCrosswalk.ingestDIM(context, dso, dimList);
+        XSLTIngestionCrosswalk.ingestDIM(context, dso, dimList, createMissingMetadataFields);
     }
 }

@@ -14,12 +14,11 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.*;
 import org.dspace.content.Item;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.EPerson;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
-import org.dspace.xmlworkflow.WorkflowFactory;
+import org.dspace.xmlworkflow.XmlWorkflowFactoryImpl;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.state.actions.WorkflowActionConfig;
@@ -169,7 +168,7 @@ public class Submissions extends AbstractDSpaceTransformer
                 XmlWorkflowItem item = null;
                 try {
                     item = XmlWorkflowItem.find(context, workflowItemID);
-                    Workflow wf = WorkflowFactory.getWorkflow(item.getCollection());
+                    Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(item.getCollection());
                     Step step = wf.getStep(stepID);
                     WorkflowActionConfig action = step.getActionConfig(actionID);
                     String url = contextPath+"/handle/"+item.getCollection().getHandle()+"/xmlworkflow?workflowID="+workflowItemID+"&stepID="+stepID+"&actionID="+actionID;
@@ -264,7 +263,7 @@ public class Submissions extends AbstractDSpaceTransformer
                     XmlWorkflowItem item;
                 try {
                     item = XmlWorkflowItem.find(context, workflowItemID);
-                    Workflow wf = WorkflowFactory.getWorkflow(item.getCollection());
+                    Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(item.getCollection());
                     String url = contextPath+"/handle/"+item.getCollection().getHandle()+"/xmlworkflow?workflowID="+workflowItemID+"&stepID="+stepID+"&actionID="+actionID;
                     Metadatum[] titles = item.getItem().getDC("title", null, Item.ANY);
                     String collectionName = item.getCollection().getMetadata("name");
@@ -376,12 +375,12 @@ public class Submissions extends AbstractDSpaceTransformer
 
                 Message state = message("xmlui.XMLWorkflow.step.unknown");
                 for(PoolTask task: pooltasks){
-                    Workflow wf = WorkflowFactory.getWorkflow(workflowItem.getCollection());
+                    Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(workflowItem.getCollection());
                     Step step = wf.getStep(task.getStepID());
                     state = message("xmlui.XMLWorkflow." + wf.getID() + "." + step.getId() + "." + task.getActionID());
                 }
                 for(ClaimedTask task: claimedtasks){
-                    Workflow wf = WorkflowFactory.getWorkflow(workflowItem.getCollection());
+                    Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(workflowItem.getCollection());
                     Step step = wf.getStep(task.getStepID());
                     state = message("xmlui.XMLWorkflow." + wf.getID() + "." + step.getId() + "." + task.getActionID());
                 }

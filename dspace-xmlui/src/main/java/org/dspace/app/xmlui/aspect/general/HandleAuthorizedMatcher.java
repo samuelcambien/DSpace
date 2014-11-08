@@ -17,7 +17,7 @@ import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.sitemap.PatternException;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.app.xmlui.utils.HandleUtil;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
@@ -83,7 +83,7 @@ public class HandleAuthorizedMatcher extends AbstractLogEnabled implements Match
                 return null;
             }
             
-            boolean authorized = AuthorizeManager.authorizeActionBoolean(context, dso, action);
+            boolean authorized = AuthorizeServiceImpl.authorizeActionBoolean(context, dso, action);
 
             // XOR
             if (not ^ authorized)

@@ -18,7 +18,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 /**
@@ -77,7 +77,7 @@ public class RepositoryAdapter extends AbstractAdapter
      */
     protected String getMETSID()
     {
-        return HandleManager.getPrefix();
+        return HandleServiceImpl.getPrefix();
     }
     
 	/**
@@ -196,7 +196,7 @@ public class RepositoryAdapter extends AbstractAdapter
 		attributes.put("mdschema","dspace");
 		attributes.put("element", "handle");
 		startElement(DIM,"field",attributes);
-		sendCharacters(HandleManager.getPrefix());
+		sendCharacters(HandleServiceImpl.getPrefix());
 		endElement(DIM,"field");
 		
 		// Entry for default.language

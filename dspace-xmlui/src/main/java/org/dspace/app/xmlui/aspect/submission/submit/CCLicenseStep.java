@@ -29,7 +29,7 @@ import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
-import org.dspace.license.CreativeCommons;
+import org.dspace.license.CreativeCommonsServiceImpl;
 import org.dspace.license.CCLicenseField;
 import org.dspace.license.CCLookup;
 import org.dspace.license.CCLicense;
@@ -169,7 +169,7 @@ public class CCLicenseStep extends AbstractSubmissionStep
         	}    
 		Division statusDivision = div.addDivision("statusDivision");
 		List statusList = statusDivision.addList("statusList", List.TYPE_FORM);
-		String licenseUri = CreativeCommons.getCCField("uri").ccItemValue(item);
+		String licenseUri = CreativeCommonsServiceImpl.getCCField("uri").ccItemValue(item);
 		if (licenseUri != null)
 		{
 			statusList.addItem().addXref(licenseUri, licenseUri);

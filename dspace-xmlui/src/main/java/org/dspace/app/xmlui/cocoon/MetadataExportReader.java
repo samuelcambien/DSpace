@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletResponse;
+
+import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -26,8 +29,6 @@ import org.apache.log4j.Logger;
 
 import org.dspace.app.xmlui.utils.AuthenticationUtil;
 import org.dspace.app.xmlui.utils.ContextUtil;
-import org.dspace.authorize.AuthorizeManager;
-import org.dspace.handle.HandleManager;
 import org.dspace.core.Context;
 import org.dspace.core.Constants;
 import org.dspace.core.LogManager;
@@ -102,7 +103,7 @@ public class MetadataExportReader extends AbstractReader implements Recyclable
             this.response = ObjectModelHelper.getResponse(objectModel);
             Context context = ContextUtil.obtainContext(objectModel);
 
-            if(AuthorizeManager.isAdmin(context))
+            if(AuthorizeServiceImpl.isAdmin(context))
             {
 
             /* Get our parameters that identify the item, collection
@@ -111,7 +112,7 @@ public class MetadataExportReader extends AbstractReader implements Recyclable
              */
 
             String handle = par.getParameter("handle");
-            DSpaceObject dso = HandleManager.resolveToObject(context, handle);
+            DSpaceObject dso = HandleServiceImpl.resolveToObject(context, handle);
             
             java.util.List<Integer> itemmd = new ArrayList<Integer>();
             if(dso.getType() == Constants.ITEM)

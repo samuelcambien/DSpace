@@ -22,7 +22,7 @@ import org.dspace.content.Bundle;
 import org.dspace.content.InProgressSubmission;
 
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.workflow.WorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 /**
@@ -146,7 +146,7 @@ public class SubmissionInfo extends HashMap
      */
     public boolean isInWorkflow()
     {
-        return ((this.submissionItem != null) && (this.submissionItem instanceof WorkflowItem || this.submissionItem instanceof XmlWorkflowItem));
+        return ((this.submissionItem != null) && (this.submissionItem instanceof BasicWorkflowItem || this.submissionItem instanceof XmlWorkflowItem));
     }
 
     /**

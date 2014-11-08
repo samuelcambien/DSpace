@@ -8,7 +8,6 @@
 package org.dspace.app.xmlui.aspect.artifactbrowser;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +32,8 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
-import org.dspace.core.Utils;
 import org.dspace.eperson.EPerson;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.TableRow;
 import org.dspace.utils.DSpace;
@@ -127,7 +125,7 @@ public class SendItemRequestAction extends AbstractAction
         email.addArgument(requesterName);    
         email.addArgument(requesterEmail);   
         email.addArgument(allFiles.equals("true")?I18nUtil.getMessage("itemRequest.all"):Bitstream.find(context,Integer.parseInt(bitstreamId)).getName());      
-        email.addArgument(HandleManager.getCanonicalForm(item.getHandle()));      
+        email.addArgument(HandleServiceImpl.getCanonicalForm(item.getHandle()));
         email.addArgument(title);    // request item title
         email.addArgument(message);   // message
         email.addArgument(getLinkTokenEmail(context,requestItem));

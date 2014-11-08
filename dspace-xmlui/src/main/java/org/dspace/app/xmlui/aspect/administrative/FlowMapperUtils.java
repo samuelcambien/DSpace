@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.browse.BrowseException;
 import org.dspace.browse.IndexBrowse;
 import org.dspace.content.Collection;
@@ -52,7 +52,7 @@ public class FlowMapperUtils
         {
             Item item = Item.find(context, Integer.valueOf(itemID));
 
-            if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.READ))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.READ))
             {
                 // make sure item doesn't belong to this collection
                 if (!item.isOwningCollection(toCollection))
@@ -100,7 +100,7 @@ public class FlowMapperUtils
         {
             Item item = Item.find(context, Integer.valueOf(itemID));
 
-            if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.READ))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.READ))
             {
                 // make sure item doesn't belong to this collection
                 if (!item.isOwningCollection(toCollection))

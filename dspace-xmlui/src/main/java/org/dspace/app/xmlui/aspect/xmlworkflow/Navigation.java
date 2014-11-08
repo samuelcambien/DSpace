@@ -25,7 +25,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.eperson.Group;
 import org.xml.sax.SAXException;
 
@@ -135,7 +135,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         List admin = options.addList("administrative");
 
         //Check if a system administrator
-        boolean isSystemAdmin = AuthorizeManager.isAdmin(this.context);
+        boolean isSystemAdmin = AuthorizeServiceImpl.isAdmin(this.context);
 
 
         // System Administrator options!

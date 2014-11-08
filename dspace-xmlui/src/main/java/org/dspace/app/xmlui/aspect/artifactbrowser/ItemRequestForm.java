@@ -29,7 +29,7 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Metadatum;
 import org.dspace.content.DSpaceObject;
@@ -177,7 +177,7 @@ public class ItemRequestForm extends AbstractDSpaceTransformer implements Cachea
                 int bitstreamID = parameters.getParameterAsInteger("bitstreamId");
                 Bitstream bitstream = Bitstream.find(context, bitstreamID);
 
-                if(AuthorizeManager.authorizeActionBoolean(context, bitstream, Constants.READ)) {
+                if(AuthorizeServiceImpl.authorizeActionBoolean(context, bitstream, Constants.READ)) {
                     String redirectURL = request.getContextPath() + "/bitstream/handle/" + item.getHandle() + "/"
                             + bitstream.getName() + "?sequence=" + bitstream.getSequenceID();
 

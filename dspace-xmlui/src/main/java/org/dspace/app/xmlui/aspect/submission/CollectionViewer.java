@@ -23,7 +23,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
@@ -143,7 +143,7 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
         Collection collection = (Collection) dso;
         
         // Only add the submit link if the user has the ability to add items.
-        if (AuthorizeManager.authorizeActionBoolean(context, collection, Constants.ADD))
+        if (AuthorizeServiceImpl.authorizeActionBoolean(context, collection, Constants.ADD))
         {
 	        Division home = body.addDivision("collection-home","primary repository collection");
 	        Division viewer = home.addDivision("collection-view","secondary");

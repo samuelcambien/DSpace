@@ -23,7 +23,7 @@ import org.dspace.app.xmlui.utils.AuthenticationUtil;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
-import org.dspace.eperson.AccountManager;
+import org.dspace.eperson.AccountServiceImpl;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.EPersonDeletionException;
 
@@ -231,7 +231,7 @@ public class FlowEPersonUtils {
 		EPerson eperson = EPerson.find(context, epersonID);
 		
 		// Note, this may throw an error is the email is bad.
-		AccountManager.sendForgotPasswordInfo(context,eperson.getEmail());
+		AccountServiceImpl.sendForgotPasswordInfo(context, eperson.getEmail());
 	
 		FlowResult result = new FlowResult();
 		result.setContinue(true);

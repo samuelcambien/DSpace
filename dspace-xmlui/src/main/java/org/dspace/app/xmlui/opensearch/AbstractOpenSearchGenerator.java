@@ -24,7 +24,7 @@ import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
-import org.dspace.app.util.OpenSearch;
+import org.dspace.app.util.OpenSearchServiceImpl;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
@@ -160,7 +160,7 @@ public abstract class AbstractOpenSearchGenerator extends AbstractGenerator
 
         // Format param (defaults to atom)
         this.format = request.getParameter("format");
-        if (format == null || format.length() == 0 || !OpenSearch.getFormats().contains(format))
+        if (format == null || format.length() == 0 || !OpenSearchServiceImpl.getFormats().contains(format))
         {
             format = "atom";
         }
@@ -169,7 +169,7 @@ public abstract class AbstractOpenSearchGenerator extends AbstractGenerator
         String scopeParam = request.getParameter("scope");
         try
         {
-            scope = OpenSearch.resolveScope(context, scopeParam);
+            scope = OpenSearchServiceImpl.resolveScope(context, scopeParam);
         }
         catch (SQLException e)
         {

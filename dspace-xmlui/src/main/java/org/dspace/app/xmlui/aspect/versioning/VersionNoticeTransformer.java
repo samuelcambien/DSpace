@@ -16,14 +16,14 @@ import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.utils.DSpace;
 import org.dspace.versioning.Version;
 import org.dspace.versioning.VersionHistory;
-import org.dspace.versioning.VersioningService;
+import org.dspace.versioning.service.VersioningService;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -101,7 +101,7 @@ public class VersionNoticeTransformer extends AbstractDSpaceTransformer {
         //Attempt to retrieve the latest version
         List<Version> allVersions = history.getVersions();
         for (Version version : allVersions) {
-            if (version.getItem().isArchived() || AuthorizeManager.isAdmin(context, item.getOwningCollection()))
+            if (version.getItem().isArchived() || AuthorizeServiceImpl.isAdmin(context, item.getOwningCollection()))
             {
                 return version;
             }
@@ -118,7 +118,7 @@ public class VersionNoticeTransformer extends AbstractDSpaceTransformer {
         para.addContent(content);
         if(addItemUrl)
         {
-            String url = HandleManager.resolveToURL(context, item.getHandle());
+            String url = HandleServiceImpl.resolveToURL(context, item.getHandle());
             para.addXref(url, url);
         }
     }

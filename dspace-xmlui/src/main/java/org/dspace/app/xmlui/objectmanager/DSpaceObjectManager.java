@@ -7,9 +7,7 @@
  */
 package org.dspace.app.xmlui.objectmanager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.dspace.app.xmlui.wing.ObjectManager;
@@ -19,8 +17,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 
 
 /**
@@ -114,7 +111,7 @@ public class DSpaceObjectManager implements ObjectManager
      */
 	public String getRepositoryIdentifier(Object object) throws WingException
 	{
-		return HandleManager.getPrefix();
+		return HandleServiceImpl.getPrefix();
 	}
 	
 	/**
@@ -122,7 +119,7 @@ public class DSpaceObjectManager implements ObjectManager
 	 */
 	public String getRepositoryURL(Object object) throws WingException
 	{
-		String handlePrefix = HandleManager.getPrefix();
+		String handlePrefix = HandleServiceImpl.getPrefix();
 		return "/metadata/internal/repository/"+handlePrefix +"/mets.xml";
 	}
 	
@@ -132,7 +129,7 @@ public class DSpaceObjectManager implements ObjectManager
 	 */
 	public Map<String,String> getAllManagedRepositories() throws WingException
 	{
-		String handlePrefix = HandleManager.getPrefix();
+		String handlePrefix = HandleServiceImpl.getPrefix();
 		
 		Map<String,String> allRepositories = new HashMap<String,String>();
 		allRepositories.put(handlePrefix, "/metadata/internal/repository/"+handlePrefix +"/mets.xml");

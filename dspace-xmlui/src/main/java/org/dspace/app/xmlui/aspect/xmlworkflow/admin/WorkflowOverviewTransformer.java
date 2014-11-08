@@ -18,14 +18,14 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
-import org.dspace.xmlworkflow.WorkflowFactory;
+import org.dspace.xmlworkflow.XmlWorkflowFactoryImpl;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.state.Workflow;
 import org.dspace.xmlworkflow.storedcomponents.ClaimedTask;
@@ -89,7 +89,7 @@ public class WorkflowOverviewTransformer extends AbstractDSpaceTransformer {
 
     public void addBody(Body body) throws SAXException, WingException, SQLException, IOException, AuthorizeException {
         Context context = ContextUtil.obtainContext(ObjectModelHelper.getRequest(objectModel));
-        if(!AuthorizeManager.isAdmin(context)){
+        if(!AuthorizeServiceImpl.isAdmin(context)){
             throw new AuthorizeException();
         }
         
@@ -160,12 +160,12 @@ public class WorkflowOverviewTransformer extends AbstractDSpaceTransformer {
 
                     Message state = message("xmlui.XMLWorkflow.step.unknown");
                     for(PoolTask task: pooltasks){
-                        Workflow wf = WorkflowFactory.getWorkflow(wfi.getCollection());
+                        Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(wfi.getCollection());
                         Step step = wf.getStep(task.getStepID());
                         state = message("xmlui.XMLWorkflow." + wf.getID() + "." + step.getId());
                     }
                     for(ClaimedTask task: claimedtasks){
-                        Workflow wf = WorkflowFactory.getWorkflow(wfi.getCollection());
+                        Workflow wf = XmlWorkflowFactoryImpl.getWorkflow(wfi.getCollection());
                         Step step = wf.getStep(task.getStepID());
                         state = message("xmlui.XMLWorkflow." + wf.getID() + "." + step.getId());
                     }
@@ -179,7 +179,7 @@ public class WorkflowOverviewTransformer extends AbstractDSpaceTransformer {
                     //Column 2 Item name
                     itemRow.addCell().addXref(request.getContextPath() + "/admin/display-workflowItem?wfiId=" +wfi.getID(), item.getName() );
                     //Column 3 collection
-                    itemRow.addCell().addXref(HandleManager.resolveToURL(context, wfi.getCollection().getHandle()), wfi.getCollection().getName());
+                    itemRow.addCell().addXref(HandleServiceImpl.resolveToURL(context, wfi.getCollection().getHandle()), wfi.getCollection().getName());
                     //Column 4 submitter
                     itemRow.addCell().addXref("mailto:" + wfi.getSubmitter().getEmail(), wfi.getSubmitter().getFullName());
 

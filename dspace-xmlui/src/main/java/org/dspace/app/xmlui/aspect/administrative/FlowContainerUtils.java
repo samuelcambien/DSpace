@@ -23,7 +23,7 @@ import org.apache.cocoon.servlet.multipart.Part;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.browse.BrowseException;
 import org.dspace.content.Collection;
@@ -491,7 +491,7 @@ public class FlowContainerUtils
         if(role.getScope() == Role.Scope.COLLECTION || role.getScope() == Role.Scope.REPOSITORY){
             roleGroup = WorkflowUtils.getRoleGroup(context, collectionID, role);
             if(roleGroup == null){
-                AuthorizeManager.authorizeAction(context, collection, Constants.WRITE);
+                AuthorizeServiceImpl.authorizeAction(context, collection, Constants.WRITE);
                 roleGroup = Group.create(context);
                 if(role.getScope() == Role.Scope.COLLECTION){
                     roleGroup.setName("COLLECTION_" + collection.getID() + "_WORKFLOW_ROLE_" + roleName);
@@ -499,7 +499,7 @@ public class FlowContainerUtils
                     roleGroup.setName(role.getName());
                 }
                 roleGroup.update();
-                AuthorizeManager.addPolicy(context, collection, Constants.ADD, roleGroup);
+                AuthorizeServiceImpl.addPolicy(context, collection, Constants.ADD, roleGroup);
                 if(role.getScope() == Role.Scope.COLLECTION){
                     WorkflowUtils.createCollectionWorkflowRole(context, collectionID, roleName, roleGroup);
                 }
@@ -558,7 +558,7 @@ public class FlowContainerUtils
 		// group has on the collection and remove them otherwise the delete will fail because 
 		// there are dependencies.
 		@SuppressWarnings("unchecked") // the cast is correct
-		List<ResourcePolicy> policies = AuthorizeManager.getPolicies(context,collection);
+		List<ResourcePolicy> policies = AuthorizeServiceImpl.getPolicies(context, collection);
 		for (ResourcePolicy policy : policies)
 		{
 			if (policy.getGroupID() == groupID)
@@ -591,8 +591,8 @@ public class FlowContainerUtils
 	{
 		Collection collection = Collection.find(context,collectionID);
 		
-		Group[] itemGroups = AuthorizeManager.getAuthorizedGroups(context, collection, Constants.DEFAULT_ITEM_READ);
-		Group[] bitstreamGroups = AuthorizeManager.getAuthorizedGroups(context, collection, Constants.DEFAULT_BITSTREAM_READ);
+		Group[] itemGroups = AuthorizeServiceImpl.getAuthorizedGroups(context, collection, Constants.DEFAULT_ITEM_READ);
+		Group[] bitstreamGroups = AuthorizeServiceImpl.getAuthorizedGroups(context, collection, Constants.DEFAULT_BITSTREAM_READ);
 		
        int itemGroupID = -1;
         
@@ -644,12 +644,12 @@ public class FlowContainerUtils
 		role.setName("COLLECTION_"+collection.getID() +"_DEFAULT_READ");
 		
 		// Remove existing privileges from the anonymous group.
-		AuthorizeManager.removePoliciesActionFilter(context, collection, Constants.DEFAULT_ITEM_READ);
-		AuthorizeManager.removePoliciesActionFilter(context, collection, Constants.DEFAULT_BITSTREAM_READ);
+		AuthorizeServiceImpl.removePoliciesActionFilter(context, collection, Constants.DEFAULT_ITEM_READ);
+		AuthorizeServiceImpl.removePoliciesActionFilter(context, collection, Constants.DEFAULT_BITSTREAM_READ);
 		
 		// Grant our new role the default privileges.
-		AuthorizeManager.addPolicy(context, collection, Constants.DEFAULT_ITEM_READ,      role);
-		AuthorizeManager.addPolicy(context, collection, Constants.DEFAULT_BITSTREAM_READ, role);
+		AuthorizeServiceImpl.addPolicy(context, collection, Constants.DEFAULT_ITEM_READ, role);
+		AuthorizeServiceImpl.addPolicy(context, collection, Constants.DEFAULT_BITSTREAM_READ, role);
 		
 		// Commit the changes
 		role.update();
@@ -687,8 +687,8 @@ public class FlowContainerUtils
 		role.delete();
 		
 		// Set anonymous as the default read group.
-		AuthorizeManager.addPolicy(context, collection, Constants.DEFAULT_ITEM_READ,      anonymous);
-		AuthorizeManager.addPolicy(context, collection, Constants.DEFAULT_BITSTREAM_READ, anonymous);
+		AuthorizeServiceImpl.addPolicy(context, collection, Constants.DEFAULT_ITEM_READ, anonymous);
+		AuthorizeServiceImpl.addPolicy(context, collection, Constants.DEFAULT_BITSTREAM_READ, anonymous);
 		
 		// Commit the changes
 		context.commit();
@@ -1087,7 +1087,7 @@ public class FlowContainerUtils
         // group has on the collection and remove them otherwise the delete will fail because 
         // there are dependencies.
         @SuppressWarnings("unchecked") // the cast is correct
-        List<ResourcePolicy> policies = AuthorizeManager.getPolicies(context, community);
+        List<ResourcePolicy> policies = AuthorizeServiceImpl.getPolicies(context, community);
         for (ResourcePolicy policy : policies)
         {
             if (policy.getGroupID() == groupID)

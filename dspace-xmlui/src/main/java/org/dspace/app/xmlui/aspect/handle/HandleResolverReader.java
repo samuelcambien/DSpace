@@ -30,11 +30,11 @@ import org.apache.cocoon.reading.AbstractReader;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
 
 
 /**
@@ -88,7 +88,7 @@ public class HandleResolverReader extends AbstractReader implements Recyclable {
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                     return;
                 }
-                String url = HandleManager.resolveToURL(context, handle);
+                String url = HandleServiceImpl.resolveToURL(context, handle);
                 // Only an array or an abject is valid JSON. A simple string
                 // isn't. An object always uses key value pairs, so we use an
                 // array.
@@ -104,7 +104,7 @@ public class HandleResolverReader extends AbstractReader implements Recyclable {
             else if (action.equals("listprefixes"))
             {
                 List<String> prefixes = new ArrayList<String>();
-                prefixes.add(HandleManager.getPrefix());
+                prefixes.add(HandleServiceImpl.getPrefix());
                 String additionalPrefixes = ConfigurationManager
                         .getProperty("handle.additional.prefixes");
                 if (StringUtils.isNotBlank(additionalPrefixes))
@@ -131,7 +131,7 @@ public class HandleResolverReader extends AbstractReader implements Recyclable {
                     return;
                 }
 
-                List<String> handlelist = HandleManager.getHandlesForPrefix(
+                List<String> handlelist = HandleServiceImpl.getHandlesForPrefix(
                         context, prefix);
                 String[] handles = handlelist.toArray(new String[handlelist.size()]);
                 jsonString = gson.toJson(handles);

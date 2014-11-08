@@ -15,7 +15,7 @@ import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.identifier.IdentifierNotFoundException;
 import org.dspace.identifier.IdentifierNotResolvableException;
-import org.dspace.identifier.IdentifierService;
+import org.dspace.identifier.service.IdentifierService;
 import org.dspace.utils.DSpace;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

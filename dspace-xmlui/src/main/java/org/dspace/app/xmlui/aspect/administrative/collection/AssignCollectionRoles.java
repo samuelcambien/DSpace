@@ -27,7 +27,7 @@ import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.LogManager;
@@ -366,7 +366,7 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
                     Group roleGroup = WorkflowUtils.getRoleGroup(context, thisCollection.getID(), role);
                     if (roleGroup != null) {
                         if(role.getScope() == Role.Scope.REPOSITORY){
-                            if(AuthorizeManager.isAdmin(context)){
+                            if(AuthorizeServiceImpl.isAdmin(context)){
                                 tableRow.addCell().addXref(baseURL + "&submit_edit_wf_role_" + roleId, roleGroup.getName());
                             }else{
                                 Cell cell = tableRow.addCell();
@@ -420,7 +420,7 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	{
     	Button button = cell.addButton(buttonName);
     	button.setValue(buttonLabel);
-    	if (!AuthorizeManager.isAdmin(context))
+    	if (!AuthorizeServiceImpl.isAdmin(context))
     	{
     		// Only admins can create or delete
     		button.setDisabled();

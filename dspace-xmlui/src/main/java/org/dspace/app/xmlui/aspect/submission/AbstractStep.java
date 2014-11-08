@@ -34,7 +34,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.workflow.WorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.xml.sax.SAXException;
 
 /**
@@ -187,7 +187,7 @@ public abstract class AbstractStep extends AbstractDSpaceTransformer
                 throw new ProcessingException("Unable to find submission for id: " + this.id);
             }
 			
-			if (this.requireWorkflow && !(submission instanceof WorkflowItem))
+			if (this.requireWorkflow && !(submission instanceof BasicWorkflowItem))
             {
                 throw new ProcessingException("The submission is not a workflow, " + this.id);
             }

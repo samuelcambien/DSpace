@@ -17,16 +17,15 @@ import org.apache.commons.lang.time.DateUtils;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.PolicySet;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.*;
 import org.dspace.core.Context;
 import org.dspace.eperson.Group;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 
 import org.dspace.core.Constants;
-
 
 
 /**
@@ -58,7 +57,7 @@ public class FlowAuthorizationUtils {
 		result.setContinue(false);
 		//Check whether it's a handle or internal id (by check ing if it has a slash in the string)
 		if (identifier.contains("/")) {
-			DSpaceObject dso = HandleManager.resolveToObject(context, identifier);
+			DSpaceObject dso = HandleServiceImpl.resolveToObject(context, identifier);
 			
 			if (dso != null && dso.getType() == Constants.ITEM) { 
 				result.setParameter("itemID", dso.getID());
@@ -183,14 +182,14 @@ public class FlowAuthorizationUtils {
 
         // check if a similar policy is already in place
         if(policy==null){
-            if(AuthorizeManager.isAnIdenticalPolicyAlreadyInPlace(context, objectType, objectID, groupID, actionID, -1)){
+            if(AuthorizeServiceImpl.isAnIdenticalPolicyAlreadyInPlace(context, objectType, objectID, groupID, actionID, -1)){
                 result.setContinue(false);
                 result.addError("duplicatedPolicy");
                 return result;
             }
         }
         else{
-            if(AuthorizeManager.isAnIdenticalPolicyAlreadyInPlace(context, objectType, objectID, groupID, actionID, policy.getID())){
+            if(AuthorizeServiceImpl.isAnIdenticalPolicyAlreadyInPlace(context, objectType, objectID, groupID, actionID, policy.getID())){
                 result.setContinue(false);
                 result.addError("duplicatedPolicy");
                 return result;
@@ -278,9 +277,9 @@ public class FlowAuthorizationUtils {
 	    
 	    if (logo != null)
 	    {
-	        List policySet = AuthorizeManager.getPolicies(context, logoContainer);
-	        AuthorizeManager.removeAllPolicies(context, logo);
-	        AuthorizeManager.addPolicies(context, policySet, logo);
+	        List policySet = AuthorizeServiceImpl.getPolicies(context, logoContainer);
+	        AuthorizeServiceImpl.removeAllPolicies(context, logo);
+	        AuthorizeServiceImpl.addPolicies(context, policySet, logo);
 	    }
 	    
 	    // Perform the update action

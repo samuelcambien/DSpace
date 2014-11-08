@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dspace.app.xmlui.utils.AuthenticationUtil;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
@@ -40,8 +40,8 @@ import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.disseminate.CitationDocument;
-import org.dspace.handle.HandleManager;
+import org.dspace.disseminate.CitationDocumentServiceImpl;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.usage.UsageEvent;
 import org.dspace.utils.DSpace;
 import org.xml.sax.SAXException;
@@ -219,7 +219,7 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             else if (handle != null)
             {
                 // Reference by an item's handle.
-                dso = HandleManager.resolveToObject(context,handle);
+                dso = HandleServiceImpl.resolveToObject(context, handle);
 
                 if (dso instanceof Item)
                 {
@@ -273,8 +273,8 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             }
 
             // Is there a User logged in and does the user have access to read it?
-            boolean isAuthorized = AuthorizeManager.authorizeActionBoolean(context, bitstream, Constants.READ);
-            if (item != null && item.isWithdrawn() && !AuthorizeManager.isAdmin(context))
+            boolean isAuthorized = AuthorizeServiceImpl.authorizeActionBoolean(context, bitstream, Constants.READ);
+            if (item != null && item.isWithdrawn() && !AuthorizeServiceImpl.isAdmin(context))
             {
                 isAuthorized = false;
                 log.info(LogManager.getHeader(context, "view_bitstream", "handle=" + item.getHandle() + ",withdrawn=true"));
@@ -331,12 +331,12 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             // 1) Intercepting Enabled
             // 2) This User is not an admin
             // 3) This object is citation-able
-            if (CitationDocument.isCitationEnabledForBitstream(bitstream, context)) {
+            if (CitationDocumentServiceImpl.isCitationEnabledForBitstream(bitstream, context)) {
                 // on-the-fly citation generator
                 log.info(item.getHandle() + " - " + bitstream.getName() + " is citable.");
 
                 FileInputStream fileInputStream = null;
-                CitationDocument citationDocument = new CitationDocument();
+                CitationDocumentServiceImpl citationDocument = new CitationDocumentServiceImpl();
 
                 try {
                     //Create the cited document
@@ -375,7 +375,7 @@ public class BitstreamReader extends AbstractReader implements Recyclable
             else
             {
                 this.isAnonymouslyReadable = false;
-                for (ResourcePolicy rp : AuthorizeManager.getPoliciesActionFilter(context, bitstream, Constants.READ))
+                for (ResourcePolicy rp : AuthorizeServiceImpl.getPoliciesActionFilter(context, bitstream, Constants.READ))
                 {
                     if (rp.getGroupID() == 0)
                     {

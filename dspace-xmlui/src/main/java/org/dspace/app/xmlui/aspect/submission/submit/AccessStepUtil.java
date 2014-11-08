@@ -10,10 +10,9 @@ package org.dspace.app.xmlui.aspect.submission.submit;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.*;
-import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
@@ -186,7 +185,7 @@ public class AccessStepUtil extends AbstractDSpaceTransformer {
         String date=null;
 
         if(dso!=null){
-            java.util.List<ResourcePolicy> policies = AuthorizeManager.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
+            java.util.List<ResourcePolicy> policies = AuthorizeServiceImpl.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
             if(policies.size() > 0){
                 ResourcePolicy rp = policies.get(0);
                 if(rp.getStartDate() != null)
@@ -229,7 +228,7 @@ public class AccessStepUtil extends AbstractDSpaceTransformer {
 	    div.setHead(T_head_policies_table);
 	    div.addPara(T_policies_help.parameterize(owningCollection));
 
-	    java.util.List<ResourcePolicy> resourcePolicies = AuthorizeManager.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
+	    java.util.List<ResourcePolicy> resourcePolicies = AuthorizeServiceImpl.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
 
 	    if (resourcePolicies.isEmpty())
 	    {
@@ -304,7 +303,7 @@ public class AccessStepUtil extends AbstractDSpaceTransformer {
 		}
 		parent.addLabel(T_head_policies_table);
 
-		java.util.List<ResourcePolicy> resourcePolicies = AuthorizeManager.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
+		java.util.List<ResourcePolicy> resourcePolicies = AuthorizeServiceImpl.findPoliciesByDSOAndType(context, dso, ResourcePolicy.TYPE_CUSTOM);
 		if (resourcePolicies.isEmpty()) {
 			parent.addItem(T_no_policies);
 			return;

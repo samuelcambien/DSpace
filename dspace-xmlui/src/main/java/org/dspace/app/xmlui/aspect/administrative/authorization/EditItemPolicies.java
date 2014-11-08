@@ -23,7 +23,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
@@ -114,7 +114,7 @@ public class EditItemPolicies extends AbstractDSpaceTransformer
 		Bundle[] bundles = item.getBundles();
 		Bitstream[] bitstreams;
 		
-		ArrayList<ResourcePolicy> itemPolicies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, item);
+		ArrayList<ResourcePolicy> itemPolicies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, item);
 		
 		// DIVISION: main
 		Division main = body.addInteractiveDivision("edit-item-policies",contextPath+"/admin/authorize",Division.METHOD_POST,"primary administrative authorization");
@@ -147,7 +147,7 @@ public class EditItemPolicies extends AbstractDSpaceTransformer
     		subheader.addCell(null, null, 1, 7, "indent").addHighlight("bold").addContent(T_subhead_bundle.parameterize(bundle.getName(),bundle.getID()));
     		subheader.addCell().addHighlight("bold").addXref(baseURL + "&submit_add_bundle_" + bundle.getID(), T_add_bundlePolicy_link);
 
-    		ArrayList<ResourcePolicy> bundlePolicies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, bundle);
+    		ArrayList<ResourcePolicy> bundlePolicies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, bundle);
     		this.rowBuilder(baseURL, table, bundlePolicies, bundle.getID(), Constants.BUNDLE, highlightID);
     		
     		// And eventually to the bundle's bitstreams
@@ -157,7 +157,7 @@ public class EditItemPolicies extends AbstractDSpaceTransformer
         		subheader.addCell(null, null, 1, 7, "doubleIndent").addContent(T_subhead_bitstream.parameterize(bitstream.getName(),bitstream.getID()));
         		subheader.addCell().addXref(baseURL + "&submit_add_bitstream_" + bitstream.getID(), T_add_bitstreamPolicy_link);
 
-        		ArrayList<ResourcePolicy> bitstreamPolicies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, bitstream);
+        		ArrayList<ResourcePolicy> bitstreamPolicies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, bitstream);
         		this.rowBuilder(baseURL, table, bitstreamPolicies, bitstream.getID(), Constants.BITSTREAM, highlightID);    			
     		}
     	}

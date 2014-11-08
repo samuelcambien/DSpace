@@ -19,7 +19,7 @@ import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.xml.sax.SAXException;
@@ -72,7 +72,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         {
             Item item = (Item) dso;
 
-            if (AuthorizeManager.isAdmin(this.context, dso))
+            if (AuthorizeServiceImpl.isAdmin(this.context, dso))
             {
                 context.setHead(T_context_swordclient_head);
                 context.addItemXref(contextPath + "/swordclient?itemID="+item.getID(), T_swordclient_copy);

@@ -20,7 +20,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.dspace.app.xmlui.utils.ContextUtil;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.core.ConfigurationManager;
 
@@ -42,7 +42,7 @@ public class LoginRedirect extends AbstractAction {
 				.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
 		final HttpServletRequest httpRequest = (HttpServletRequest) objectModel
 				.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-		final Iterator<AuthenticationMethod> authMethods = AuthenticationManager
+		final Iterator<AuthenticationMethod> authMethods = AuthenticationServiceImpl
 				    .authenticationMethodIterator();
 
         if (authMethods == null)

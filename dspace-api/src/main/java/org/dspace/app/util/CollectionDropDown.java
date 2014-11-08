@@ -51,15 +51,15 @@ public class CollectionDropDown {
             separator = " > ";
         }
         
-        Community[] getCom = null;
+        List<Community> getCom = null;
         StringBuffer name = new StringBuffer("");
         getCom = col.getCommunities(); // all communities containing given collection
         for (Community com : getCom)
         {
-            name.insert(0, com.getMetadata("name") + separator);
+            name.insert(0, com.getName() + separator);
         }
 
-        name.append(col.getMetadata("name"));
+        name.append(col.getName());
 
         if (maxchars != 0)
         {
@@ -117,7 +117,7 @@ public class CollectionDropDown {
 			{
 				return this.path.compareTo(other.path);
 			}
-			return Integer.compare(this.collection.getID(), other.collection.getID());
+			return this.collection.getID().compareTo(other.collection.getID());
 		}
 
 		@Override

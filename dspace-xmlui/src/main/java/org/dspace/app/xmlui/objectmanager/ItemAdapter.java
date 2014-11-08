@@ -7,12 +7,12 @@
  */
 package org.dspace.app.xmlui.objectmanager;
 
-import org.dspace.app.util.MetadataExposure;
+import org.dspace.app.util.MetadataExposureServiceImpl;
 import org.dspace.app.util.Util;
 import org.dspace.app.xmlui.wing.AttributeMap;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -267,7 +267,7 @@ public class ItemAdapter extends AbstractAdapter
                 Metadatum[] dcvs = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
                 for (Metadatum dcv : dcvs)
                 {
-                        if (!MetadataExposure.isHidden(context, dcv.schema, dcv.element, dcv.qualifier))
+                        if (!MetadataExposureServiceImpl.isHidden(context, dcv.schema, dcv.element, dcv.qualifier))
                         {
                         // ///////////////////////////////
                         // Field element for each metadata field.
@@ -1087,7 +1087,7 @@ public class ItemAdapter extends AbstractAdapter
 	// Test if we are allowed to see this item
 	String isAllowed = "n";
 	try {
-	    if (AuthorizeManager.authorizeActionBoolean(context, bitstream, Constants.READ)) {
+	    if (AuthorizeServiceImpl.authorizeActionBoolean(context, bitstream, Constants.READ)) {
 		isAllowed = "y";
 	    }
 	} catch (SQLException e) {/* Do nothing */}

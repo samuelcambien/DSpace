@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.ConfigurationManager;
@@ -323,8 +323,8 @@ public class DAVServlet extends HttpServlet
 	                }
 	            }
 	        }
-	        if (AuthenticationManager.authenticate(context, username, password,
-	                null, request) == AuthenticationMethod.SUCCESS)
+	        if (AuthenticationServiceImpl.authenticate(context, username, password,
+                    null, request) == AuthenticationMethod.SUCCESS)
 	        {
 	            log.info(LogManager.getHeader(context, "auth",
 	                    "Authentication returned SUCCESS, eperson="
@@ -357,8 +357,8 @@ public class DAVServlet extends HttpServlet
 	        }
 	
 	        // Set any special groups - invoke the authentication mgr.
-	        int[] groupIDs = AuthenticationManager.getSpecialGroups(context,
-	                request);
+	        int[] groupIDs = AuthenticationServiceImpl.getSpecialGroups(context,
+                    request);
 	        for (int element : groupIDs)
 	        {
 	            context.setSpecialGroup(element);

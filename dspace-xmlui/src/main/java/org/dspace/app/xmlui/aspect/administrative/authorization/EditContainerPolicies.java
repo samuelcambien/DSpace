@@ -22,7 +22,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
@@ -94,13 +94,13 @@ public class EditContainerPolicies extends AbstractDSpaceTransformer
 	    {
 			Collection col = Collection.find(context, containerID); 
 			main.setHead(T_main_head_collection.parameterize(col.getMetadata("name"),col.getHandle(),col.getID()));
-			policies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, col);
+			policies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, col);
 	    }
 		else 
 		{
 			Community com = Community.find(context, containerID);
 			main.setHead(T_main_head_community.parameterize(com.getMetadata("name"),com.getHandle(),com.getID()));
-			policies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, com);
+			policies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, com);
 		}
 		
 		/* Adding a new policy link */

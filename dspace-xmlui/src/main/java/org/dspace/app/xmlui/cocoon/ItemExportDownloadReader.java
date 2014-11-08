@@ -24,7 +24,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.http.HttpResponse;
 import org.apache.cocoon.reading.AbstractReader;
 import org.apache.cocoon.util.ByteRange;
-import org.dspace.app.itemexport.ItemExport;
+import org.dspace.app.itemexport.ItemExportServiceImpl;
 import org.dspace.app.xmlui.utils.AuthenticationUtil;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.core.Context;
@@ -95,7 +95,7 @@ public class ItemExportDownloadReader extends AbstractReader implements Recyclab
             
                 
             // Is there a User logged in and does the user have access to read it?
-            if (!ItemExport.canDownload(context, fileName))
+            if (!ItemExportServiceImpl.canDownload(context, fileName))
             {
                 if(context.getCurrentUser()!=null){
             		// A user is logged in, but they are not authorized to read this bitstream, 
@@ -128,8 +128,8 @@ public class ItemExportDownloadReader extends AbstractReader implements Recyclab
                 
             // Success, bitstream found and the user has access to read it.
             // Store these for later retrieval:
-            this.compressedExportInputStream = ItemExport.getExportDownloadInputStream(fileName, context.getCurrentUser());
-            this.compressedExportSize = ItemExport.getExportFileSize(fileName);
+            this.compressedExportInputStream = ItemExportServiceImpl.getExportDownloadInputStream(fileName, context.getCurrentUser());
+            this.compressedExportSize = ItemExportServiceImpl.getExportFileSize(fileName);
             this.compressedExportName = fileName;
         }
         catch (Exception e)
@@ -250,7 +250,7 @@ public class ItemExportDownloadReader extends AbstractReader implements Recyclab
      */
     public String getMimeType()
     {
-    	return ItemExport.COMPRESSED_EXPORT_MIME_TYPE;
+    	return ItemExportServiceImpl.COMPRESSED_EXPORT_MIME_TYPE;
     }
     
     /**

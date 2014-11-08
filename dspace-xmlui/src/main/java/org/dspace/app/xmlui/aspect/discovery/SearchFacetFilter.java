@@ -31,7 +31,7 @@ import org.dspace.core.Constants;
 import org.dspace.discovery.*;
 import org.dspace.discovery.configuration.DiscoveryConfiguration;
 import org.dspace.discovery.configuration.DiscoveryConfigurationParameters;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.utils.DSpace;
 import org.xml.sax.SAXException;
 
@@ -569,7 +569,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
         else
         {
             // Get the search scope from the location parameter
-            dso = HandleManager.resolveToObject(context, scopeString);
+            dso = HandleServiceImpl.resolveToObject(context, scopeString);
         }
 
         return dso;

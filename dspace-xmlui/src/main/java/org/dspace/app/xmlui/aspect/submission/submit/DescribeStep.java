@@ -43,8 +43,8 @@ import org.dspace.content.DCPersonName;
 import org.dspace.content.DCSeriesNumber;
 import org.dspace.content.Metadatum;
 import org.dspace.content.Item;
-import org.dspace.content.authority.MetadataAuthorityManager;
-import org.dspace.content.authority.ChoiceAuthorityManager;
+import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
+import org.dspace.content.authority.MetadataAuthorityServiceImpl;
 import org.dspace.content.authority.Choice;
 import org.dspace.content.authority.Choices;
 
@@ -220,8 +220,8 @@ public class DescribeStep extends AbstractSubmissionStep
 
                         // if this field is configured as choice control and its
                         // presentation format is SELECT, render it as select field:
-                        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
-                        ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
+                        String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(schema, element, qualifier);
+                        ChoiceAuthorityServiceImpl cmgr = ChoiceAuthorityServiceImpl.getManager();
                         if (cmgr.isChoicesConfigured(fieldKey) &&
                             Params.PRESENTATION_SELECT.equals(cmgr.getPresentation(fieldKey)))
                         {
@@ -329,7 +329,7 @@ public class DescribeStep extends AbstractSubmissionStep
             throw new UIException(se);
         }
         
-        MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
+        MetadataAuthorityServiceImpl mam = MetadataAuthorityServiceImpl.getManager();
         DCInput[] inputs = inputSet.getPageRows(getPage()-1, submission.hasMultipleTitles(), submission.isPublishedBefore());
 
         for (DCInput input : inputs)
@@ -458,18 +458,18 @@ public class DescribeStep extends AbstractSubmissionStep
                 {
                     fullName.enableDeleteOperation();
                 }
-                String fieldKey = MetadataAuthorityManager.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
-                boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+                String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
+                boolean isAuthorityControlled = MetadataAuthorityServiceImpl.getManager().isAuthorityControlled(fieldKey);
                 if (isAuthorityControlled)
                 {
                     fullName.setAuthorityControlled();
-                    fullName.setAuthorityRequired(MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey));
+                    fullName.setAuthorityRequired(MetadataAuthorityServiceImpl.getManager().isAuthorityRequired(fieldKey));
                 }
-                if (ChoiceAuthorityManager.getManager().isChoicesConfigured(fieldKey))
+                if (ChoiceAuthorityServiceImpl.getManager().isChoicesConfigured(fieldKey))
                 {
                     fullName.setChoices(fieldKey);
-                    fullName.setChoicesPresentation(ChoiceAuthorityManager.getManager().getPresentation(fieldKey));
-                    fullName.setChoicesClosed(ChoiceAuthorityManager.getManager().isClosed(fieldKey));
+                    fullName.setChoicesPresentation(ChoiceAuthorityServiceImpl.getManager().getPresentation(fieldKey));
+                    fullName.setChoicesClosed(ChoiceAuthorityServiceImpl.getManager().isClosed(fieldKey));
                 }
 
                 // Setup the first and last name
@@ -823,18 +823,18 @@ public class DescribeStep extends AbstractSubmissionStep
                 // Setup the text area
                 textArea.setLabel(dcInput.getLabel());
                 textArea.setHelp(cleanHints(dcInput.getHints()));
-                String fieldKey = MetadataAuthorityManager.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
-                boolean isAuth = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+                String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
+                boolean isAuth = MetadataAuthorityServiceImpl.getManager().isAuthorityControlled(fieldKey);
                 if (isAuth)
                 {
                     textArea.setAuthorityControlled();
-                    textArea.setAuthorityRequired(MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey));
+                    textArea.setAuthorityRequired(MetadataAuthorityServiceImpl.getManager().isAuthorityRequired(fieldKey));
                 }
-                if (ChoiceAuthorityManager.getManager().isChoicesConfigured(fieldKey))
+                if (ChoiceAuthorityServiceImpl.getManager().isChoicesConfigured(fieldKey))
                 {
                     textArea.setChoices(fieldKey);
-                    textArea.setChoicesPresentation(ChoiceAuthorityManager.getManager().getPresentation(fieldKey));
-                    textArea.setChoicesClosed(ChoiceAuthorityManager.getManager().isClosed(fieldKey));
+                    textArea.setChoicesPresentation(ChoiceAuthorityServiceImpl.getManager().getPresentation(fieldKey));
+                    textArea.setChoicesClosed(ChoiceAuthorityServiceImpl.getManager().isClosed(fieldKey));
                 }
                 if (dcInput.isRequired())
                 {
@@ -918,8 +918,8 @@ public class DescribeStep extends AbstractSubmissionStep
          */
         private void renderChoiceSelectField(List form, String fieldName, Collection coll, DCInput dcInput, Metadatum[] dcValues, boolean readonly) throws WingException
         {
-                String fieldKey = MetadataAuthorityManager.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
-                if (MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey))
+                String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
+                if (MetadataAuthorityServiceImpl.getManager().isAuthorityControlled(fieldKey))
                 {
                     throw new WingException("Field " + fieldKey + " has choice presentation of type \"" + Params.PRESENTATION_SELECT + "\", it may NOT be authority-controlled.");
                 }
@@ -962,7 +962,7 @@ public class DescribeStep extends AbstractSubmissionStep
                     select.setDisabled();
                 }
 
-                Choices cs = ChoiceAuthorityManager.getManager().getMatches(fieldKey, "", coll.getID(), 0, 0, null);
+                Choices cs = ChoiceAuthorityServiceImpl.getManager().getMatches(fieldKey, "", coll.getID(), 0, 0, null);
                 if (dcValues.length == 0)
                 {
                     select.addOption(true, "", "");
@@ -1167,18 +1167,18 @@ public class DescribeStep extends AbstractSubmissionStep
                 // Setup the select field
                 text.setLabel(dcInput.getLabel());
                 text.setHelp(cleanHints(dcInput.getHints()));
-                String fieldKey = MetadataAuthorityManager.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
-                boolean isAuth = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+                String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(dcInput.getSchema(), dcInput.getElement(), dcInput.getQualifier());
+                boolean isAuth = MetadataAuthorityServiceImpl.getManager().isAuthorityControlled(fieldKey);
                 if (isAuth)
                 {
                     text.setAuthorityControlled();
-                    text.setAuthorityRequired(MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey));
+                    text.setAuthorityRequired(MetadataAuthorityServiceImpl.getManager().isAuthorityRequired(fieldKey));
                 }
-                if (ChoiceAuthorityManager.getManager().isChoicesConfigured(fieldKey))
+                if (ChoiceAuthorityServiceImpl.getManager().isChoicesConfigured(fieldKey))
                 {
                     text.setChoices(fieldKey);
-                    text.setChoicesPresentation(ChoiceAuthorityManager.getManager().getPresentation(fieldKey));
-                    text.setChoicesClosed(ChoiceAuthorityManager.getManager().isClosed(fieldKey));
+                    text.setChoicesPresentation(ChoiceAuthorityServiceImpl.getManager().getPresentation(fieldKey));
+                    text.setChoicesClosed(ChoiceAuthorityServiceImpl.getManager().isClosed(fieldKey));
                 }
 
                 if (dcInput.isRequired())

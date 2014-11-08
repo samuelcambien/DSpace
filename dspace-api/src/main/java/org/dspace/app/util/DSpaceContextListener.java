@@ -8,7 +8,6 @@
 package org.dspace.app.util;
 
 import org.dspace.core.ConfigurationManager;
-import org.dspace.storage.rdbms.DatabaseManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextListener;
@@ -147,9 +146,6 @@ public class DSpaceContextListener implements ServletContextListener
 
         try
         {
-            // Remove the database pool
-            DatabaseManager.shutdown();
-
             // Clean out the introspector
             Introspector.flushCaches();
 

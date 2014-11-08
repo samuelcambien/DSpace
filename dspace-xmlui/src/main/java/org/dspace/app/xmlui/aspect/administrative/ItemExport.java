@@ -23,6 +23,7 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
+import org.dspace.app.itemexport.ItemExportServiceImpl;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.UIException;
@@ -109,7 +110,7 @@ public class ItemExport extends AbstractDSpaceTransformer implements
 				errors.add(T_export_item_not_found);
 			} else {
 				try {
-					org.dspace.app.itemexport.ItemExport
+					ItemExportServiceImpl
 							.createDownloadableExport(item, context, false);
 				} catch (Exception e) {
 					errors.add(message(e.getMessage()));
@@ -132,7 +133,7 @@ public class ItemExport extends AbstractDSpaceTransformer implements
 				errors.add(T_export_col_not_found);
 			} else {
 				try {
-					org.dspace.app.itemexport.ItemExport
+					ItemExportServiceImpl
 							.createDownloadableExport(col, context, false);
 				} catch (Exception e) {
 					errors.add(message(e.getMessage()));
@@ -155,7 +156,7 @@ public class ItemExport extends AbstractDSpaceTransformer implements
 				errors.add(T_export_community_not_found);
 			} else {
 				try {
-					org.dspace.app.itemexport.ItemExport
+					ItemExportServiceImpl
 							.createDownloadableExport(com, context, false);
 				} catch (Exception e) {
 					errors.add(message(e.getMessage()));
@@ -168,7 +169,7 @@ public class ItemExport extends AbstractDSpaceTransformer implements
 		}
         
         try {
-			availableExports = org.dspace.app.itemexport.ItemExport
+			availableExports = ItemExportServiceImpl
 					.getExportsAvailable(context.getCurrentUser());
 		} catch (Exception e) {
 			// nothing to do

@@ -21,7 +21,7 @@ import org.dspace.app.util.Util;
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.content.Bundle;
@@ -36,8 +36,7 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
-import org.dspace.handle.HandleManager;
-import org.dspace.submit.step.AccessStep;
+import org.dspace.handle.HandleServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -87,7 +86,7 @@ public class FlowItemUtils
 		//		Check whether it's a handle or internal id (by check ing if it has a slash inthe string)
 		if (identifier.contains("/")) 
 		{
-			DSpaceObject dso = HandleManager.resolveToObject(context, identifier);
+			DSpaceObject dso = HandleServiceImpl.resolveToObject(context, identifier);
 	
 			if (dso != null && dso.getType() == Constants.ITEM) 
 			{ 
@@ -384,14 +383,14 @@ public class FlowItemUtils
 
         Item item = Item.find(context, itemID);
 
-        if(AuthorizeManager.isAdmin(context, item))
+        if(AuthorizeServiceImpl.isAdmin(context, item))
         {
           //Add an action giving this user *explicit* admin permissions on the item itself.
           //This ensures that the user will be able to call item.update() even if he/she
           // moves it to a Collection that he/she doesn't administer.
           if (item.canEdit())
           {
-              AuthorizeManager.authorizeAction(context, item, Constants.WRITE);
+              AuthorizeServiceImpl.authorizeAction(context, item, Constants.WRITE);
           }
 
           Collection destination = Collection.find(context, collectionID);
@@ -602,7 +601,7 @@ public class FlowItemUtils
             //Ignore, start date is already null
         }
         String reason = request.getParameter("reason");
-        AuthorizeManager.generateAutomaticPolicies(context, startDate, reason, b, collection);
+        AuthorizeServiceImpl.generateAutomaticPolicies(context, startDate, reason, b, collection);
     }
 	
 	

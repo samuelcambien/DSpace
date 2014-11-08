@@ -16,7 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.log4j.Logger;
-import org.dspace.app.util.MetadataExposure;
+import org.dspace.app.util.MetadataExposureServiceImpl;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.HandleUtil;
@@ -36,7 +36,7 @@ import org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguratio
 import org.dspace.discovery.configuration.DiscoverySortConfiguration;
 import org.dspace.discovery.configuration.DiscoverySortConfiguration.SORT_ORDER;
 import org.dspace.discovery.configuration.DiscoverySortFieldConfiguration;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -441,7 +441,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
             //Retrieve the schema for this field
             String schema = MetadataSchema.find(context, metadataField.getSchemaID()).getName();
             //Check if our field isn't hidden
-            if (!MetadataExposure.isHidden(context, schema, metadataField.getElement(), metadataField.getQualifier()))
+            if (!MetadataExposureServiceImpl.isHidden(context, schema, metadataField.getElement(), metadataField.getQualifier()))
             {
                 //Check if our metadata field is highlighted
                 StringBuilder metadataKey = new StringBuilder();
@@ -1042,7 +1042,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
         else
         {
             // Get the search scope from the location parameter
-            dso = HandleManager.resolveToObject(context, scopeString);
+            dso = HandleServiceImpl.resolveToObject(context, scopeString);
         }
 
         return dso;

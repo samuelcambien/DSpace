@@ -22,7 +22,7 @@ import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.app.xmlui.wing.element.TextArea;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 
 
@@ -202,7 +202,7 @@ public class EditCollectionMetadataForm extends AbstractDSpaceTransformer
 		Para buttonList = main.addPara();
 	    buttonList.addButton("submit_save").setValue(T_submit_save);
         //Only System Admins can Delete Collections
-	    if (AuthorizeManager.isAdmin(context))
+	    if (AuthorizeServiceImpl.isAdmin(context))
         {
 	    	buttonList.addButton("submit_delete").setValue(T_submit_delete);
         }

@@ -29,7 +29,7 @@ import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.search.DSQuery;
 import org.dspace.search.QueryArgs;
 import org.dspace.search.QueryResults;
@@ -222,7 +222,7 @@ public class OpenURLReader extends AbstractReader implements Recyclable {
 		if(rft_ids != null)
 		{
 			for (String rft_id : rft_ids) {
-				DSpaceObject obj = HandleManager.resolveToObject(context, rft_id);
+				DSpaceObject obj = HandleServiceImpl.resolveToObject(context, rft_id);
 				if (obj != null) {
 					httpResponse.sendRedirect(httpResponse
 							.encodeRedirectURL(request.getContextPath()

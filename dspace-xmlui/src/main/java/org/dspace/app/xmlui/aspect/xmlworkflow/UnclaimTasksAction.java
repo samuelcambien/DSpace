@@ -50,9 +50,9 @@ public class UnclaimTasksAction extends AbstractAction
                 XmlWorkflowItem workflowItem = XmlWorkflowItem.find(context, Integer.valueOf(workflowID.split(":")[0]));
 
                 ClaimedTask pooledTask = ClaimedTask.findByWorkflowIdAndEPerson(context, workflowItem.getID(), context.getCurrentUser().getID());
-                XmlWorkflowManager.deleteClaimedTask(context, workflowItem, pooledTask);
+                XmlWorkflowServiceImpl.deleteClaimedTask(context, workflowItem, pooledTask);
 
-                WorkflowRequirementsManager.removeClaimedUser(context, workflowItem, context.getCurrentUser(), workflowID.split(":")[1]);
+                WorkflowRequirementsServiceImpl.removeClaimedUser(context, workflowItem, context.getCurrentUser(), workflowID.split(":")[1]);
                 log.info(LogManager.getHeader(context, "unclaim_workflow", "workflow_id=" + workflowItem.getID()));
 
             }

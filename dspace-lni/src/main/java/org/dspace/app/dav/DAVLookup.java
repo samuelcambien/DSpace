@@ -21,7 +21,7 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.jdom.Element;
 
 
@@ -177,7 +177,7 @@ class DAVLookup extends DAVResource
         }
 
         // did handle lookup fail?
-        dso = HandleManager.resolveToObject(this.context, handle);
+        dso = HandleServiceImpl.resolveToObject(this.context, handle);
         if (dso == null)
         {
             throw new DAVStatusException(HttpServletResponse.SC_NOT_FOUND,
@@ -222,7 +222,7 @@ class DAVLookup extends DAVResource
     protected String makeURI(String handle, String bsPid) throws IOException,
             SQLException
     {
-        DSpaceObject dso = HandleManager.resolveToObject(this.context, handle);
+        DSpaceObject dso = HandleServiceImpl.resolveToObject(this.context, handle);
         if (dso == null)
         {
             return null;

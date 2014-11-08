@@ -1,0 +1,103 @@
+package org.dspace.content.service;
+
+import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataSchema;
+import org.dspace.content.NonUniqueMetadataException;
+import org.dspace.core.Context;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * User: kevin (kevin at atmire.com)
+ * Date: 23/10/14
+ * Time: 14:58
+ */
+public interface MetadataFieldService {
+
+    /**
+     * Creates a new metadata field.
+     *
+     * @param context
+     *            DSpace context object
+     * @throws IOException
+     * @throws AuthorizeException
+     * @throws SQLException
+     * @throws NonUniqueMetadataException
+     */
+    public MetadataField create(Context context, MetadataSchema metadataSchema, String element, String qualifier, String scopeNote)
+            throws AuthorizeException, SQLException, NonUniqueMetadataException;
+
+    /**
+     * Find the field corresponding to the given numeric ID.  The ID is
+     * a database key internal to DSpace.
+     *
+     * @param context
+     *            context, in case we need to read it in from DB
+     * @param id
+     *            the metadata field ID
+     * @return the metadata field object
+     * @throws SQLException
+     */
+    public MetadataField find(Context context, int id) throws SQLException;
+
+    /**
+     * Retrieves the metadata field from the database.
+     *
+     * @param context dspace context
+     * @param metadataSchema schema
+     * @param element element name
+     * @param qualifier qualifier (may be ANY or null)
+     * @return recalled metadata field
+     * @throws SQLException
+     */
+    public MetadataField findByElement(Context context, MetadataSchema metadataSchema, String element, String qualifier)
+            throws SQLException;
+
+    public MetadataField findByElement(Context context, String metadataSchemaName, String element, String qualifier)
+            throws SQLException;
+
+    /**
+     * Retrieve all metadata field types from the registry
+     *
+     * @param context dspace context
+     * @return an array of all the Dublin Core types
+     * @throws SQLException
+     */
+    public List<MetadataField> findAll(Context context) throws SQLException;
+
+    /**
+     * Return all metadata fields that are found in a given schema.
+     *
+     * @param context dspace context
+     * @param metadataSchema the metadata schema for which we want all our metadata fields
+     * @return array of metadata fields
+     * @throws SQLException
+     */
+    public List<MetadataField> findAllInSchema(Context context, MetadataSchema metadataSchema)
+            throws SQLException;
+
+
+    /**
+     * Update the metadata field in the database.
+     *
+     * @param context dspace context
+     * @throws SQLException
+     * @throws AuthorizeException
+     * @throws NonUniqueMetadataException
+     * @throws IOException
+     */
+    public void update(Context context, MetadataField metadataField)
+            throws SQLException, AuthorizeException, NonUniqueMetadataException, IOException;
+
+    /**
+     * Delete the metadata field.
+     *
+     * @param context dspace context
+     * @throws SQLException
+     * @throws AuthorizeException
+     */
+    public void delete(Context context, MetadataField metadataField) throws SQLException, AuthorizeException;
+}

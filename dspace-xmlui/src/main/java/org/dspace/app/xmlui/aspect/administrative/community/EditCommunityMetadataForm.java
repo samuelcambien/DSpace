@@ -22,7 +22,7 @@ import org.dspace.app.xmlui.wing.element.Para;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.app.xmlui.wing.element.TextArea;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Community;
 import org.dspace.core.Constants;
 
@@ -164,7 +164,7 @@ public class EditCommunityMetadataForm extends AbstractDSpaceTransformer
 	    Para buttonList = main.addPara();
 	    buttonList.addButton("submit_save").setValue(T_submit_update);
 
-	    if (AuthorizeManager.authorizeActionBoolean(context, thisCommunity, Constants.DELETE))
+	    if (AuthorizeServiceImpl.authorizeActionBoolean(context, thisCommunity, Constants.DELETE))
         {
 	         buttonList.addButton("submit_delete").setValue(T_submit_delete);
         }

@@ -7,6 +7,8 @@
  */
 package org.dspace.checker;
 
+import java.sql.SQLException;
+
 /**
  * Component that receives BitstreamInfo results from a checker.
  * 
@@ -23,5 +25,5 @@ public interface ChecksumResultsCollector
      * @param info
      *            BitstreamInfo representing the check results.
      */
-    void collect(BitstreamInfo info);
+    void collect(MostRecentChecksum info) throws SQLException;
 }

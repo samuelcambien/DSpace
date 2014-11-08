@@ -10,7 +10,11 @@ package org.dspace.content;
 import org.dspace.AbstractUnitTest;
 import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
+
+import org.dspace.authorize.AuthorizeException;
 import org.junit.*;
+
+import java.sql.SQLException;
 
 /**
  * Unit Tests for class NonUniqueMetadataException. Being an exception
@@ -32,8 +36,7 @@ public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
     }
 
@@ -46,8 +49,7 @@ public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         super.destroy();
     }
 

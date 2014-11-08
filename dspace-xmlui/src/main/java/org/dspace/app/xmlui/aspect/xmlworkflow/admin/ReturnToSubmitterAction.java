@@ -16,9 +16,9 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.dspace.app.util.Util;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.Context;
-import org.dspace.xmlworkflow.XmlWorkflowManager;
+import org.dspace.xmlworkflow.XmlWorkflowServiceImpl;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class ReturnToSubmitterAction extends AbstractAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         Request request = ObjectModelHelper.getRequest(objectModel);
         Context context = ContextUtil.obtainContext(request);
-        if(!AuthorizeManager.isAdmin(context)){
+        if(!AuthorizeServiceImpl.isAdmin(context)){
             throw new AuthorizeException();
         }
 
@@ -47,7 +47,7 @@ public class ReturnToSubmitterAction extends AbstractAction {
             for (int workflowIdentifier : workflowIdentifiers) {
                 XmlWorkflowItem workflowItem = XmlWorkflowItem.find(context, workflowIdentifier);
                 if (workflowItem != null) {
-                    XmlWorkflowManager.sendWorkflowItemBackSubmission(context, workflowItem, context.getCurrentUser(), "Item sent back to the submisson process by admin", null);
+                    XmlWorkflowServiceImpl.sendWorkflowItemBackSubmission(context, workflowItem, context.getCurrentUser(), "Item sent back to the submisson process by admin", null);
                 }
             }
         }

@@ -20,7 +20,7 @@ import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.ReferenceSet;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.Context;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.xml.sax.SAXException;
@@ -71,7 +71,7 @@ public class WorkflowItemTransformer extends AbstractDSpaceTransformer {
     public void addBody(Body body) throws SAXException, WingException, UIException, SQLException, IOException, AuthorizeException {
         Request request = ObjectModelHelper.getRequest(objectModel);
         Context context = ContextUtil.obtainContext(request);
-        if(!AuthorizeManager.isAdmin(context)){
+        if(!AuthorizeServiceImpl.isAdmin(context)){
             throw new AuthorizeException();
         }
 

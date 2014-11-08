@@ -25,7 +25,7 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.xml.sax.SAXException;
 
 import org.dspace.app.util.CollectionDropDown;
@@ -74,7 +74,7 @@ public class SelectCollectionStep extends AbstractSubmissionStep
     {     
         Collection[] collections; // List of possible collections.
         String actionURL = contextPath + "/submit/" + knot.getId() + ".continue";
-        DSpaceObject dso = HandleManager.resolveToObject(context, handle);
+        DSpaceObject dso = HandleServiceImpl.resolveToObject(context, handle);
         
         if (dso instanceof Community)
         {

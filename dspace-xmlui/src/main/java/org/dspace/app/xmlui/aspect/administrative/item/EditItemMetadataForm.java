@@ -38,8 +38,8 @@ import org.dspace.content.Metadatum;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataSchema;
-import org.dspace.content.authority.MetadataAuthorityManager;
-import org.dspace.content.authority.ChoiceAuthorityManager;
+import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
+import org.dspace.content.authority.MetadataAuthorityServiceImpl;
 import org.dspace.content.authority.Choices;
 
 /**
@@ -220,7 +220,7 @@ public class EditItemMetadataForm extends AbstractDSpaceTransformer {
                 header.addCell().addContent(T_column3);
                 header.addCell().addContent(T_column4);
 
-                ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
+                ChoiceAuthorityServiceImpl cmgr = ChoiceAuthorityServiceImpl.getManager();
                 for(Metadatum value : values)
                 {
                         String name = value.schema + "_" + value.element;
@@ -241,7 +241,7 @@ public class EditItemMetadataForm extends AbstractDSpaceTransformer {
 
                         // value entry cell:
                         Cell mdCell = row.addCell();
-                        String fieldKey = MetadataAuthorityManager.makeFieldKey(value.schema, value.element, value.qualifier);
+                        String fieldKey = MetadataAuthorityServiceImpl.makeFieldKey(value.schema, value.element, value.qualifier);
 
                         // put up just a selector when preferred choice presentation is select:
                         if (cmgr.isChoicesConfigured(fieldKey) &&
@@ -264,17 +264,17 @@ public class EditItemMetadataForm extends AbstractDSpaceTransformer {
                             TextArea mdValue = mdCell.addTextArea("value_"+index);
                         mdValue.setSize(4,35);
                         mdValue.setValue(value.value);
-                            boolean isAuth = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+                            boolean isAuth = MetadataAuthorityServiceImpl.getManager().isAuthorityControlled(fieldKey);
                             if (isAuth)
                             {
                                 mdValue.setAuthorityControlled();
-                                mdValue.setAuthorityRequired(MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey));
+                                mdValue.setAuthorityRequired(MetadataAuthorityServiceImpl.getManager().isAuthorityRequired(fieldKey));
                                 Value authValue =  mdValue.setAuthorityValue((value.authority == null)?"":value.authority, Choices.getConfidenceText(value.confidence));
                                 // add the "unlock" button to auth field
                                 Button unlock = authValue.addButton("authority_unlock_"+index,"ds-authority-lock");
                                 unlock.setHelp(T_unlock);
                             }
-                            if (ChoiceAuthorityManager.getManager().isChoicesConfigured(fieldKey))
+                            if (ChoiceAuthorityServiceImpl.getManager().isChoicesConfigured(fieldKey))
                             {
                                 mdValue.setChoices(fieldKey);
                                 if(Params.PRESENTATION_AUTHORLOOKUP.equals(cmgr.getPresentation(fieldKey))){
@@ -282,7 +282,7 @@ public class EditItemMetadataForm extends AbstractDSpaceTransformer {
                                 }else{
                                     mdValue.setChoicesPresentation(Params.PRESENTATION_LOOKUP);
                                 }
-                                mdValue.setChoicesClosed(ChoiceAuthorityManager.getManager().isClosed(fieldKey));
+                                mdValue.setChoicesClosed(ChoiceAuthorityServiceImpl.getManager().isClosed(fieldKey));
                             }
                         }
                         Text mdLang = row.addCell().addText("language_"+index);

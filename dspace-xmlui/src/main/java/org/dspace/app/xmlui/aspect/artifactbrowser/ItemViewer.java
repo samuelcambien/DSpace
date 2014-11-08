@@ -25,6 +25,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
+import org.dspace.app.sfx.SFXFileReaderServiceImpl;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.HandleUtil;
@@ -50,12 +51,7 @@ import org.jdom.Text;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.SAXException;
 import org.dspace.core.ConfigurationManager;
-import org.dspace.app.sfx.SFXFileReader;
 import org.dspace.app.xmlui.wing.element.Metadata;
-import org.dspace.content.MetadataSchema;
-import org.dspace.identifier.IdentifierNotFoundException;
-import org.dspace.identifier.IdentifierNotResolvableException;
-import org.dspace.identifier.IdentifierProvider;
 import org.dspace.utils.DSpace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,7 +193,7 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
             sfxQuery = "";
 
             // parse XML file -> XML document will be build
-            sfxQuery = SFXFileReader.loadSFXFile(sfxFile, item);
+            sfxQuery = SFXFileReaderServiceImpl.loadSFXFile(sfxFile, item);
 
             // Remove initial &, if any
             if (sfxQuery.startsWith("&"))

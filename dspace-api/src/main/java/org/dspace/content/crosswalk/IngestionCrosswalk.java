@@ -9,10 +9,20 @@ package org.dspace.content.crosswalk;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
+import org.dspace.content.MetadataField;
+import org.dspace.content.MetadataSchema;
+import org.dspace.content.NonUniqueMetadataException;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.ItemService;
+import org.dspace.content.service.MetadataFieldService;
+import org.dspace.content.service.MetadataSchemaService;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.jdom.Element;
 
@@ -71,7 +81,7 @@ public interface IngestionCrosswalk
      * @throws SQLException  Database failure in services this calls
      * @throws AuthorizeException current user not authorized for this operation.
      */
-    public void ingest(Context context, DSpaceObject dso, List<Element> metadata)
+    public abstract void ingest(Context context, DSpaceObject dso, List<Element> metadata, boolean createMissingMetadataFields)
         throws CrosswalkException, IOException, SQLException, AuthorizeException;
 
     /**
@@ -93,6 +103,6 @@ public interface IngestionCrosswalk
      * @throws SQLException  Database failure in services this calls
      * @throws AuthorizeException current user not authorized for this operation.
      */
-    public void ingest(Context context, DSpaceObject dso, Element root)
+    public abstract void ingest(Context context, DSpaceObject dso, Element root, boolean createMissingMetadataFields)
         throws CrosswalkException, IOException, SQLException, AuthorizeException;
 }

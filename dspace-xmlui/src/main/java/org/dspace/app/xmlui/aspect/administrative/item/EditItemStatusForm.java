@@ -19,7 +19,7 @@ import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Collection;
 import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
@@ -194,7 +194,7 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 
 
 		itemInfo.addLabel(T_label_delete);
-		if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.DELETE))
+		if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.DELETE))
 		{
 			itemInfo.addItem().addButton("submit_delete").setValue(T_submit_delete);
 		}
@@ -216,8 +216,8 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
         if(item.isDiscoverable())
         {
             itemInfo.addLabel(T_label_private);
-			if (AuthorizeManager.authorizeActionBoolean(context, item,
-					Constants.WRITE)) 
+			if (AuthorizeServiceImpl.authorizeActionBoolean(context, item,
+                    Constants.WRITE))
 			{
 				itemInfo.addItem().addButton("submit_private")
 						.setValue(T_submit_private);
@@ -231,7 +231,7 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
         else
         {
             itemInfo.addLabel(T_label_public);
-            if (AuthorizeManager.authorizeActionBoolean(context, item, Constants.WRITE))
+            if (AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.WRITE))
             {
                 itemInfo.addItem().addButton("submit_public").setValue(T_submit_public);
             }
@@ -264,7 +264,7 @@ public class EditItemStatusForm extends AbstractDSpaceTransformer {
 		button.setValue(buttonLabel);
 
 
-		if (!AuthorizeManager.isAdmin(context, collection))
+		if (!AuthorizeServiceImpl.isAdmin(context, collection))
 		{
 			// Only admins can create or delete
 			button.setDisabled();

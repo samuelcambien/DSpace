@@ -13,7 +13,7 @@ import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.sitemap.PatternException;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.app.xmlui.utils.HandleUtil;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -57,7 +57,7 @@ public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements M
             DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
 
             //We have always got rights to view stats on the home page (admin rights will be checked later)
-            boolean authorized = dso == null || AuthorizeManager.authorizeActionBoolean(context, dso, action, false);
+            boolean authorized = dso == null || AuthorizeServiceImpl.authorizeActionBoolean(context, dso, action, false);
             //Check if (one of our) display type is admin only
             //If one of the given ones isn't admin only, no need to check !
             boolean  adminCheckNeeded = true;
@@ -83,11 +83,11 @@ public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements M
 
                 if(authorized){
                     //Check for admin
-                    authorized = AuthorizeManager.isAdmin(context);
+                    authorized = AuthorizeServiceImpl.isAdmin(context);
                     if(!authorized)
                     {
                         //Check if we have authorization for the owning colls, comms, ...
-                        authorized = AuthorizeManager.isAdmin(context, dso);
+                        authorized = AuthorizeServiceImpl.isAdmin(context, dso);
                     }
                 }
             }

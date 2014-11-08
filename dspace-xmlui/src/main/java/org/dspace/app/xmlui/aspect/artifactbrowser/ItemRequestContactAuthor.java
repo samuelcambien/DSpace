@@ -28,7 +28,7 @@ import org.dspace.content.Item;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
-import org.dspace.handle.HandleManager;
+import org.dspace.handle.HandleServiceImpl;
 import org.dspace.utils.DSpace;
 import org.xml.sax.SAXException;
 
@@ -125,7 +125,7 @@ public class ItemRequestContactAuthor extends AbstractDSpaceTransformer implemen
         Object[] args = new String[]{
                 ItemService.getFirstMetadataValue(item, "dc.contributor.author"),
                 ItemService.getFirstMetadataValue(item, "dc.title"),
-                HandleManager.getCanonicalForm(item.getHandle()),
+                HandleServiceImpl.getCanonicalForm(item.getHandle()),
                 requestItemAuthor.getFullName(),
                 requestItemAuthor.getEmail(),
                 requestItem.getReqName(),

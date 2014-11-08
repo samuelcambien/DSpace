@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -20,23 +19,16 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.DCInput;
-import org.dspace.app.util.SubmissionConfig;
-import org.dspace.app.util.SubmissionConfigReader;
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.app.util.SubmissionStepConfig;
-import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Collection;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
-import org.dspace.core.LogManager;
-import org.dspace.handle.HandleManager;
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 /**
@@ -78,7 +70,7 @@ public class FlowUtils {
 		}
 		else if (type == 'W')
 		{
-			return WorkflowItem.find(context, id);
+			return BasicWorkflowItem.find(context, id);
 		}
         else if (type == 'X')
         {

@@ -31,7 +31,10 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
 import org.dspace.eperson.EPerson;
-import org.dspace.handle.HandleManager;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.handle.HandleServiceImpl;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.workflow.WorkflowException;
 
 /**
  * Command-line interface to the Packager plugin.
@@ -113,12 +116,12 @@ import org.dspace.handle.HandleManager;
 public class Packager
 {
     /* Various private global settings/options */
-    private String packageType = null;
-    private boolean submit = true;
-    private boolean userInteractionEnabled = true;
+    protected String packageType = null;
+    protected boolean submit = true;
+    protected boolean userInteractionEnabled = true;
 
     // die from illegal command line
-    private static void usageError(String msg)
+    protected static void usageError(String msg)
     {
         System.out.println(msg);
         System.out.println(" (run with -h flag for details)");
@@ -316,7 +319,7 @@ public class Packager
         // find the EPerson, assign to context
         Context context = new Context();
         EPerson myEPerson = null;
-        myEPerson = EPerson.findByEmail(context, eperson);
+        myEPerson = EPersonServiceFactory.getInstance().getEPersonService().findByEmail(context, eperson);
         if (myEPerson == null)
         {
             usageError("Error, eperson cannot be found: " + eperson);
@@ -339,7 +342,7 @@ public class Packager
             //if a specific identifier was specified, make sure it is valid
             if(identifier!=null && identifier.length()>0)
             {
-                objToReplace = HandleManager.resolveToObject(context, identifier);
+                objToReplace = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context, identifier);
                 if (objToReplace == null)
                 {
                     throw new IllegalArgumentException("Bad identifier/handle -- "
@@ -407,7 +410,7 @@ public class Packager
                 for (int i = 0; i < parents.length; i++)
                 {
                     // sanity check: did handle resolve?
-                    parentObjs[i] = HandleManager.resolveToObject(context,
+                    parentObjs[i] = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context,
                             parents[i]);
                     if (parentObjs[i] == null)
                     {
@@ -449,7 +452,7 @@ public class Packager
                 usageError("Error, Unknown package type: " + myPackager.packageType);
             }
 
-            DSpaceObject dso = HandleManager.resolveToObject(context, identifier);
+            DSpaceObject dso = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context, identifier);
             if (dso == null)
             {
                 throw new IllegalArgumentException("Bad identifier/handle -- "
@@ -519,23 +522,55 @@ public class Packager
                 //Report total objects created
                 System.out.println("\nCREATED a total of " + hdlResults.size() + " DSpace Objects.");
 
-                String choiceString = null;
-                //Ask if user wants full list printed to command line, as this may be rather long.
-                if(this.userInteractionEnabled)
-                {
-                    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-                    System.out.print("\nWould you like to view a list of all objects that were created? [y/n]: ");
-                    choiceString = input.readLine();
-                }
-                else
-                {
-                    // user interaction disabled -- default answer to 'yes', as
-                    // we want to provide user with as detailed a report as possible.
-                    choiceString = "y";
-                }
+                //ingest first package & recursively ingest anything else that package references (child packages, etc)
+                List<DSpaceObject> dsoResults = sip.ingestAll(context, parent, pkgFile, pkgParams, null);
 
-                // Provide detailed report if user answered 'yes'
-                if (choiceString.equalsIgnoreCase("y"))
+                if(dsoResults!=null)
+                {
+                    //Report total objects created
+                    System.out.println("\nCREATED a total of " + dsoResults.size() + " DSpace Objects.");
+
+                    String choiceString = null;
+                    //Ask if user wants full list printed to command line, as this may be rather long.
+                    if(this.userInteractionEnabled)
+                    {
+                        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                        System.out.print("\nWould you like to view a list of all objects that were created? [y/n]: ");
+                        choiceString = input.readLine();
+                    }
+                    else
+                    {
+                        // user interaction disabled -- default answer to 'yes', as
+                        // we want to provide user with as detailed a report as possible.
+                        choiceString = "y";
+                    }
+
+                    // Provide detailed report if user answered 'yes'
+                    if (choiceString.equalsIgnoreCase("y"))
+                    {
+                        System.out.println("\n\n");
+                        for(DSpaceObject result : dsoResults)
+                        {
+                            if(pkgParams.restoreModeEnabled())
+                            {
+                                System.out.println("RESTORED DSpace " + Constants.typeText[result.getType()] +
+                                        " [ hdl=" + result.getHandle() + ", dbID=" + result.getID() + " ] ");
+                            }
+                            else
+                            {
+                                System.out.println("CREATED new DSpace " + Constants.typeText[result.getType()] +
+                                        " [ hdl=" + result.getHandle() + ", dbID=" + result.getID() + " ] ");
+                            }
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+
+                //otherwise, just one package to ingest
+                try
                 {
                     System.out.println("\n\n");
                     for(String result : hdlResults)
@@ -557,48 +592,25 @@ public class Packager
                         }
                     }
                 }
-
-            }
-        }
-        else
-        {
-
-            //otherwise, just one package to ingest
-            try
-            {
-
-                DSpaceObject dso = sip.ingest(context, parent, pkgFile, pkgParams, null);
-
-                if(dso!=null)
+                catch(IllegalStateException ie)
                 {
-                    if(pkgParams.restoreModeEnabled())
+                    // NOTE: if we encounter an IllegalStateException, this means the
+                    // handle is already in use and this object already exists.
+
+                    //if we are skipping over (i.e. keeping) existing objects
+                    if(pkgParams.keepExistingModeEnabled())
                     {
-                        System.out.println("RESTORED DSpace " + Constants.typeText[dso.getType()] +
-                                " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                        System.out.println("\nSKIPPED processing package '" + pkgFile + "', as an Object already exists with this handle.");
                     }
-                    else
+                    else // Pass this exception on -- which essentially causes a full rollback of all changes (this is the default)
                     {
-                        System.out.println("CREATED new DSpace " + Constants.typeText[dso.getType()] +
-                                " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                        throw ie;
                     }
                 }
-            }
-            catch(IllegalStateException ie)
-            {
-                // NOTE: if we encounter an IllegalStateException, this means the
-                // handle is already in use and this object already exists.
 
-                //if we are skipping over (i.e. keeping) existing objects
-                if(pkgParams.keepExistingModeEnabled())
-                {
-                    System.out.println("\nSKIPPED processing package '" + pkgFile + "', as an Object already exists with this handle.");
-                }
-                else // Pass this exception on -- which essentially causes a full rollback of all changes (this is the default)
-                {
-                    throw ie;
-                }
             }
-
+        } catch (WorkflowException e) {
+            throw new PackageException(e);
         }
 
     }
@@ -736,20 +748,10 @@ public class Packager
                 //Report total objects replaced
                 System.out.println("\nREPLACED a total of " + hdlResults.size() + " DSpace Objects.");
 
-                String choiceString = null;
-                //Ask if user wants full list printed to command line, as this may be rather long.
-                if(this.userInteractionEnabled)
+                if(dsoResults!=null)
                 {
-                    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-                    System.out.print("\nWould you like to view a list of all objects that were replaced? [y/n]: ");
-                    choiceString = input.readLine();
-                }
-                else
-                {
-                    // user interaction disabled -- default answer to 'yes', as
-                    // we want to provide user with as detailed a report as possible.
-                    choiceString = "y";
-                }
+                    //Report total objects replaced
+                    System.out.println("\nREPLACED a total of " + dsoResults.size() + " DSpace Objects.");
 
                 // Provide detailed report if user answered 'yes'
                 if (choiceString.equalsIgnoreCase("y"))
@@ -765,21 +767,40 @@ public class Packager
                                         " [ hdl=" + dso.getHandle() + " ] ");
                         }
                     }
+                    else
+                    {
+                        // user interaction disabled -- default answer to 'yes', as
+                        // we want to provide user with as detailed a report as possible.
+                        choiceString = "y";
+                    }
+
+                    // Provide detailed report if user answered 'yes'
+                    if (choiceString.equalsIgnoreCase("y"))
+                    {
+                        System.out.println("\n\n");
+                        for(DSpaceObject result : dsoResults)
+                        {
+                            System.out.println("REPLACED DSpace " + Constants.typeText[result.getType()] +
+                                        " [ hdl=" + result.getHandle() + " ] ");
+                        }
+                    }
+
+
                 }
-
-
             }
-        }
-        else
-        {
-            //otherwise, just one object to replace
-            DSpaceObject dso = sip.replace(context, objToReplace, pkgFile, pkgParams);
-
-            if(dso!=null)
+            else
             {
-                System.out.println("REPLACED DSpace " + Constants.typeText[dso.getType()] +
-                        " [ hdl=" + dso.getHandle() + " ] ");
+                //otherwise, just one object to replace
+                DSpaceObject dso = sip.replace(context, objToReplace, pkgFile, pkgParams);
+
+                if(dso!=null)
+                {
+                    System.out.println("REPLACED DSpace " + Constants.typeText[dso.getType()] +
+                            " [ hdl=" + dso.getHandle() + " ] ");
+                }
             }
+        } catch (WorkflowException e) {
+            throw new PackageException(e);
         }
     }
 

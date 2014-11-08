@@ -25,7 +25,7 @@ import org.dspace.app.xmlui.wing.element.PageMeta;
 import org.dspace.app.xmlui.wing.element.Select;
 import org.dspace.app.xmlui.wing.element.Text;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.Bundle;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -175,7 +175,7 @@ public class AddBitstreamForm extends AbstractDSpaceTransformer
             if (bundles == null || bundles.length == 0)
             {
                 // No bundle, so the user has to be authorized to add to item.
-                if(!AuthorizeManager.authorizeActionBoolean(context, item, Constants.ADD))
+                if(!AuthorizeServiceImpl.authorizeActionBoolean(context, item, Constants.ADD))
                 {
                     return false;
                 }
@@ -183,13 +183,13 @@ public class AddBitstreamForm extends AbstractDSpaceTransformer
             {
                 // At least one bundle exists, does the user have privileges to upload to it?
                 Bundle bundle = bundles[0];
-                if (!AuthorizeManager.authorizeActionBoolean(context, bundle, Constants.ADD))
+                if (!AuthorizeServiceImpl.authorizeActionBoolean(context, bundle, Constants.ADD))
                 {
                     return false; // you can't upload to this bundle.
                 }
 
                 // You also need the write privlege on the bundle.
-                if (!AuthorizeManager.authorizeActionBoolean(context, bundle, Constants.WRITE))
+                if (!AuthorizeServiceImpl.authorizeActionBoolean(context, bundle, Constants.WRITE))
                 {
                     return false;  // you can't upload
                 }

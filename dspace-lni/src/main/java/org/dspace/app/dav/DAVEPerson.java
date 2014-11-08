@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.jdom.Element;
@@ -136,7 +136,7 @@ class DAVEPerson extends DAVResource
     @Override
     protected DAVResource[] children() throws SQLException
     {
-        if (AuthorizeManager.isAdmin(this.context))
+        if (AuthorizeServiceImpl.isAdmin(this.context))
         {
             EPerson all[] = EPerson.findAll(this.context, EPerson.ID);
             DAVResource result[] = new DAVResource[all.length];

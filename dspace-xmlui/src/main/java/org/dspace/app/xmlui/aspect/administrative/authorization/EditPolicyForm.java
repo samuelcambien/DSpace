@@ -9,7 +9,6 @@ package org.dspace.app.xmlui.aspect.administrative.authorization;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -17,7 +16,7 @@ import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
-import org.dspace.authorize.AuthorizeManager;
+import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.content.*;
 import org.dspace.content.Item;
@@ -340,7 +339,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
     {
         Group[] groups = Group.search(context, query, page*RESULTS_PER_PAGE, (page+1)*RESULTS_PER_PAGE);
         int totalResults = Group.searchResultCount(context, query);
-        ArrayList<ResourcePolicy> otherPolicies = (ArrayList<ResourcePolicy>)AuthorizeManager.getPolicies(context, dso);
+        ArrayList<ResourcePolicy> otherPolicies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, dso);
 
 
         if (totalResults > RESULTS_PER_PAGE) {

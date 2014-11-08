@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.axis.MessageContext;
 import org.apache.axis.transport.http.AxisServlet;
 import org.apache.log4j.Logger;
-import org.dspace.authenticate.AuthenticationManager;
+import org.dspace.authenticate.AuthenticationServiceImpl;
 import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
@@ -148,7 +148,7 @@ public class LNISoapServlet extends AxisServlet
             return context;
         }
 
-        int status = AuthenticationManager.authenticate(context, username,
+        int status = AuthenticationServiceImpl.authenticate(context, username,
                 password, null, this.request);
         if (status == AuthenticationMethod.SUCCESS)
         {

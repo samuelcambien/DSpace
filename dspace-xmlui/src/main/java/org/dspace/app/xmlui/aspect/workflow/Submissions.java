@@ -13,11 +13,10 @@ import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.*;
 import org.dspace.content.Item;
 import org.dspace.eperson.EPerson;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.workflow.WorkflowManager;
+import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -141,10 +140,10 @@ public class Submissions extends AbstractDSpaceTransformer
     private void addWorkflowTasks(Division division) throws SQLException, WingException
     {
     	@SuppressWarnings("unchecked") // This cast is correct
-    	List<WorkflowItem> ownedItems = WorkflowManager.getOwnedTasks(context, context
+    	List<BasicWorkflowItem> ownedItems = BasicWorkflowServiceImpl.getOwnedTasks(context, context
                 .getCurrentUser());
     	@SuppressWarnings("unchecked") // This cast is correct.
-    	List<WorkflowItem> pooledItems = WorkflowManager.getPooledTasks(context, context
+    	List<BasicWorkflowItem> pooledItems = BasicWorkflowServiceImpl.getPooledTasks(context, context
                 .getCurrentUser());
 
     	if (!(ownedItems.size() > 0 || pooledItems.size() > 0))
@@ -170,7 +169,7 @@ public class Submissions extends AbstractDSpaceTransformer
 
         if (ownedItems.size() > 0)
         {
-        	for (WorkflowItem owned : ownedItems)
+        	for (BasicWorkflowItem owned : ownedItems)
         	{
         		int workflowItemID = owned.getID();
         		String collectionUrl = contextPath + "/handle/" + owned.getCollection().getHandle();
@@ -243,7 +242,7 @@ public class Submissions extends AbstractDSpaceTransformer
         if (pooledItems.size() > 0)
         {
 
-        	for (WorkflowItem pooled : pooledItems)
+        	for (BasicWorkflowItem pooled : pooledItems)
         	{
         		int workflowItemID = pooled.getID();
         		String collectionUrl = contextPath + "/handle/" + pooled.getCollection().getHandle();
@@ -325,7 +324,7 @@ public class Submissions extends AbstractDSpaceTransformer
      */
     private void addSubmissionsInWorkflow(Division division) throws SQLException, WingException
     {
-    	WorkflowItem[] inprogressItems = WorkflowItem.findByEPerson(context,context.getCurrentUser());
+    	BasicWorkflowItem[] inprogressItems = BasicWorkflowItem.findByEPerson(context, context.getCurrentUser());
 
     	// If there is nothing in progress then don't add anything.
     	if (!(inprogressItems.length > 0))
@@ -345,7 +344,7 @@ public class Submissions extends AbstractDSpaceTransformer
         header.addCellContent(T_p_column3);
 
 
-        for (WorkflowItem workflowItem : inprogressItems)
+        for (BasicWorkflowItem workflowItem : inprogressItems)
         {
         	Metadatum[] titles = workflowItem.getItem().getDC("title", null, Item.ANY);
         	String collectionName = workflowItem.getCollection().getMetadata("name");
@@ -386,25 +385,25 @@ public class Submissions extends AbstractDSpaceTransformer
      *
      * FIXME: change to return type of message;
      */
-    private Message getWorkflowStateMessage(WorkflowItem workflowItem)
+    private Message getWorkflowStateMessage(BasicWorkflowItem workflowItem)
     {
 		switch (workflowItem.getState())
 		{
-			case WorkflowManager.WFSTATE_SUBMIT:
+			case BasicWorkflowServiceImpl.WFSTATE_SUBMIT:
 				return T_status_0;
-			case WorkflowManager.WFSTATE_STEP1POOL:
+			case BasicWorkflowServiceImpl.WFSTATE_STEP1POOL:
 				return T_status_1;
-    		case WorkflowManager.WFSTATE_STEP1:
+    		case BasicWorkflowServiceImpl.WFSTATE_STEP1:
     			return T_status_2;
-    		case WorkflowManager.WFSTATE_STEP2POOL:
+    		case BasicWorkflowServiceImpl.WFSTATE_STEP2POOL:
     			return T_status_3;
-    		case WorkflowManager.WFSTATE_STEP2:
+    		case BasicWorkflowServiceImpl.WFSTATE_STEP2:
     			return T_status_4;
-    		case WorkflowManager.WFSTATE_STEP3POOL:
+    		case BasicWorkflowServiceImpl.WFSTATE_STEP3POOL:
     			return T_status_5;
-    		case WorkflowManager.WFSTATE_STEP3:
+    		case BasicWorkflowServiceImpl.WFSTATE_STEP3:
     			return T_status_6;
-    		case WorkflowManager.WFSTATE_ARCHIVE:
+    		case BasicWorkflowServiceImpl.WFSTATE_ARCHIVE:
     			return T_status_7;
    			default:
    				return T_status_unknown;
