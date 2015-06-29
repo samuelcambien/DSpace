@@ -12,6 +12,8 @@ import org.apache.cocoon.sitemap.PatternException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.Context;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -28,6 +30,7 @@ import java.sql.SQLException;
  */
 public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements Matcher{
 
+    protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
 
     public Map match(String pattern, Map objectModel, Parameters parameters) throws PatternException {
         String[] statisticsDisplayTypes = parameters.getParameter("type", "").split(",");
@@ -54,7 +57,7 @@ public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements M
             DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
 
             //We have always got rights to view stats on the home page (admin rights will be checked later)
-            boolean authorized = dso == null || AuthorizeServiceImpl.authorizeActionBoolean(context, dso, action, false);
+            boolean authorized = dso == null || authorizeService.authorizeActionBoolean(context, dso, action, false);
             //Check if (one of our) display type is admin only
             //If one of the given ones isn't admin only, no need to check !
             boolean  adminCheckNeeded = true;
@@ -80,11 +83,11 @@ public class StatisticsAuthorizedMatcher extends AbstractLogEnabled implements M
 
                 if(authorized){
                     //Check for admin
-                    authorized = AuthorizeServiceImpl.isAdmin(context);
+                    authorized = authorizeService.isAdmin(context);
                     if(!authorized)
                     {
                         //Check if we have authorization for the owning colls, comms, ...
-                        authorized = AuthorizeServiceImpl.isAdmin(context, dso);
+                        authorized = authorizeService.isAdmin(context, dso);
                     }
                 }
             }

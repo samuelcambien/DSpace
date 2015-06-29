@@ -20,6 +20,7 @@ import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.*;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.handle.service.HandleService;
 import org.dspace.usage.UsageWorkflowEvent;
 import org.dspace.utils.DSpace;
@@ -83,6 +84,8 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
     protected WorkspaceItemService workspaceItemService;
     @Autowired(required = true)
     protected XmlWorkflowItemService xmlWorkflowItemService;
+    @Autowired(required = true)
+    protected GroupService groupService;
 
 
 
@@ -113,6 +116,33 @@ public class XmlWorkflowServiceImpl implements XmlWorkflowService {
             constraints.add("cwf_workflowitemrole");
         }
         return constraints;
+    }
+
+    @Override
+    public Group getWorkflowRoleGroup(Context context, Collection collection, String roleName, Group roleGroup) throws SQLException, IOException, WorkflowException, AuthorizeException {
+        try {
+            Role role = WorkflowUtils.getCollectionAndRepositoryRoles(collection).get(roleName);
+            if(role.getScope() == Role.Scope.COLLECTION || role.getScope() == Role.Scope.REPOSITORY){
+                roleGroup = WorkflowUtils.getRoleGroup(context, collection, role);
+                if(roleGroup == null){
+                    authorizeService.authorizeAction(context, collection, Constants.WRITE);
+                    roleGroup = groupService.create(context);
+                    if(role.getScope() == Role.Scope.COLLECTION){
+                        roleGroup.setName(context, "COLLECTION_" + collection.getID().toString() + "_WORKFLOW_ROLE_" + roleName);
+                    }else{
+                        roleGroup.setName(context,  role.getName());
+                    }
+                    groupService.update(context, roleGroup);
+                    authorizeService.addPolicy(context, collection, Constants.ADD, roleGroup);
+                    if(role.getScope() == Role.Scope.COLLECTION){
+                        WorkflowUtils.createCollectionWorkflowRole(context, collection, roleName, roleGroup);
+                    }
+               }
+            }
+            return roleGroup;
+        } catch (WorkflowConfigurationException e) {
+            throw new WorkflowException(e);
+        }
     }
 
     @Override

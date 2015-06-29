@@ -19,6 +19,8 @@ import org.dspace.app.xmlui.utils.HandleUtil;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.handle.HandleServiceImpl;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.handle.service.HandleService;
 import org.dspace.usage.UsageEvent;
 import org.dspace.usage.UsageSearchEvent;
 import org.dspace.utils.DSpace;
@@ -35,6 +37,8 @@ import java.util.Map;
  * @author Mark Diggory (markd at atmire dot com)
  */
 public abstract class SearchLoggerAction extends AbstractAction {
+
+    protected HandleService handleService = HandleServiceFactory.getInstance().getHandleService();
 
     @Override
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
@@ -94,7 +98,7 @@ public abstract class SearchLoggerAction extends AbstractAction {
         else
         {
             // Get the search scope from the location parameter
-            dso = HandleServiceImpl.resolveToObject(context, scopeString);
+            dso = handleService.resolveToObject(context, scopeString);
         }
 
         return dso;

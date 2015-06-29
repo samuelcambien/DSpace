@@ -24,8 +24,8 @@ public class ImageMagickPdfThumbnailFilter extends ImageMagickThumbnailFilter {
 	    File f3 = null;
 	    try
 	    {
-		    f2 = getImageFile(f, 0);
-		    f3 = getThumbnailFile(f2);
+		    f2 = getImageFile(f, 0, verbose);
+		    f3 = getThumbnailFile(f2, verbose);
 		    byte[] bytes = Files.readAllBytes(f3.toPath());
 		    return new ByteArrayInputStream(bytes);
 	    }

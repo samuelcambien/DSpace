@@ -7,6 +7,8 @@
  */
 package org.dspace.content;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import javax.persistence.*;
 
 /**
@@ -39,8 +41,9 @@ public class MetadataField {
     @Column(name = "qualifier", length = 64)
     private String qualifier = null;
 
-    @Column(name = "scope_note")
-    @Lob
+//    @Column(name = "scope_note")
+//    @Lob
+    @Column(name="scope_note", columnDefinition = "text")
     private String scopeNote;
 
     protected MetadataField()
@@ -155,7 +158,8 @@ public class MetadataField {
         {
             return false;
         }
-        if (!(obj instanceof MetadataField))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

@@ -609,7 +609,7 @@ public abstract class AbstractMETSDisseminator
                     MdWrap mdWrap = new MdWrap();
                     setMdType(mdWrap, metsName);
                     XmlData xmlData = new XmlData();
-                    if (crosswalkToMetsElement(xwalk, dso, xmlData) != null)
+                    if (crosswalkToMetsElement(context, xwalk, dso, xmlData) != null)
                     {
                         mdWrap.getContent().add(xmlData);
                         mdSec.getContent().add(mdWrap);
@@ -1294,7 +1294,7 @@ public abstract class AbstractMETSDisseminator
     // Get result from crosswalk plugin and add it to the document,
     // including namespaces and schema.
     // returns the new/modified element upon success.
-    protected MetsElement crosswalkToMetsElement(DisseminationCrosswalk xwalk,
+    protected MetsElement crosswalkToMetsElement(Context context, DisseminationCrosswalk xwalk,
                                  DSpaceObject dso, MetsElement me)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
@@ -1322,7 +1322,7 @@ public abstract class AbstractMETSDisseminator
             PreformedXML pXML = null;
             if (xwalk.preferList())
             {
-                List<Element> res = xwalk.disseminateList(dso);
+                List<Element> res = xwalk.disseminateList(context, dso);
                 if (!(res == null || res.isEmpty()))
                 {
                     pXML = new PreformedXML(outputter.outputString(res));
@@ -1330,7 +1330,7 @@ public abstract class AbstractMETSDisseminator
             }
             else
             {
-                Element res = xwalk.disseminateElement(dso);
+                Element res = xwalk.disseminateElement(context, dso);
                 if (res != null)
                 {
                     pXML = new PreformedXML(outputter.outputString(res));

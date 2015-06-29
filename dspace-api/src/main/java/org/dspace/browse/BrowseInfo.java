@@ -478,7 +478,7 @@ public class BrowseInfo
      *
      * @return Result list. This list cannot be modified.
      */
-    public List getResults()
+    public List<Item> getResults()
     {
         return results;
     }

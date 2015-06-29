@@ -11,13 +11,11 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.*;
 import org.dspace.eperson.EPerson;
 import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
-import org.dspace.xmlworkflow.service.WorkflowRequirementsService;
 import org.dspace.xmlworkflow.service.XmlWorkflowService;
 import org.dspace.xmlworkflow.state.Step;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 import org.dspace.xmlworkflow.*;
 import org.dspace.xmlworkflow.state.actions.ActionResult;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +33,6 @@ import java.util.ArrayList;
  * @author Mark Diggory (markd at atmire dot com)
  */
 public class ClaimAction extends UserSelectionAction {
-
-    @Autowired(required = true)
-    protected WorkflowRequirementsService workflowRequirementsService;
 
     @Override
     public void activate(Context context, XmlWorkflowItem wfItem) throws SQLException, IOException, AuthorizeException {
@@ -60,7 +55,7 @@ public class ClaimAction extends UserSelectionAction {
         //Check if we are accept this task, or accepting multiple tasks
         if(request.getParameter("submit_take_task") != null || request.getParameter("submit_take_tasks") != null){
             //Add a claimed user to our task
-            workflowRequirementsService.addClaimedUser(c, wfi, step, c.getCurrentUser());
+            XmlWorkflowServiceFactory.getInstance().getWorkflowRequirementsService().addClaimedUser(c, wfi, step, c.getCurrentUser());
 
             return new ActionResult(ActionResult.TYPE.TYPE_OUTCOME, ActionResult.OUTCOME_COMPLETE);
         }else{

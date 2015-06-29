@@ -1,5 +1,6 @@
 package org.dspace.core;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.dspace.core.GenericDAO;
 import org.hibernate.*;
 import org.hibernate.criterion.Projections;
@@ -26,6 +27,7 @@ public abstract class AbstractHibernateDAO<T> implements GenericDAO<T> {
 
     @Override
     public void save(Context context, T t) throws SQLException {
+        //Isn't required, is just here for other DB implementation. Hibernate auto keeps track of changes.
 //        t = (T) getHibernateSession(context).merge(t);
 //        getHibernateSession(context).persist(t);
 //        getHibernateSession(context).flush();
@@ -117,11 +119,34 @@ public abstract class AbstractHibernateDAO<T> implements GenericDAO<T> {
         return result;
     }
 
+    /**
+     * Retrieve a unique result from the query, if multiple results CAN be retrieved an exception will be thrown
+     * so only use when the criteria state uniqueness in the database
+     * @param criteria
+     * @return
+     */
     public T uniqueResult(Criteria criteria)
     {
         @SuppressWarnings("unchecked")
         T result = (T) criteria.uniqueResult();
         return result;
+    }
+
+    /**
+     * Retrieve a single result from the query, best used if you expect a single result but this isn't enforced on the database
+     * @param criteria
+     * @return
+     */
+    public T singleResult(Criteria criteria)
+    {
+        List<T> list = list(criteria);
+        if(CollectionUtils.isNotEmpty(list))
+        {
+            return list.get(0);
+        }else{
+            return null;
+        }
+
     }
 
     public T uniqueResult(Query query)

@@ -338,7 +338,7 @@ public class QDCCrosswalk extends SelfNamedPlugin
      * Returns object's metadata in MODS format, as XML structure node.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -399,7 +399,7 @@ public class QDCCrosswalk extends SelfNamedPlugin
     }
 
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {

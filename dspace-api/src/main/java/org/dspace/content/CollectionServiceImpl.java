@@ -123,7 +123,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     public List<Collection> findAuthorizedOptimized(Context context, int actionID) throws SQLException {
         if(! ConfigurationManager.getBooleanProperty("org.dspace.content.Collection.findAuthorizedPerformanceOptimize", true)) {
             // Fallback to legacy query if config says so. The rationale could be that a site found a bug.
-            return findAuthorized(context, null, null, actionID);
+            return findAuthorized(context, null, actionID);
         }
 
         List<Collection> myResults = new ArrayList<Collection>();
@@ -721,7 +721,7 @@ public class CollectionServiceImpl extends DSpaceObjectServiceImpl<Collection> i
     }
 
     @Override
-    public List<Collection> findAuthorized(Context context, Collection collection, Community community, int actionID) throws SQLException {
+    public List<Collection> findAuthorized(Context context, Community community, int actionID) throws SQLException {
         List<Collection> myResults = new ArrayList<Collection>();
 
         List<Collection> myCollections = null;

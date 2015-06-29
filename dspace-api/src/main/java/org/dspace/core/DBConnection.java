@@ -1,3 +1,4 @@
+
 package org.dspace.core;
 
 import java.sql.SQLException;
@@ -22,4 +23,6 @@ public interface DBConnection<T> {
     public void commit() throws SQLException;
 
     public void shutdown();
+
+    public String getType();
 }

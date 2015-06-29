@@ -32,6 +32,6 @@ public class VersionHistoryDAOImpl extends AbstractHibernateDAO<VersionHistory> 
         Criteria criteria = createCriteria(context, VersionHistory.class);
         criteria.createAlias("versions", "v");
         criteria.add(Restrictions.eq("v.item", item));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 }

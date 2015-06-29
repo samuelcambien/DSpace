@@ -54,13 +54,13 @@ public class CommunityDAOImpl extends AbstractHibernateDSODAO<Community> impleme
     public Community findByAdminGroup(Context context, Group group) throws SQLException {
         Criteria criteria = createCriteria(context, Community.class);
         criteria.add(Restrictions.eq("admins", group));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
     public List<Community> findAllNoParent(Context context, MetadataField sortField) throws SQLException {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT community FROM Community as community ");
+        queryBuilder.append(" FROM Community as community ");
         addMetadataLeftJoin(queryBuilder, Community.class.getSimpleName().toLowerCase(), Arrays.asList(sortField));
         addMetadataValueWhereQuery(queryBuilder, ListUtils.EMPTY_LIST, null, " community.parentCommunities IS EMPTY");
         addMetadataSortQuery(queryBuilder, Arrays.asList(sortField), ListUtils.EMPTY_LIST);

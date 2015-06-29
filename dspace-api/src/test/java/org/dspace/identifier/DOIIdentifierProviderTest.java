@@ -542,7 +542,7 @@ public class DOIIdentifierProviderTest
         String retrievedDOI = provider.mint(context, item);
 
         assertNotNull("Minted DOI is null?!", retrievedDOI);
-        assertTrue("Mint did not returned an existing DOI!", doi.equals(retrievedDOI));
+        assertEquals("Mint did not returned an existing DOI!", doi, retrievedDOI);
     }
 
     @Test

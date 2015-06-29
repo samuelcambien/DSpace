@@ -4,6 +4,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.dspace.content.DSpaceObject;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -77,7 +78,8 @@ public class ResourcePolicy{
         {
             return false;
         }
-        if (getClass() != obj.getClass())
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

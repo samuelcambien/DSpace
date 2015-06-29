@@ -19,6 +19,7 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -294,16 +295,13 @@ public class Item extends DSpaceObject implements DSpaceObjectLegacySupport
          {
              return false;
          }
-         if (!(obj instanceof Item))
+         Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+         if (this.getClass() != objClass)
          {
              return false;
          }
-         final Item other = (Item) obj;
-         if (this.getType() != other.getType())
-         {
-             return false;
-         }
-         if (!this.getID().equals(other.getID()))
+         final Item otherItem = (Item) obj;
+         if (!this.getID().equals(otherItem.getID()))
          {
              return false;
          }

@@ -13,6 +13,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CommunityService;
 import org.dspace.core.*;
 import org.dspace.eperson.Group;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 import java.sql.SQLException;
@@ -198,14 +199,25 @@ public class Community extends DSpaceObject implements DSpaceObjectLegacySupport
      * @return <code>true</code> if object passed in represents the same
      *         community as this object
      */
+    @Override
     public boolean equals(Object other)
     {
-        if (!(other instanceof Community))
+        if (other == null)
+        {
+            return false;
+        }
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(other);
+        if (this.getClass() != objClass)
+        {
+            return false;
+        }
+        final Community otherCommunity = (Community) other;
+        if (!this.getID().equals(otherCommunity.getID() ))
         {
             return false;
         }
 
-        return (getID().equals(((Community) other).getID()));
+        return true;
     }
 
     public int hashCode()

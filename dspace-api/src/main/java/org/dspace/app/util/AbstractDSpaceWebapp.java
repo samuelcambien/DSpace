@@ -11,6 +11,7 @@ package org.dspace.app.util;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+
 import org.dspace.app.util.factory.UtilServiceFactory;
 import org.dspace.app.util.service.WebAppService;
 import org.dspace.core.ConfigurationManager;
@@ -30,7 +31,7 @@ abstract public class AbstractDSpaceWebapp
 {
     private static final Logger log = LoggerFactory.getLogger(AbstractDSpaceWebapp.class);
 
-    protected static final WebAppService webAppService = UtilServiceFactory.getInstance().getWebAppService();
+    protected final WebAppService webAppService = UtilServiceFactory.getInstance().getWebAppService();
 
 
     protected String kind;
@@ -71,7 +72,7 @@ abstract public class AbstractDSpaceWebapp
         Timestamp now = new Timestamp(started.getTime());
         try {
             Context context = new Context();
-            webAppService.create(context, kind, url, now, isUI() ? 1 : 0);
+            webApp = webAppService.create(context, kind, url, now, isUI() ? 1 : 0);
             context.complete();
         } catch (SQLException e) {
             log.error("Failed to record startup in Webapp table.", e);
@@ -89,5 +90,23 @@ abstract public class AbstractDSpaceWebapp
         } catch (SQLException e) {
             log.error("Failed to record shutdown in Webapp table.", e);
         }
+    }
+
+    @Override
+    public String getKind()
+    {
+        return kind;
+    }
+
+    @Override
+    public String getURL()
+    {
+        return url;
+    }
+
+    @Override
+    public String getStarted()
+    {
+        return started.toString();
     }
 }

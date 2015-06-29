@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Lazy;
 public class StatisticsServiceFactoryImpl extends StatisticsServiceFactory {
 
     @Autowired(required = true)
-    @Lazy
+//    @Lazy
     private ElasticSearchLoggerService elasticSearchLogger;
 
     @Autowired(required = true)

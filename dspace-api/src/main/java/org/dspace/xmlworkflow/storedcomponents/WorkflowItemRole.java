@@ -33,8 +33,9 @@ public class WorkflowItemRole {
     @SequenceGenerator(name="cwf_workflowitemrole_seq", sequenceName="cwf_workflowitemrole_seq", allocationSize = 1)
     private int id;
 
-    @Column(name = "role_id")
-    @Lob
+//    @Column(name = "role_id")
+//    @Lob
+    @Column(name="role_id", columnDefinition = "text")
     private String roleId;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -121,7 +121,7 @@ public class SubscribeServiceImpl implements SubscribeService
         {
             context.setCurrentUser(eperson);
         }
-        collections = collectionService.findAuthorized(context, null, null, Constants.ADD);
+        collections = collectionService.findAuthorized(context, null, Constants.ADD);
 
         return collections;
     }

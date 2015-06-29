@@ -28,7 +28,7 @@ public class HarvestedCollectionDAOImpl extends AbstractHibernateDAO<HarvestedCo
 //      Old query: "select collection_id from harvested_collection where harvest_type > ? and harvest_status = ? order by last_harvested desc limit 1";
         Criteria criteria = getByStatusAndMinimalTypeCriteria(context, status, type, limit);
         criteria.addOrder(Order.desc("lastHarvested"));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class HarvestedCollectionDAOImpl extends AbstractHibernateDAO<HarvestedCo
 //        Old query: "select collection_id from harvested_collection where harvest_type > ? and harvest_status = ? order by last_harvested asc limit 1";
         Criteria criteria = getByStatusAndMinimalTypeCriteria(context, status, type, limit);
         criteria.addOrder(Order.asc("lastHarvested"));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class HarvestedCollectionDAOImpl extends AbstractHibernateDAO<HarvestedCo
     public HarvestedCollection findByCollection(Context context, Collection collection) throws SQLException {
         Criteria criteria = createCriteria(context, HarvestedCollection.class);
         criteria.add(Restrictions.eq("collection", collection));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
 
     }
 

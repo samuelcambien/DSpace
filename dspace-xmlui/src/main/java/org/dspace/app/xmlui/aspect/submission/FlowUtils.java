@@ -26,10 +26,17 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.submit.AbstractProcessingStep;
 import org.dspace.workflowbasic.BasicWorkflowItem;
+import org.dspace.workflowbasic.factory.BasicWorkflowServiceFactory;
+import org.dspace.workflowbasic.service.BasicWorkflowItemService;
+import org.dspace.workflowbasic.service.BasicWorkflowService;
+import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
+import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
 
 /**
  * This is a utility class to aid in the submission flow scripts. 
@@ -50,12 +57,17 @@ public class FlowUtils {
     /** Where the submissionInfo is stored on an HTTP Request object */
     private static final String DSPACE_SUBMISSION_INFO = "dspace.submission.info";
 
+    protected static final WorkspaceItemService workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
+    protected static final BasicWorkflowItemService basicWorkflowService = BasicWorkflowServiceFactory.getInstance().getBasicWorkflowItemService();
+    protected static final XmlWorkflowItemService xmlWorkflowItemService = XmlWorkflowServiceFactory.getInstance().getXmlWorkflowItemService();
+
+
 	/**
-	 * Return the InProgressSubmission, either workspaceItem or workflowItem, 
+	 * Return the InProgressSubmission, either workspaceItem or workflowItem,
 	 * depending on the id provided. If the id begins with an S then it is a
 	 * considered a workspaceItem. If the id begins with a W then it is
 	 * considered a workflowItem.
-	 * 
+	 *
 	 * @param context
 	 * @param inProgressSubmissionID
 	 * @return The InprogressSubmission or null if non found
@@ -66,15 +78,15 @@ public class FlowUtils {
 		
 		if (type == 'S')
 		{
-			return WorkspaceItem.find(context, id);
+			return workspaceItemService.find(context, id);
 		}
 		else if (type == 'W')
 		{
-			return BasicWorkflowItem.find(context, id);
+			return basicWorkflowService.find(context, id);
 		}
         else if (type == 'X')
         {
-            return XmlWorkflowItem.find(context, id);
+            return xmlWorkflowItemService.find(context, id);
         }
 		return null;
 	}
@@ -176,15 +188,13 @@ public class FlowUtils {
 			{
 				workspaceItem.setStageReached(step);
 				workspaceItem.setPageReached(1);  //reset page to first page in new step
-				workspaceItem.update();
-				context.commit();
+				workspaceItemService.update(context, workspaceItem);
 			}
 			else if ((step == workspaceItem.getStageReached()) &&
 					 (page > workspaceItem.getPageReached()))
 			{
 				workspaceItem.setPageReached(page);
-				workspaceItem.update();
-				context.commit();
+                workspaceItemService.update(context, workspaceItem);
 			}
 		}
     }
@@ -209,8 +219,7 @@ public class FlowUtils {
 
             workspaceItem.setStageReached(step);
             workspaceItem.setPageReached(page > 0 ? page : 1);
-            workspaceItem.update();
-            context.commit();
+            workspaceItemService.update(context, workspaceItem);
         }
     }
     
@@ -315,8 +324,7 @@ public class FlowUtils {
 		{
 			// If they selected to remove the item then delete everything.
 			WorkspaceItem workspace = findWorkspace(context,id);
-			workspace.deleteAll();
-	        context.commit();
+			workspaceItemService.deleteAll(context, workspace);
 		}
 	}
 	

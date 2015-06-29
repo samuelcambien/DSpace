@@ -154,6 +154,10 @@ public class Context
         return dbConnection;
     }
 
+    public String getDbType(){
+        return dbConnection.getType();
+    }
+
     /**
      * Set the current user. Authentication must have been performed by the
      * caller - this call does not attempt any authentication.
@@ -353,6 +357,7 @@ public class Context
             dbConnection.commit();
             // Free the DB connection
             dbConnection.closeDBConnection();
+            dbConnection = null;
         }
     }
 
@@ -503,7 +508,7 @@ public class Context
     public boolean isValid()
     {
         // Only return true if our DB connection is live
-        return dbConnection.isTransActionAlive();
+        return dbConnection != null && dbConnection.isTransActionAlive();
     }
 
     /**

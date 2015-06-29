@@ -15,6 +15,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -136,11 +137,11 @@ public class WorkspaceItem implements InProgressSubmission
         {
             return true;
         }
-        if (!(o instanceof WorkspaceItem))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(o);
+        if (getClass() != objClass)
         {
             return false;
         }
-
         final WorkspaceItem that = (WorkspaceItem)o;
         if (this.getID() != that.getID())
         {

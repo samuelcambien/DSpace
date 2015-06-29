@@ -19,6 +19,9 @@ import org.dspace.app.xmlui.utils.ContextUtil;
 import org.dspace.core.Context;
 import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
+import org.dspace.workflowbasic.factory.BasicWorkflowServiceFactory;
+import org.dspace.workflowbasic.service.BasicWorkflowItemService;
+import org.dspace.workflowbasic.service.BasicWorkflowService;
 
 /**
  * Claim all the selected workflows. This action is used by the 
@@ -28,6 +31,9 @@ import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
  */
 public class ClaimTasksAction extends AbstractAction
 {
+
+	protected BasicWorkflowService basicWorkflowService = BasicWorkflowServiceFactory.getInstance().getBasicWorkflowService();
+	protected BasicWorkflowItemService basicWorkflowItemService = BasicWorkflowServiceFactory.getInstance().getBasicWorkflowItemService();
 
     /**
      * @param redirector
@@ -49,7 +55,7 @@ public class ClaimTasksAction extends AbstractAction
     	{
     		for (String workflowID : workflowIDs)
     		{
-    			BasicWorkflowItem workflowItem = BasicWorkflowItem.find(context, Integer.valueOf(workflowID));
+    			BasicWorkflowItem workflowItem = basicWorkflowItemService.find(context, Integer.valueOf(workflowID));
     			
     			int state = workflowItem.getState();
     			// Only unclaim tasks that are already claimed.
@@ -57,11 +63,9 @@ public class ClaimTasksAction extends AbstractAction
     				 state == BasicWorkflowServiceImpl.WFSTATE_STEP2POOL ||
     				 state == BasicWorkflowServiceImpl.WFSTATE_STEP3POOL)
     			{
-    				BasicWorkflowServiceImpl.claim(context, workflowItem, context.getCurrentUser());
+					basicWorkflowService.claim(context, workflowItem, context.getCurrentUser());
     			}
     		}
-
-    		context.commit();
     	}
     	
     	return null;

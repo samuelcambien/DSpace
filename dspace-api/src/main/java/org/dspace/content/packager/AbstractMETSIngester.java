@@ -34,9 +34,7 @@ import org.dspace.core.LogManager;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.workflow.WorkflowException;
-import org.dspace.handle.HandleManager;
-import org.dspace.workflow.WorkflowItem;
-import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
+import org.dspace.workflow.factory.WorkflowServiceFactory;
 import org.jdom.Element;
 
 /**
@@ -667,19 +665,14 @@ public abstract class AbstractMETSIngester extends AbstractPackageIngester
             addBitstreams(context, item, manifest, pkgFile, params, callback);
 
             // have subclass manage license since it may be extra package file.
-            Collection owningCollection = (Collection) dso.getParentObject();
+            Collection owningCollection = (Collection) ContentServiceFactory.getInstance().getDSpaceObjectService(dso).getParentObject(context, dso);
             if(owningCollection == null)
             {
                 //We are probably dealing with an item that isn't archived yet
-                InProgressSubmission inProgressSubmission = WorkspaceItem.findByItem(context, item);
+                InProgressSubmission inProgressSubmission = workspaceItemService.findByItem(context, item);
                 if(inProgressSubmission == null)
                 {
-                    if (ConfigurationManager.getProperty("workflow", "workflow.framework").equals("xmlworkflow"))
-                    {
-                        inProgressSubmission = XmlWorkflowItem.findByItem(context, item);
-                    }else{
-                        inProgressSubmission = WorkflowItem.findByItem(context, item);
-                    }
+                    inProgressSubmission = WorkflowServiceFactory.getInstance().getWorkflowItemService().findByItem(context, item);
                 }
                 owningCollection = inProgressSubmission.getCollection();
             }

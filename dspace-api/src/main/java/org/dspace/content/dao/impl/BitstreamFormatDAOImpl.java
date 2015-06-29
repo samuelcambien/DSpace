@@ -44,7 +44,7 @@ public class BitstreamFormatDAOImpl extends AbstractHibernateDAO<BitstreamFormat
                 Restrictions.like("mimetype", mimeType)
         ));
 
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     /**

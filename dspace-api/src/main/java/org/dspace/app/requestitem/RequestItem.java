@@ -41,8 +41,9 @@ public class RequestItem {
     @Column(name = "request_name", length = 64)
     private String reqName;
 
-    @Column(name = "request_message")
-    @Lob
+//    @Column(name = "request_message")
+//    @Lob
+    @Column(name="request_message", columnDefinition = "text")
     private String reqMessage;
 
     @Column(name = "token", unique = true, length = 48)

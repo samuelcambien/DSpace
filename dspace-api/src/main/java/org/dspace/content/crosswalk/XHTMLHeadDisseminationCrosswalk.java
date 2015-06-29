@@ -14,6 +14,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.dspace.core.SelfNamedPlugin;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -147,12 +148,12 @@ public class XHTMLHeadDisseminationCrosswalk extends SelfNamedPlugin implements
      * this will probably not be used
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
             throws CrosswalkException, IOException, SQLException,
             AuthorizeException
     {
         Element head = new Element("head", XHTML_NAMESPACE);
-        head.addContent(disseminateList(dso));
+        head.addContent(disseminateList(context, dso));
 
         return head;
     }
@@ -162,7 +163,7 @@ public class XHTMLHeadDisseminationCrosswalk extends SelfNamedPlugin implements
      * of an XHTML document.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException,
+    public List<Element> disseminateList(Context context, DSpaceObject dso) throws CrosswalkException,
             IOException, SQLException, AuthorizeException
     {
         if (dso.getType() != Constants.ITEM)

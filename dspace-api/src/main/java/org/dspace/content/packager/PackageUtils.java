@@ -13,10 +13,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +22,7 @@ import org.apache.log4j.Logger;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
+import org.dspace.content.Collection;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.*;
 import org.dspace.core.Constants;
@@ -667,11 +665,13 @@ public class PackageUtils
         {
             Item item = (Item) dso;
             // Get a reference to all Bundles in Item (which contain the bitstreams)
-            List<Bundle> bunds = item.getBundles();
+            Iterator<Bundle> bunds = item.getBundles().iterator();
 
             // Remove each bundle -- this will in turn remove all bitstreams associated with this Item.
-            for (Bundle bund : bunds) {
-                itemService.removeBundle(context, item, bund);
+            while (bunds.hasNext()) {
+                Bundle bundle = bunds.next();
+                bunds.remove();
+                itemService.removeBundle(context, item, bundle);
             }
         }
         else if (dso.getType()==Constants.COLLECTION)

@@ -18,6 +18,7 @@ import org.dspace.content.*;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.dspace.core.SelfNamedPlugin;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -62,7 +63,7 @@ public class SimpleDCDisseminationCrosswalk extends SelfNamedPlugin
     }
 
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -78,7 +79,7 @@ public class SimpleDCDisseminationCrosswalk extends SelfNamedPlugin
      * "creator" but otherwise just grab element name without qualifier.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {

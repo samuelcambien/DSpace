@@ -39,7 +39,7 @@ public class DOIDAOImpl extends AbstractHibernateDAO<DOI> implements DOIDAO {
 
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class DOIDAOImpl extends AbstractHibernateDAO<DOI> implements DOIDAO {
                         Restrictions.eq("dSpaceObject", dso)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 }

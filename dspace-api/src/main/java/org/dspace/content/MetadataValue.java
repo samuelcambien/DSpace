@@ -8,6 +8,7 @@
 package org.dspace.content;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -39,9 +40,10 @@ public class MetadataValue
     private MetadataField metadataField = null;
 
     /** The value of the field */
-    @Column(name = "text_value")
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+//    @Column(name = "text_value")
+//    @Lob
+//    @Type(type = "org.hibernate.type.TextType")
+    @Column(name="text_value", columnDefinition = "text")
     private String value;
 
     /** The language of the field, may be <code>null</code> */
@@ -223,7 +225,8 @@ public class MetadataValue
         {
             return false;
         }
-        if (!(obj instanceof MetadataValue))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

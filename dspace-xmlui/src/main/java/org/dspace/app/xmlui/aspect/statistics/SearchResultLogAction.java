@@ -19,6 +19,8 @@ import org.dspace.app.xmlui.utils.HandleUtil;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
 import org.dspace.handle.HandleServiceImpl;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.handle.service.HandleService;
 import org.dspace.usage.UsageEvent;
 import org.dspace.usage.UsageSearchEvent;
 import org.dspace.utils.DSpace;
@@ -36,6 +38,8 @@ import java.util.Map;
  */
 public class SearchResultLogAction extends AbstractAction {
 
+    protected HandleService handleService = HandleServiceFactory.getInstance().getHandleService();
+
     @Override
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         Request request = ObjectModelHelper.getRequest(objectModel);
@@ -45,7 +49,7 @@ public class SearchResultLogAction extends AbstractAction {
         DSpaceObject scope = null;
         if(StringUtils.isNotBlank(request.getParameter("current-scope")))
         {
-            scope = HandleServiceImpl.resolveToObject(context, request.getParameter("current-scope"));
+            scope = handleService.resolveToObject(context, request.getParameter("current-scope"));
         }
 
         //Fire an event to log our search result

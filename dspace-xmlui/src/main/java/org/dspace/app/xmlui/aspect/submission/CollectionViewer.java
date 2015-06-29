@@ -10,6 +10,7 @@ package org.dspace.app.xmlui.aspect.submission;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.util.HashUtil;
@@ -24,10 +25,14 @@ import org.dspace.app.xmlui.wing.element.Body;
 import org.dspace.app.xmlui.wing.element.Division;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Constants;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 import org.xml.sax.SAXException;
 
 /**
@@ -48,7 +53,10 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
 	
     /** Cached validity object */
     private SourceValidity validity;
-    
+
+    protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+    protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
     /**
      * Generate the unique caching key.
      * This key must be unique inside the space of this component.
@@ -110,7 +118,7 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
 	            validity.add(eperson);
 	            
 	            // Include any groups they are a member of
-	            Group[] groups = Group.allMemberGroups(context, eperson);
+	            List<Group> groups = groupService.allMemberGroups(context, eperson);
 	            for (Group group : groups)
 	            {
 	            	validity.add(group);
@@ -143,7 +151,7 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
         Collection collection = (Collection) dso;
         
         // Only add the submit link if the user has the ability to add items.
-        if (AuthorizeServiceImpl.authorizeActionBoolean(context, collection, Constants.ADD))
+        if (authorizeService.authorizeActionBoolean(context, collection, Constants.ADD))
         {
 	        Division home = body.addDivision("collection-home","primary repository collection");
 	        Division viewer = home.addDivision("collection-view","secondary");

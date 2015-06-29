@@ -80,7 +80,7 @@ public class OptimizeSelectCollection {
         System.out.println("User: " + person.getEmail());
 
         stopWatch.start("findAuthorized");
-        List<Collection> collections = collectionService.findAuthorized(context, null, null, Constants.ADD);
+        List<Collection> collections = collectionService.findAuthorized(context, null, Constants.ADD);
         stopWatch.stop();
         Long defaultMS = stopWatch.getLastTaskTimeMillis();
 

@@ -42,7 +42,7 @@ public class SubscriptionDAOImpl extends AbstractHibernateDAO<Subscription> impl
                         Restrictions.eq("collection", collection)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
 

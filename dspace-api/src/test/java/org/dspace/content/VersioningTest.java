@@ -109,6 +109,7 @@ public class VersioningTest extends AbstractUnitTest {
     @Override
     public void destroy()
     {
+        context.abort();
         super.destroy();
     }
 

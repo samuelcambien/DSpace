@@ -35,8 +35,9 @@ public class CollectionRole {
     @SequenceGenerator(name="cwf_collectionrole_seq", sequenceName="cwf_collectionrole_seq", allocationSize = 1)
     private int id;
 
-    @Column(name = "role_id")
-    @Lob
+//    @Column(name = "role_id")
+//    @Lob
+    @Column(name="role_id", columnDefinition = "text")
     private String roleId;
 
     @ManyToOne(fetch = FetchType.LAZY)

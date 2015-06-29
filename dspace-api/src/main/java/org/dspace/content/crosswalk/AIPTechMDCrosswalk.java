@@ -167,11 +167,11 @@ public class AIPTechMDCrosswalk implements IngestionCrosswalk, DisseminationCros
      * @throws AuthorizeException current user not authorized for this operation.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
     {
-        Element dim = disseminateElement(dso);
+        Element dim = disseminateElement(context, dso);
         return dim.getChildren();
     }
 
@@ -191,7 +191,7 @@ public class AIPTechMDCrosswalk implements IngestionCrosswalk, DisseminationCros
      * @throws AuthorizeException current user not authorized for this operation.
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
     {
@@ -284,9 +284,7 @@ public class AIPTechMDCrosswalk implements IngestionCrosswalk, DisseminationCros
             String ownerHdl = null;
             if (CollectionUtils.isEmpty(parentCommunities))
             {
-                Context context = new Context();
                 ownerHdl = siteService.findSite(context).getHandle();
-                context.abort();
             }
             else
             {

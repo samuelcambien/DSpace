@@ -197,7 +197,7 @@ public class XSLTDisseminationCrosswalk
      * @see DisseminationCrosswalk
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -238,7 +238,7 @@ public class XSLTDisseminationCrosswalk
      * @see DisseminationCrosswalk
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -565,7 +565,7 @@ public class XSLTDisseminationCrosswalk
         Element root = null;
         try
         {
-            root = xwalk.disseminateElement(dso);
+            root = xwalk.disseminateElement(context, dso);
         }
         catch (Exception e)
         {

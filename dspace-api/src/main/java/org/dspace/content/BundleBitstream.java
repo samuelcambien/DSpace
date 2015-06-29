@@ -1,5 +1,7 @@
 package org.dspace.content;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -27,6 +29,29 @@ public class BundleBitstream implements Serializable {
     private int bitstreamOrder = -1;
 
     protected BundleBitstream() {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+        {
+            return false;
+        }
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
+        {
+            return false;
+        }
+        final BundleBitstream other = (BundleBitstream) obj;
+        if(!other.getBundle().equals(bundle))
+        {
+            return false;
+        }
+        if(!other.getBitstream().equals(bitstream))
+        {
+            return false;
+        }
+        return true;
     }
 
     public Bundle getBundle() {

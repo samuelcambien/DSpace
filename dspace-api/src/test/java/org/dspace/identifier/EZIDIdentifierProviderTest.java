@@ -20,6 +20,8 @@ import org.dspace.AbstractUnitTest;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
 import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.CollectionService;
+import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
@@ -64,6 +66,8 @@ public class EZIDIdentifierProviderTest
 
     private static Collection collection;
 
+    protected CommunityService communityService = ContentServiceFactory.getInstance().getCommunityService();
+    protected CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
     protected ItemService itemService = ContentServiceFactory.getInstance().getItemService();
     protected WorkspaceItemService workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
 
@@ -75,16 +79,16 @@ public class EZIDIdentifierProviderTest
     {
     }
 
-    private static void dumpMetadata(Item eyetem)
+    private void dumpMetadata(Item eyetem)
     {
-        Metadatum[] metadata = eyetem.getMetadata("dc", Item.ANY, Item.ANY, Item.ANY);
-        for (Metadatum metadatum : metadata)
+        List<MetadataValue> metadata = itemService.getMetadata(eyetem, "dc", Item.ANY, Item.ANY, Item.ANY);
+        for (MetadataValue metadatum : metadata)
             System.out.printf("Metadata:  %s.%s.%s(%s) = %s\n",
-                    metadatum.schema,
-                    metadatum.element,
-                    metadatum.qualifier,
-                    metadatum.language,
-                    metadatum.value);
+                    metadatum.getMetadataField().getMetadataSchema().getName(),
+                    metadatum.getMetadataField().getElement(),
+                    metadatum.getMetadataField().getQualifier(),
+                    metadatum.getLanguage(),
+                    metadatum.getValue());
     }
 
     /**
@@ -149,15 +153,13 @@ public class EZIDIdentifierProviderTest
         context.turnOffAuthorisationSystem();
 
         // Create an environment for our test objects to live in.
-        community = Community.create(null, context);
-        community.setMetadata("name", "A Test Community");
-        community.update();
+        community = communityService.create(community, context);
+        communityService.setMetadata(context, community, "name", "A Test Community");
+        communityService.update(context, community);
 
-        collection = community.createCollection();
-        collection.setMetadata("name", "A Test Collection");
-        collection.update();
-
-        context.commit();
+        collection = collectionService.create(context, community);
+        collectionService.setMetadata(context, collection, "name", "A Test Collection");
+        collectionService.update(context, collection);
     }
 
     @After
@@ -166,7 +168,7 @@ public class EZIDIdentifierProviderTest
     {
         context.restoreAuthSystemState();
 
-        dumpMetadata(Item.find(context, itemID));
+        dumpMetadata(item);
     }
 
     /**
@@ -413,7 +415,7 @@ public class EZIDIdentifierProviderTest
         String handle = dso.getHandle();
 
         // Test!
-        Map<String, String> metadata = instance.crosswalkMetadata(dso);
+        Map<String, String> metadata = instance.crosswalkMetadata(context, dso);
 
         // Evaluate
         String target = (String) metadata.get("_target");

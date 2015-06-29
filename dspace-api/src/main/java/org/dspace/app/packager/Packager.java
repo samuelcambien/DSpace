@@ -507,107 +507,93 @@ public class Packager
         //NOTE: at this point, Parent may be null -- in which case it is up to the PackageIngester
         // to either determine the Parent (from package contents) or throw an error.
 
-
-        //If we are doing a recursive ingest, call ingestAll()
-        if(pkgParams.recursiveModeEnabled())
-        {
-            System.out.println("\nAlso ingesting all referenced packages (recursive mode)..");
-            System.out.println("This may take a while, please check your logs for ongoing status while we process each package.");
-
-            //ingest first package & recursively ingest anything else that package references (child packages, etc)
-            List<String> hdlResults = sip.ingestAll(context, parent, pkgFile, pkgParams, null);
-
-            if(hdlResults!=null)
-            {
-                //Report total objects created
-                System.out.println("\nCREATED a total of " + hdlResults.size() + " DSpace Objects.");
+        try{
+            //If we are doing a recursive ingest, call ingestAll()
+            if(pkgParams.recursiveModeEnabled()) {
+                System.out.println("\nAlso ingesting all referenced packages (recursive mode)..");
+                System.out.println("This may take a while, please check your logs for ongoing status while we process each package.");
 
                 //ingest first package & recursively ingest anything else that package references (child packages, etc)
-                List<DSpaceObject> dsoResults = sip.ingestAll(context, parent, pkgFile, pkgParams, null);
+                List<String> hdlResults = sip.ingestAll(context, parent, pkgFile, pkgParams, null);
 
-                if(dsoResults!=null)
-                {
+                if (hdlResults != null) {
                     //Report total objects created
-                    System.out.println("\nCREATED a total of " + dsoResults.size() + " DSpace Objects.");
+                    System.out.println("\nCREATED a total of " + hdlResults.size() + " DSpace Objects.");
 
-                    String choiceString = null;
-                    //Ask if user wants full list printed to command line, as this may be rather long.
-                    if(this.userInteractionEnabled)
-                    {
-                        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-                        System.out.print("\nWould you like to view a list of all objects that were created? [y/n]: ");
-                        choiceString = input.readLine();
-                    }
-                    else
-                    {
-                        // user interaction disabled -- default answer to 'yes', as
-                        // we want to provide user with as detailed a report as possible.
-                        choiceString = "y";
-                    }
+                    //ingest first package & recursively ingest anything else that package references (child packages, etc)
+                    List<String> dsoResults = sip.ingestAll(context, parent, pkgFile, pkgParams, null);
 
-                    // Provide detailed report if user answered 'yes'
-                    if (choiceString.equalsIgnoreCase("y"))
-                    {
+                    if (dsoResults != null) {
+                        //Report total objects created
+                        System.out.println("\nCREATED a total of " + dsoResults.size() + " DSpace Objects.");
+
+                        String choiceString = null;
+                        //Ask if user wants full list printed to command line, as this may be rather long.
+                        if (this.userInteractionEnabled) {
+                            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                            System.out.print("\nWould you like to view a list of all objects that were created? [y/n]: ");
+                            choiceString = input.readLine();
+                        } else {
+                            // user interaction disabled -- default answer to 'yes', as
+                            // we want to provide user with as detailed a report as possible.
+                            choiceString = "y";
+                        }
+
+                        // Provide detailed report if user answered 'yes'
+                        if (choiceString.equalsIgnoreCase("y"))
+                        {
+                            System.out.println("\n\n");
+                            for (String result : hdlResults)
+                            {
+                                DSpaceObject dso = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context, result);
+
+                                if(dso!=null)
+                                {
+
+                                    if (pkgParams.restoreModeEnabled()) {
+                                        System.out.println("RESTORED DSpace " + Constants.typeText[dso.getType()] +
+                                                " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                                    } else {
+                                        System.out.println("CREATED new DSpace " + Constants.typeText[dso.getType()] +
+                                                " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                } else {
+
+                    //otherwise, just one package to ingest
+                    try {
                         System.out.println("\n\n");
-                        for(DSpaceObject result : dsoResults)
+                        for (String result : hdlResults) {
+                            DSpaceObject dso = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context, result);
+
+                            if (dso != null) {
+                                if (pkgParams.restoreModeEnabled()) {
+                                    System.out.println("RESTORED DSpace " + Constants.typeText[dso.getType()] +
+                                            " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                                } else {
+                                    System.out.println("CREATED new DSpace " + Constants.typeText[dso.getType()] +
+                                            " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
+                                }
+                            }
+                        }
+                    } catch (IllegalStateException ie) {
+                        // NOTE: if we encounter an IllegalStateException, this means the
+                        // handle is already in use and this object already exists.
+
+                        //if we are skipping over (i.e. keeping) existing objects
+                        if (pkgParams.keepExistingModeEnabled()) {
+                            System.out.println("\nSKIPPED processing package '" + pkgFile + "', as an Object already exists with this handle.");
+                        } else // Pass this exception on -- which essentially causes a full rollback of all changes (this is the default)
                         {
-                            if(pkgParams.restoreModeEnabled())
-                            {
-                                System.out.println("RESTORED DSpace " + Constants.typeText[result.getType()] +
-                                        " [ hdl=" + result.getHandle() + ", dbID=" + result.getID() + " ] ");
-                            }
-                            else
-                            {
-                                System.out.println("CREATED new DSpace " + Constants.typeText[result.getType()] +
-                                        " [ hdl=" + result.getHandle() + ", dbID=" + result.getID() + " ] ");
-                            }
+                            throw ie;
                         }
                     }
 
                 }
-            }
-            else
-            {
-
-                //otherwise, just one package to ingest
-                try
-                {
-                    System.out.println("\n\n");
-                    for(String result : hdlResults)
-                    {
-                        DSpaceObject dso = HandleManager.resolveToObject(context, result);
-                        
-                        if(dso!=null)
-                        {
-                            if(pkgParams.restoreModeEnabled())
-                            {
-                                System.out.println("RESTORED DSpace " + Constants.typeText[dso.getType()] +
-                                        " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
-                            }
-                            else
-                            {
-                                System.out.println("CREATED new DSpace " + Constants.typeText[dso.getType()] +
-                                        " [ hdl=" + dso.getHandle() + ", dbID=" + dso.getID() + " ] ");
-                            }
-                        }
-                    }
-                }
-                catch(IllegalStateException ie)
-                {
-                    // NOTE: if we encounter an IllegalStateException, this means the
-                    // handle is already in use and this object already exists.
-
-                    //if we are skipping over (i.e. keeping) existing objects
-                    if(pkgParams.keepExistingModeEnabled())
-                    {
-                        System.out.println("\nSKIPPED processing package '" + pkgFile + "', as an Object already exists with this handle.");
-                    }
-                    else // Pass this exception on -- which essentially causes a full rollback of all changes (this is the default)
-                    {
-                        throw ie;
-                    }
-                }
-
             }
         } catch (WorkflowException e) {
             throw new PackageException(e);
@@ -738,63 +724,47 @@ public class Packager
 
 
         //If we are doing a recursive replace, call replaceAll()
-        if(pkgParams.recursiveModeEnabled())
-        {
-            //ingest first object using package & recursively replace anything else that package references (child objects, etc)
-            List<String> hdlResults = sip.replaceAll(context, objToReplace, pkgFile, pkgParams);
+        try {
+            if (pkgParams.recursiveModeEnabled()) {
+                //ingest first object using package & recursively replace anything else that package references (child objects, etc)
+                List<String> hdlResults = sip.replaceAll(context, objToReplace, pkgFile, pkgParams);
 
-            if(hdlResults!=null)
-            {
-                //Report total objects replaced
-                System.out.println("\nREPLACED a total of " + hdlResults.size() + " DSpace Objects.");
-
-                if(dsoResults!=null)
-                {
+                if (hdlResults != null) {
                     //Report total objects replaced
-                    System.out.println("\nREPLACED a total of " + dsoResults.size() + " DSpace Objects.");
+                    System.out.println("\nREPLACED a total of " + hdlResults.size() + " DSpace Objects.");
 
-                // Provide detailed report if user answered 'yes'
-                if (choiceString.equalsIgnoreCase("y"))
-                {
-                    System.out.println("\n\n");
-                    for(String result : hdlResults)
-                    {
-                        DSpaceObject dso = HandleManager.resolveToObject(context, result);
-                        
-                        if(dso!=null)
-                        {
-                            System.out.println("REPLACED DSpace " + Constants.typeText[dso.getType()] +
-                                        " [ hdl=" + dso.getHandle() + " ] ");
-                        }
-                    }
-                    else
-                    {
+                    String choiceString = null;
+                    //Ask if user wants full list printed to command line, as this may be rather long.
+                    if (this.userInteractionEnabled) {
+                        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+                        System.out.print("\nWould you like to view a list of all objects that were replaced? [y/n]: ");
+                        choiceString = input.readLine();
+                    } else {
                         // user interaction disabled -- default answer to 'yes', as
                         // we want to provide user with as detailed a report as possible.
                         choiceString = "y";
                     }
 
                     // Provide detailed report if user answered 'yes'
-                    if (choiceString.equalsIgnoreCase("y"))
-                    {
+                    if (choiceString.equalsIgnoreCase("y")) {
                         System.out.println("\n\n");
-                        for(DSpaceObject result : dsoResults)
-                        {
-                            System.out.println("REPLACED DSpace " + Constants.typeText[result.getType()] +
-                                        " [ hdl=" + result.getHandle() + " ] ");
+                        for (String result : hdlResults) {
+                            DSpaceObject dso = HandleServiceFactory.getInstance().getHandleService().resolveToObject(context, result);
+
+                            if (dso != null) {
+                                System.out.println("REPLACED DSpace " + Constants.typeText[dso.getType()] +
+                                        " [ hdl=" + dso.getHandle() + " ] ");
+                            }
                         }
                     }
 
 
                 }
-            }
-            else
-            {
+            } else {
                 //otherwise, just one object to replace
                 DSpaceObject dso = sip.replace(context, objToReplace, pkgFile, pkgParams);
 
-                if(dso!=null)
-                {
+                if (dso != null) {
                     System.out.println("REPLACED DSpace " + Constants.typeText[dso.getType()] +
                             " [ hdl=" + dso.getHandle() + " ] ");
                 }

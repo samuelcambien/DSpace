@@ -941,7 +941,10 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
         Community community = null;
         if (collection != null)
         {
-            community = collection.getCommunities().iterator().next();
+            if(CollectionUtils.isNotEmpty(collection.getCommunities()))
+            {
+                community = collection.getCommunities().get(0);
+            }
         }
 
         switch (action)

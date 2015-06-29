@@ -43,15 +43,14 @@ import org.dspace.browse.BrowseEngine;
 import org.dspace.browse.BrowseException;
 import org.dspace.browse.BrowseIndex;
 import org.dspace.browse.BrowseInfo;
-import org.dspace.browse.BrowseItem;
 import org.dspace.browse.BrowserScope;
+import org.dspace.content.*;
+import org.dspace.content.Collection;
 import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
+import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
+import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.sort.SortOption;
 import org.dspace.sort.SortException;
-import org.dspace.content.Collection;
-import org.dspace.content.Community;
-import org.dspace.content.DCDate;
-import org.dspace.content.DSpaceObject;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
@@ -133,6 +132,8 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
     private Message titleMessage = null;
     private Message trailMessage = null;
 
+    protected ChoiceAuthorityService choicheAuthorityService = ContentAuthorityServiceFactory.getInstance().getChoiceAuthorityService();
+
     @Override
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
@@ -202,7 +203,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
                 if (isItemBrowse(info))
                 {
                     // Add the browse items to the validity
-                    for (BrowseItem item : (java.util.List<BrowseItem>) info.getResults())
+                    for (Item item : (java.util.List<Item>) info.getResults())
                     {
                         validity.add(item);
                     }
@@ -251,7 +252,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
         pageMeta.addTrailLink(contextPath + "/", T_dspace_home);
         if (dso != null)
         {
-            HandleUtil.buildHandleTrail(dso, pageMeta, contextPath, true);
+            HandleUtil.buildHandleTrail(context, dso, pageMeta, contextPath, true);
         }
 
         pageMeta.addTrail().addContent(getTrailMessage(info));
@@ -308,7 +309,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
             if (isItemBrowse(info))
             {
                 // Add the items to the browse results
-                for (BrowseItem item : (java.util.List<BrowseItem>) info.getResults())
+                for (Item item : (java.util.List<Item>) info.getResults())
                 {
                     referenceSet.addReference(item);
                 }
@@ -890,9 +891,8 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
             {
                 if (bix.isAuthorityIndex())
                 {
-                    ChoiceAuthorityServiceImpl cm = ChoiceAuthorityServiceImpl.getManager();
-                    String fk = cm.makeFieldKey(bix.getMetadata(0));
-                    value = "\""+cm.getLabel(fk, info.getValue(), null)+"\"";
+                    String fk = bix.getMetadata(0).replace(".", "_");
+                    value = "\""+choicheAuthorityService.getLabel(fk, info.getValue(), null)+"\"";
                 }
                 else
                 {

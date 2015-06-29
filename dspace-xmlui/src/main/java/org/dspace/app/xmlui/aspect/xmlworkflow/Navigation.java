@@ -26,7 +26,11 @@ import org.dspace.app.xmlui.wing.element.List;
 import org.dspace.app.xmlui.wing.element.Options;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 import org.xml.sax.SAXException;
 
 /**
@@ -43,6 +47,10 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 
     /** Cached validity object */
 	private SourceValidity validity;
+
+    protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+    protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
 
 	/** exports available for download */
 	java.util.List<String> availableExports = null;
@@ -103,7 +111,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 
 		            validity.add(eperson);
 
-		            Group[] groups = Group.allMemberGroups(context, eperson);
+		            java.util.List<Group> groups = groupService.allMemberGroups(context, eperson);
 		            for (Group group : groups)
 		            {
 		            	validity.add(group);
@@ -135,7 +143,7 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
         List admin = options.addList("administrative");
 
         //Check if a system administrator
-        boolean isSystemAdmin = AuthorizeServiceImpl.isAdmin(this.context);
+        boolean isSystemAdmin = authorizeService.isAdmin(this.context);
 
 
         // System Administrator options!

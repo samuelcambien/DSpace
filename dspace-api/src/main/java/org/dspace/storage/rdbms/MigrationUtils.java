@@ -46,9 +46,11 @@ public class MigrationUtils
         String dbtype = connection.getMetaData().getDatabaseProductName();
         String constraintName = null;
         String constraintNameSQL = null;
+        boolean cascade = false;
         switch(dbtype.toLowerCase())
         {
             case "postgres":
+            case "postgresql":
                 // In Postgres, constraints are always named:
                 // {tablename}_{columnname(s)}_{suffix}
                 // see: http://stackoverflow.com/a/4108266/3750035
@@ -59,6 +61,7 @@ public class MigrationUtils
                 }
 
                 constraintName += "_" + StringUtils.lowerCase(constraintSuffix);
+                cascade = true;
                 break;
             case "oracle":
                 // In Oracle, constraints are listed in the USER_CONS_COLUMNS table
@@ -103,6 +106,9 @@ public class MigrationUtils
         {
             // This drop constaint SQL should be the same in all databases
             String dropConstraintSQL = "ALTER TABLE " + tableName + " DROP CONSTRAINT " + constraintName;
+            if(cascade){
+                dropConstraintSQL += " CASCADE";
+            }
 
             PreparedStatement statement = connection.prepareStatement(dropConstraintSQL);
             try

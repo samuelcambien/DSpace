@@ -234,11 +234,6 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
         List<MetadataField> metadataFieldsSort = new ArrayList<>();
         switch (sortField)
         {
-            case ID:
-                s = "id";
-
-                break;
-
             case NAME:
                 metadataFieldsSort.add(metadataFieldService.findByElement(context, MetadataSchema.DC_SCHEMA, "title", null));
 

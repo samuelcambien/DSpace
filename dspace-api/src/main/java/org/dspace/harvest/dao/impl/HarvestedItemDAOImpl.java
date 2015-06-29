@@ -22,7 +22,7 @@ public class HarvestedItemDAOImpl extends AbstractHibernateDAO<HarvestedItem> im
     public HarvestedItem findByItem(Context context, Item item) throws SQLException {
         Criteria criteria = createCriteria(context, HarvestedItem.class);
         criteria.add(Restrictions.eq("item", item));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class HarvestedItemDAOImpl extends AbstractHibernateDAO<HarvestedItem> im
                         Restrictions.eq("item.owningCollection", collection)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 }

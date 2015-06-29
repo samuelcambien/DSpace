@@ -215,7 +215,7 @@ public class PREMISCrosswalk
     }
 
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -336,12 +336,12 @@ public class PREMISCrosswalk
     }
 
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
         List<Element> result = new ArrayList<Element>(1);
-        result.add(disseminateElement(dso));
+        result.add(disseminateElement(context, dso));
         return result;
     }
 

@@ -138,7 +138,7 @@ public class METSRightsCrosswalk
      * @throws AuthorizeException
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -167,7 +167,6 @@ public class METSRightsCrosswalk
         // what those rights are -- too many types of content can be stored in DSpace
 
         //Get all policies on this DSpace Object
-        Context context = new Context();
         List<ResourcePolicy> policies = authorizeService.getPolicies(context, dso);
 
         //For each DSpace policy
@@ -293,17 +292,16 @@ public class METSRightsCrosswalk
            
         }//end for each policy
 
-        context.complete();
         return rightsMD;
     }
 
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
         List<Element> result = new ArrayList<Element>(1);
-        result.add(disseminateElement(dso));
+        result.add(disseminateElement(context, dso));
         return result;
     }
 

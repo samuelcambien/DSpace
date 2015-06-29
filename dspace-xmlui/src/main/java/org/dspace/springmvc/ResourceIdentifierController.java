@@ -179,8 +179,6 @@ public class ResourceIdentifierController {
 
         } catch (IdentifierNotResolvableException e) {
             throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
 
         }
     }
@@ -207,8 +205,6 @@ public class ResourceIdentifierController {
 
             return STATUS_OK;
 
-        }catch (SQLException e) {
-            return STATUS_FORBIDDEN;
         }catch (IdentifierNotFoundException e) {
             return STATUS_FORBIDDEN;
 

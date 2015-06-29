@@ -1862,27 +1862,27 @@ public class CollectionTest extends AbstractDSpaceObjectTest
         Community com = communityService.create(null, context);
         context.restoreAuthSystemState();
 
-        List<Collection> found = collectionService.findAuthorized(context, collection, com, Constants.WRITE);
+        List<Collection> found = collectionService.findAuthorized(context, com, Constants.WRITE);
         assertThat("testFindAuthorized 0",found,notNullValue());
         assertTrue("testFindAuthorized 1",found.size() == 0);
 
-        found = collectionService.findAuthorized(context, collection, null, Constants.WRITE);
+        found = collectionService.findAuthorized(context, null, Constants.WRITE);
         assertThat("testFindAuthorized 2",found,notNullValue());
         assertTrue("testFindAuthorized 3",found.size() == 0);
 
-        found = collectionService.findAuthorized(context, collection, com, Constants.ADD);
+        found = collectionService.findAuthorized(context, com, Constants.ADD);
         assertThat("testFindAuthorized 3",found,notNullValue());
         assertTrue("testFindAuthorized 4",found.size() == 0);
 
-        found = collectionService.findAuthorized(context, collection, null, Constants.ADD);
+        found = collectionService.findAuthorized(context, null, Constants.ADD);
         assertThat("testFindAuthorized 5",found,notNullValue());
         assertTrue("testFindAuthorized 6",found.size() == 0);
 
-        found = collectionService.findAuthorized(context, collection, com, Constants.READ);
+        found = collectionService.findAuthorized(context, com, Constants.READ);
         assertThat("testFindAuthorized 7",found,notNullValue());
         assertTrue("testFindAuthorized 8",found.size() == 0);
 
-        found = collectionService.findAuthorized(context, collection, null, Constants.READ);
+        found = collectionService.findAuthorized(context, null, Constants.READ);
         assertThat("testFindAuthorized 9",found,notNullValue());
         assertTrue("testFindAuthorized 10",found.size() >= 1);
     }

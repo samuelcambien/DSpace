@@ -30,6 +30,7 @@ import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.dspace.core.SelfNamedPlugin;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -311,7 +312,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * Returns object's metadata in MODS format, as List of XML structure nodes.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {
@@ -322,7 +323,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * Disseminate an Item, Collection, or Community to MODS.
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException,
                IOException, SQLException, AuthorizeException
     {

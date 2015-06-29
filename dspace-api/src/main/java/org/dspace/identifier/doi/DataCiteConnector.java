@@ -492,7 +492,7 @@ implements DOIConnector
         Element root = null;
         try
         {
-            root = xwalk.disseminateElement(dso);
+            root = xwalk.disseminateElement(context, dso);
         }
         catch (AuthorizeException ae)
         {

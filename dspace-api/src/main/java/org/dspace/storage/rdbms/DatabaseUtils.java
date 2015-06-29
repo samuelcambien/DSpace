@@ -894,28 +894,16 @@ public class DatabaseUtils
         DatabaseMetaData meta = connection.getMetaData();
 
         // Determine our DB type
+
+        // If unspecified, determine "sane" defaults based on DB type
         String dbType = findDbKeyword(meta);
-        
-        if(dbType.equals(DBMS_POSTGRES))
+        if (StringUtils.equals(dbType, DBMS_POSTGRES))
         {
-            String dbType = DatabaseManager.findDbKeyword(meta);
-        
-            if(dbType.equals(DatabaseManager.DBMS_POSTGRES))
-            {
-                // For PostgreSQL, the default schema is named "public"
-                // See: http://www.postgresql.org/docs/9.0/static/ddl-schemas.html
-                schema = "public";
-            }
-            else if (dbType.equals(DatabaseManager.DBMS_ORACLE))
-            {
-                // For Oracle, default schema is actually the user account
-                // See: http://stackoverflow.com/a/13341390
-                schema = meta.getUserName();
-            }
-            else
-                schema = null;
+            // For PostgreSQL, the default schema is named "public"
+            // See: http://www.postgresql.org/docs/9.0/static/ddl-schemas.html
+            schema = "public";
         }
-        else if (dbType.equals(DBMS_ORACLE))
+        else if (StringUtils.equals(dbType, DBMS_ORACLE))
         {
             // Schema is actually the user account
             // See: http://stackoverflow.com/a/13341390

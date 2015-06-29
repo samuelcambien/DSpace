@@ -15,6 +15,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -56,7 +57,7 @@ public class Bitstream extends DSpaceObject implements DSpaceObjectLegacySupport
     @Column(name = "store_number")
     private int storeNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bitstream_format_id")
     private BitstreamFormat bitstreamFormat;
 
@@ -396,7 +397,8 @@ public class Bitstream extends DSpaceObject implements DSpaceObjectLegacySupport
          {
              return false;
          }
-         if (!(other instanceof Bitstream))
+         Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(other);
+         if (this.getClass() != objClass)
          {
              return false;
          }

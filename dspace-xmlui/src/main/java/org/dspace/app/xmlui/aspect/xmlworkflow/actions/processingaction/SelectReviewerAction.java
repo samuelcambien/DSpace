@@ -119,7 +119,7 @@ public class SelectReviewerAction extends AbstractXMLUIAction {
             String baseURL = actionUrl + "?submission-continue="+knot.getId() + "&submit_search=search";
             baseURL += "&query=" + request.getParameter("query");
             int firstIndex = page* org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction.RESULTS_PER_PAGE+1;
-            int lastIndex = page* org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction.RESULTS_PER_PAGE + epeople.length;
+            int lastIndex = page* org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction.RESULTS_PER_PAGE + epeople.size();
 
             String nextURL = null, prevURL = null;
             if (page < (resultCount / org.dspace.xmlworkflow.state.actions.processingaction.SelectReviewerAction.RESULTS_PER_PAGE))

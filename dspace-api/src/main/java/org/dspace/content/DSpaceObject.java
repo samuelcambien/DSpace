@@ -10,6 +10,9 @@ package org.dspace.content;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.handle.Handle;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,11 +25,15 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy= InheritanceType.JOINED)
 @Table(name = "dspaceobject", schema = "public")
+//@TypeDefs({
+//  @TypeDef(name="uuid-custom",typeClass=org.dspace.storage.hibernate.UUIDCustomType.class),
+//})
 public abstract class DSpaceObject implements Serializable
 {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+//    @Type(type = "uuid-custom")
     //TODO: HIBERNATE, FIND A GOOD WAY SO THAT POSTGRES, ORACLE & TESTS WORK WITH THIS
 //    @Column(name = "uuid", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     @Column(name = "uuid", unique = true, nullable = false, insertable = true, updatable = false)

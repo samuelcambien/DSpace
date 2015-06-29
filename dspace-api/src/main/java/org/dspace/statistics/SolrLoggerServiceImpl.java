@@ -241,7 +241,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
     }
     
     @Override
-	public static void postView(DSpaceObject dspaceObject,
+	public void postView(DSpaceObject dspaceObject,
 			String ip, String userAgent, String xforwardedfor, EPerson currentUser) {
 		if (solr == null || locationService == null) {
 			return;
@@ -377,7 +377,7 @@ public class SolrLoggerServiceImpl implements SolrLoggerService, InitializingBea
         return doc1;
     }
 
-    private static SolrInputDocument getCommonSolrDoc(DSpaceObject dspaceObject, String ip, String userAgent, String xforwardedfor, EPerson currentUser) throws SQLException {
+    protected SolrInputDocument getCommonSolrDoc(DSpaceObject dspaceObject, String ip, String userAgent, String xforwardedfor, EPerson currentUser) throws SQLException {
         boolean isSpiderBot = SpiderDetector.isSpider(ip);
         if(isSpiderBot &&
                 !ConfigurationManager.getBooleanProperty("usage-statistics", "logBots", true))

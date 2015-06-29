@@ -33,6 +33,7 @@ import org.dspace.core.Utils;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.event.Event;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -123,7 +124,8 @@ public class EPerson extends DSpaceObject implements DSpaceObjectLegacySupport
         {
             return false;
         }
-        if (!(obj instanceof EPerson))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

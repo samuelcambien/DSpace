@@ -294,6 +294,7 @@ public class BitstreamFormatTest extends AbstractUnitTest
     public void testSetDescription()
     {
         String desc = "long description stored here";
+        String oldDescription = bf.getDescription();
         bf.setDescription(desc);
 
         assertThat("testSetDescription 0", bf.getDescription(),
@@ -302,6 +303,7 @@ public class BitstreamFormatTest extends AbstractUnitTest
                 not(equalTo("")));
         assertThat("testSetDescription 2", bf.getDescription(),
                 equalTo(desc));
+        bf.setDescription(oldDescription);
     }
 
     /**
@@ -325,14 +327,19 @@ public class BitstreamFormatTest extends AbstractUnitTest
     public void testSetMIMEType()
     {
         String mime = "text/plain";
+        String originalMime = bf.getMIMEType();
         bf.setMIMEType(mime);
 
-        assertThat("testSetMIMEType 0", bf.getMIMEType(),
-                notNullValue());
-        assertThat("testSetMIMEType 1", bf.getMIMEType(),
-                not(equalTo("")));
-        assertThat("testSetMIMEType 2", bf.getMIMEType(),
-                equalTo(mime));
+        try {
+            assertThat("testSetMIMEType 0", bf.getMIMEType(),
+                    notNullValue());
+            assertThat("testSetMIMEType 1", bf.getMIMEType(),
+                    not(equalTo("")));
+            assertThat("testSetMIMEType 2", bf.getMIMEType(),
+                    equalTo(mime));
+        } finally {
+            bf.setMIMEType(originalMime);
+        }
     }
 
     /**
@@ -478,11 +485,13 @@ public class BitstreamFormatTest extends AbstractUnitTest
         }};
 
         String desc = "Test description";
+        String oldDescription = bf.getDescription();
         bf.setDescription(desc);
         bitstreamFormatService.update(context, bf);
 
         BitstreamFormat b =  bitstreamFormatService.find(context, 5);
         assertThat("testUpdateAdmin 0", b.getDescription(), equalTo(desc));
+        bf.setDescription(oldDescription);
     }
 
     /**

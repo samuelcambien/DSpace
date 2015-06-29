@@ -7,6 +7,8 @@
  */
 package org.dspace.content;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import javax.persistence.*;
 
 /**
@@ -51,7 +53,8 @@ public class MetadataSchema
         {
             return false;
         }
-        if (!(obj instanceof MetadataSchema))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

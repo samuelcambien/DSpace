@@ -184,7 +184,6 @@ public class DailyReportEmailer
         FileWriter writer = null;
         Context context = null;
 
-        Context context = null;
         try
         {
             context = new Context();
@@ -296,12 +295,6 @@ public class DailyReportEmailer
         }
         catch (MessagingException | SQLException | IOException e)
         {
-            log.fatal(e);
-        }
-        catch (IOException e)
-        {
-            log.fatal(e);
-        } catch (SQLException e) {
             log.fatal(e);
         } finally
         {

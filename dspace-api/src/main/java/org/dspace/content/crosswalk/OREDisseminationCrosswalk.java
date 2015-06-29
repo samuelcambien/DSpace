@@ -299,7 +299,7 @@ public class OREDisseminationCrosswalk
     }
     
     @Override
-    public Element disseminateElement(DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException
+    public Element disseminateElement(Context context, DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException
 	{
     	switch(dso.getType()) {
 	    	case Constants.ITEM: return disseminateItem((Item)dso);
@@ -351,10 +351,10 @@ public class OREDisseminationCrosswalk
     
    
     @Override
-    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
+    public List<Element> disseminateList(Context context, DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
 	{
 	    List<Element> result = new ArrayList<Element>(1);
-	    result.add(disseminateElement(dso));
+	    result.add(disseminateElement(context, dso));
 	    return result;
 	}
 

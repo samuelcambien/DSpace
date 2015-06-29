@@ -37,7 +37,7 @@ public class ImageMagickImageThumbnailFilter extends ImageMagickThumbnailFilter
     	File f2 = null;
 	    try
 	    {
-		    f2 = getThumbnailFile(f);
+		    f2 = getThumbnailFile(f, verbose);
 		    byte[] bytes = Files.readAllBytes(f2.toPath());
 		    return new ByteArrayInputStream(bytes);
 	    }

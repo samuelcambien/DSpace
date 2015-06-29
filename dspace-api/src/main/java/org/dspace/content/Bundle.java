@@ -15,6 +15,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BundleService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -158,7 +159,8 @@ public class Bundle extends DSpaceObject implements DSpaceObjectLegacySupport
         {
             return false;
         }
-        if (!(obj instanceof Bundle))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (this.getClass() != objClass)
         {
             return false;
         }

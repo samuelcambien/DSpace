@@ -33,7 +33,7 @@ public class MetadataFieldDAOImpl extends AbstractHibernateDAO<MetadataField> im
                         Restrictions.eqOrIsNull("qualifier", qualifier)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MetadataFieldDAOImpl extends AbstractHibernateDAO<MetadataField> im
                         Restrictions.eqOrIsNull("qualifier", qualifier)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MetadataFieldDAOImpl extends AbstractHibernateDAO<MetadataField> im
                         Restrictions.eqOrIsNull("qualifier", qualifier)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override

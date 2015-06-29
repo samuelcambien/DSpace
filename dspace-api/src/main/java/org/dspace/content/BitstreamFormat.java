@@ -16,6 +16,7 @@ import org.dspace.core.Context;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.Type;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -37,13 +38,14 @@ public class BitstreamFormat
     @Column(name="bitstream_format_id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="bitstreamformatregistry_seq")
     @SequenceGenerator(name="bitstreamformatregistry_seq", sequenceName="bitstreamformatregistry_seq", allocationSize = 1, initialValue = 1)
-    private Integer id;
+    private int id;
 
     @Column(name="short_description", length = 128, unique = true)
     private String shortDescription;
 
-    @Column(name="description")
-    @Lob //Generates a TEXT or LONGTEXT data type
+//    @Column(name="description")
+//    @Lob //Generates a TEXT or LONGTEXT data type
+    @Column(name="description", columnDefinition = "text")
     private String description;
 
 
@@ -269,7 +271,8 @@ public class BitstreamFormat
          {
              return false;
          }
-         if (!(other instanceof BitstreamFormat))
+         Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(other);
+         if (this.getClass() != objClass)
          {
              return false;
          }

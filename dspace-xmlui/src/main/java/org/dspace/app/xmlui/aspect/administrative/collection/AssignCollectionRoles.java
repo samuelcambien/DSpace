@@ -10,7 +10,9 @@ package org.dspace.app.xmlui.aspect.administrative.collection;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.app.xmlui.aspect.administrative.FlowContainerUtils;
@@ -28,10 +30,16 @@ import org.dspace.app.xmlui.wing.element.Row;
 import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
+import org.dspace.content.factory.ContentServiceFactory;
+import org.dspace.content.service.CollectionService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
 import org.dspace.xmlworkflow.Role;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.WorkflowUtils;
@@ -96,6 +104,13 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	
     private static Logger log = Logger.getLogger(AssignCollectionRoles.class);
 
+	protected CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
+
+	protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+
+	protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+
+
 	public void addPageMeta(PageMeta pageMeta) throws WingException
     {
         pageMeta.addMetadata("title").addContent(T_title);
@@ -106,8 +121,8 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	
 	public void addBody(Body body) throws WingException, SQLException, AuthorizeException
 	{
-		int collectionID = parameters.getParameterAsInteger("collectionID", -1);
-		Collection thisCollection = Collection.find(context, collectionID);
+		UUID collectionID = UUID.fromString(parameters.getParameter("collectionID", null));
+		Collection thisCollection = collectionService.find(context, collectionID);
 		
 		String baseURL = contextPath + "/admin/collection?administrative-continue=" + knot.getId();
 		
@@ -115,15 +130,15 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 		Group submitters = thisCollection.getSubmitters();
 
 		Group defaultRead = null;
-		int defaultReadID = FlowContainerUtils.getCollectionDefaultRead(context, collectionID);
-		if (defaultReadID >= 0)
+		UUID defaultReadID = FlowContainerUtils.getCollectionDefaultRead(context, thisCollection);
+		if (defaultReadID != null)
         {
-            defaultRead = Group.find(context, defaultReadID);
+            defaultRead = groupService.find(context, defaultReadID);
         }
 		
 		// DIVISION: main
 	    Division main = body.addInteractiveDivision("collection-assign-roles",contextPath+"/admin/collection",Division.METHOD_POST,"primary administrative collection");
-	    main.setHead(T_main_head.parameterize(thisCollection.getMetadata("name")));
+	    main.setHead(T_main_head.parameterize(collectionService.getMetadata(thisCollection, "name")));
 	    
 	    List options = main.addList("options", List.TYPE_SIMPLE, "horizontal");
 	    options.addItem().addXref(baseURL+"&submit_metadata",T_options_metadata);
@@ -228,7 +243,7 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	    	// authorizations manager.
 	    	tableRow.addCell(1,2).addContent(T_default_read_custom);
 	    }
-	    else if (defaultRead.getID() == Group.ANONYMOUS_ID) {
+	    else if (StringUtils.equals(defaultRead.getName(), Group.ANONYMOUS)) {
 	    	// Anonymous reading
 	    	tableRow.addCell().addContent(T_default_read_anonymous);
 	    	addAdministratorOnlyButton(tableRow.addCell(),"submit_create_default_read",T_restrict);
@@ -286,9 +301,9 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	    // data row
 	    try
         {
-            Group wfStep1 = thisCollection.getWorkflowGroup(1);
-            Group wfStep2 = thisCollection.getWorkflowGroup(2);
-            Group wfStep3 = thisCollection.getWorkflowGroup(3);
+            Group wfStep1 = collectionService.getWorkflowGroup(thisCollection, 1);
+            Group wfStep2 = collectionService.getWorkflowGroup(thisCollection, 2);
+            Group wfStep3 = collectionService.getWorkflowGroup(thisCollection, 3);
             AuthorizeUtil.authorizeManageWorkflowsGroup(context, thisCollection);
     	    tableRow = rolesTable.addRow(Row.ROLE_DATA);
     	    tableRow.addCell(Cell.ROLE_HEADER).addContent(T_label_wf_step1);
@@ -363,10 +378,10 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
                 if (role.getScope() == Role.Scope.COLLECTION || role.getScope() == Role.Scope.REPOSITORY) {
                     tableRow = rolesTable.addRow(Row.ROLE_DATA);
                     tableRow.addCell(Cell.ROLE_HEADER).addContent(role.getName());
-                    Group roleGroup = WorkflowUtils.getRoleGroup(context, thisCollection.getID(), role);
+                    Group roleGroup = WorkflowUtils.getRoleGroup(context, thisCollection, role);
                     if (roleGroup != null) {
                         if(role.getScope() == Role.Scope.REPOSITORY){
-                            if(AuthorizeServiceImpl.isAdmin(context)){
+                            if(authorizeService.isAdmin(context)){
                                 tableRow.addCell().addXref(baseURL + "&submit_edit_wf_role_" + roleId, roleGroup.getName());
                             }else{
                                 Cell cell = tableRow.addCell();
@@ -420,7 +435,7 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 	{
     	Button button = cell.addButton(buttonName);
     	button.setValue(buttonLabel);
-    	if (!AuthorizeServiceImpl.isAdmin(context))
+    	if (!authorizeService.isAdmin(context))
     	{
     		// Only admins can create or delete
     		button.setDisabled();

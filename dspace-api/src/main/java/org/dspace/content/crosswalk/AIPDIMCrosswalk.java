@@ -125,11 +125,11 @@ public class AIPDIMCrosswalk
      * @throws AuthorizeException current user not authorized for this operation.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
+    public List<Element> disseminateList(Context context, DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
     {
-        Element dim = disseminateElement(dso);
+        Element dim = disseminateElement(context, dso);
         return dim.getChildren();
     }
 
@@ -149,7 +149,7 @@ public class AIPDIMCrosswalk
      * @throws AuthorizeException current user not authorized for this operation.
      */
     @Override
-    public Element disseminateElement(DSpaceObject dso)
+    public Element disseminateElement(Context context, DSpaceObject dso)
         throws CrosswalkException, IOException, SQLException,
                AuthorizeException
     {

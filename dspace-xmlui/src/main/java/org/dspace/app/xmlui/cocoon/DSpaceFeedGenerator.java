@@ -35,11 +35,15 @@ import org.dspace.app.xmlui.utils.DSpaceValidity;
 import org.dspace.app.xmlui.utils.FeedUtils;
 import org.dspace.app.util.SyndicationFeed;
 import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.browse.BrowseEngine;
 import org.dspace.browse.BrowseException;
 import org.dspace.browse.BrowseIndex;
 import org.dspace.browse.BrowserScope;
 import org.dspace.handle.HandleServiceImpl;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.handle.service.HandleService;
 import org.dspace.sort.SortException;
 import org.dspace.sort.SortOption;
 import org.dspace.content.Collection;
@@ -120,7 +124,10 @@ public class DSpaceFeedGenerator extends AbstractGenerator
     
     /** The cache of recently submitted items */
     private Item recentSubmissionItems[];
-    
+
+    protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+    protected HandleService handleService = HandleServiceFactory.getInstance().getHandleService();
+
     /**
      * Generate the unique caching key.
      * This key must be unique inside the space of this component.
@@ -152,7 +159,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
                 
                 if (handle != null && !handle.contains("site"))
                 {
-                    dso = HandleServiceImpl.resolveToObject(context, handle);
+                    dso = handleService.resolveToObject(context, handle);
                 }
                 
                 validity.add(dso);
@@ -213,7 +220,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
             
             if (handle != null && !handle.contains("site"))
             {
-                dso = HandleServiceImpl.resolveToObject(context, handle);
+                dso = handleService.resolveToObject(context, handle);
                 if (dso == null)
                 {
                     // If we were unable to find a handle then return page not found.
@@ -288,7 +295,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
             }
 
             BrowseEngine be = new BrowseEngine(context);
-            this.recentSubmissionItems = be.browseMini(scope).getItemResults(context);
+            this.recentSubmissionItems = be.browseMini(scope).getItemResults();
 
             // filter out Items that are not world-readable
             if (!includeRestrictedItems)
@@ -297,9 +304,9 @@ public class DSpaceFeedGenerator extends AbstractGenerator
                 for (Item item : this.recentSubmissionItems)
                 {
                 checkAccess:
-                    for (Group group : AuthorizeServiceImpl.getAuthorizedGroups(context, item, Constants.READ))
+                    for (Group group : authorizeService.getAuthorizedGroups(context, item, Constants.READ))
                     {
-                        if ((group.getID() == Group.ANONYMOUS_ID))
+                        if ((group.getName().equals(Group.ANONYMOUS)))
                         {
                             result.add(item);
                             break checkAccess;

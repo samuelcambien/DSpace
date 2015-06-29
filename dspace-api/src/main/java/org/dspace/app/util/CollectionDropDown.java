@@ -81,12 +81,12 @@ public class CollectionDropDown {
 	 * @return A sorted array of collection path entries (essentially collection/path pairs).
 	 * @throws SQLException In case there are problems annotating a collection with its path.
 	 */
-	public static CollectionPathEntry[] annotateWithPaths(Collection[] collections) throws SQLException
+	public static CollectionPathEntry[] annotateWithPaths(List<Collection> collections) throws SQLException
 	{
-		CollectionPathEntry[] result = new CollectionPathEntry[collections.length];
-		for (int i = 0; i < collections.length; i++)
+		CollectionPathEntry[] result = new CollectionPathEntry[collections.size()];
+		for (int i = 0; i < collections.size(); i++)
 		{
-			Collection collection = collections[i];
+			Collection collection = collections.get(i);
 			CollectionPathEntry entry = new CollectionPathEntry(collection, collectionPath(collection));
 			result[i] = entry;
 		}

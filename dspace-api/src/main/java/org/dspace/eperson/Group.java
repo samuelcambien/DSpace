@@ -16,6 +16,7 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 
@@ -167,7 +168,8 @@ public class Group extends DSpaceObject implements DSpaceObjectLegacySupport
          {
              return false;
          }
-         if (!(obj instanceof Group))
+         Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+         if (getClass() != objClass)
          {
              return false;
          }

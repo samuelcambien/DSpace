@@ -75,7 +75,11 @@ public abstract class AbstractHibernateDSODAO<T extends DSpaceObject> extends Ab
 
             if(StringUtils.isNotBlank(additionalWhere))
             {
-                query.append(" OR ").append(additionalWhere);
+                if(CollectionUtils.isNotEmpty(metadataFields))
+                {
+                    query.append(" OR ");
+                }
+                query.append(additionalWhere);
             }
 
         }

@@ -101,11 +101,11 @@
     <bean class="org.dspace.xmlworkflow.storedcomponents.WorkflowItemRoleServiceImpl"/>
     <bean class="org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItemServiceImpl"/>
 
+
+    <!--Configurable workflow services, uncomment the xml workflow beans below to enable the configurable workflow-->
+    <!--<bean class="org.dspace.xmlworkflow.XmlWorkflowServiceImpl"/>-->
     <!--<bean class="org.dspace.xmlworkflow.WorkflowRequirementsServiceImpl"/>-->
     <!--<bean class="org.dspace.xmlworkflow.XmlWorkflowFactoryImpl"/>-->
-
-    <!--Configurable workflow services, uncomment to enable the configurable workflow-->
-    <!--<bean class="org.dspace.xmlworkflow.XmlWorkflowServiceImpl"/>-->
 
 
 

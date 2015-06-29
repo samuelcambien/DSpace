@@ -7,6 +7,8 @@
  */
 package org.dspace.versioning;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,8 @@ public class VersionHistory {
         {
             return true;
         }
-        if (!(o instanceof VersionHistory))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(o);
+        if (getClass() != objClass)
         {
             return false;
         }

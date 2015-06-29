@@ -19,6 +19,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.content.service.BundleService;
 import org.dspace.content.service.SiteService;
+import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.event.Consumer;
@@ -38,6 +39,7 @@ public class RDFConsumer implements Consumer
     protected BitstreamService bitstreamService;
     protected BundleService bundleService;
     protected SiteService siteService;
+    protected WorkspaceItemService workspaceItemService;
 
     @Override
     public void consume(Context ctx, Event event)
@@ -117,7 +119,7 @@ public class RDFConsumer implements Consumer
                 List<Item> items = b.getItems();
                 for (Item i : items)
                 {
-                    if (WorkspaceItem.findByItem(ctx, i) != null)
+                    if (workspaceItemService.findByItem(ctx, i) != null)
                     {
                         log.debug("Ignoring Item " + i.getID() + " as a corresponding workspace item exists.");
                         continue;
@@ -167,7 +169,7 @@ public class RDFConsumer implements Consumer
             List<Item> items = bundle.getItems();
             for (Item i : items)
             {
-                if (WorkspaceItem.findByItem(ctx, i) != null)
+                if (workspaceItemService.findByItem(ctx, i) != null)
                 {
                     log.debug("Ignoring Item " + i.getID() + " as a corresponding workspace item exists.");
                     continue;
@@ -243,7 +245,7 @@ public class RDFConsumer implements Consumer
             // has an workspace item. The item flag "in_archive" doesn't help us
             // here as this is also set to false if a newer version was submitted.
             if (dso instanceof Item
-                    && WorkspaceItem.findByItem(ctx, (Item) dso) != null)
+                    && workspaceItemService.findByItem(ctx, (Item) dso) != null)
             {
                 log.debug("Ignoring Item " + dso.getID() + " as a corresponding workspace item exists.");
                 return;
@@ -438,6 +440,7 @@ public class RDFConsumer implements Consumer
         bitstreamService = ContentServiceFactory.getInstance().getBitstreamService();
         bundleService = ContentServiceFactory.getInstance().getBundleService();
         siteService = ContentServiceFactory.getInstance().getSiteService();
+        workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
     }
 
     

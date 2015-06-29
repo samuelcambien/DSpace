@@ -1038,4 +1038,29 @@ public class BasicWorkflowServiceImpl implements BasicWorkflowService
         }
         return resultList;
     }
+
+    @Override
+    public Group getWorkflowRoleGroup(Context context, Collection collection, String roleName, Group roleGroup) throws SQLException, AuthorizeException {
+        if ("WF_STEP1".equals(roleName))
+        {
+            roleGroup = collection.getWorkflowStep1();
+            if (roleGroup == null)
+                roleGroup = collectionService.createWorkflowGroup(context, collection, 1);
+
+		}
+		else if ("WF_STEP2".equals(roleName))
+		{
+            roleGroup = collection.getWorkflowStep2();
+            if (roleGroup == null)
+                roleGroup = collectionService.createWorkflowGroup(context, collection, 2);
+        }
+		else if ("WF_STEP3".equals(roleName))
+		{
+            roleGroup = collection.getWorkflowStep3();
+            if (roleGroup == null)
+                roleGroup = collectionService.createWorkflowGroup(context, collection, 3);
+
+		}
+        return roleGroup;
+    }
 }

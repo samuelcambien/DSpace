@@ -15,6 +15,8 @@ import org.dspace.content.packager.PackageParameters;
 import org.dspace.core.Context;
 import org.dspace.core.PluginManager;
 import org.dspace.handle.HandleServiceImpl;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.handle.service.HandleService;
 import org.dspace.sword.client.exceptions.HttpException;
 import org.dspace.sword.client.exceptions.InvalidHandleException;
 import org.dspace.sword.client.exceptions.PackageFormatException;
@@ -53,6 +55,7 @@ public class DSpaceSwordClient
     private PackageParameters pkgParams;
 
     private static Logger log = Logger.getLogger(DSpaceSwordClient.class);
+    protected HandleService handleService = HandleServiceFactory.getInstance().getHandleService();
 
 
     public DSpaceSwordClient()
@@ -177,7 +180,7 @@ public class DSpaceSwordClient
         DSpaceObject dso = null;
         try
         {
-            dso = HandleServiceImpl.resolveToObject(context, handle);
+            dso = handleService.resolveToObject(context, handle);
         }
         catch (SQLException e)
         {

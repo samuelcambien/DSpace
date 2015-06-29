@@ -89,7 +89,7 @@ public abstract class Action {
      *            current servlet request object
      * @return List of error fields (as Strings)
      */
-    public List getErrorFields(HttpServletRequest request)
+    public static List getErrorFields(HttpServletRequest request)
     {
         List result = new ArrayList();
         if(request.getAttribute(ERROR_FIELDS_ATTRIBUTE) != null)

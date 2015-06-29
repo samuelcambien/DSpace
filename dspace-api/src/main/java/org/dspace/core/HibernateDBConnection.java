@@ -3,6 +3,7 @@ package org.dspace.core;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -25,13 +26,10 @@ public class HibernateDBConnection implements DBConnection<Session> {
             sessionFactory.getCurrentSession().beginTransaction();
         }
         return sessionFactory.getCurrentSession();
-//        HibernateUtil.beginTransaction();
-//        return HibernateUtil.getSession();
     }
 
     @Override
     public boolean isTransActionAlive() {
-//        return HibernateUtil.isTransActionAlive();
         Transaction transaction = getTransaction();
         return transaction != null && transaction.isActive();
     }
@@ -42,7 +40,6 @@ public class HibernateDBConnection implements DBConnection<Session> {
 
     @Override
     public boolean isSessionAlive() {
-//        return HibernateUtil.isSessionAlive();
         return sessionFactory.getCurrentSession() != null && sessionFactory.getCurrentSession().getTransaction() != null && sessionFactory.getCurrentSession().getTransaction().isActive();
     }
 
@@ -51,12 +48,10 @@ public class HibernateDBConnection implements DBConnection<Session> {
         if(isTransActionAlive()){
             getTransaction().rollback();
         }
-//        HibernateUtil.rollbackTransaction();
     }
 
     @Override
     public void closeDBConnection() throws SQLException {
-//        HibernateUtil.closeSession();
         if(sessionFactory.getCurrentSession() != null && sessionFactory.getCurrentSession().isOpen())
         {
             sessionFactory.getCurrentSession().close();
@@ -68,15 +63,17 @@ public class HibernateDBConnection implements DBConnection<Session> {
         if(isTransActionAlive() && !getTransaction().wasRolledBack())
         {
             getTransaction().commit();
-//            sessionFactory.getCurrentSession().beginTransaction();
         }
-//        HibernateUtil.commitTransaction();
-//        HibernateUtil.flushSession();
     }
 
     @Override
-    public void shutdown() {
-//        HibernateUtil.shutdown();
+    public synchronized void shutdown() {
+        sessionFactory.close();
+    }
+
+    @Override
+    public String getType() {
+        return ((SessionFactoryImplementor) sessionFactory).getDialect().toString();
     }
 
 }

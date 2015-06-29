@@ -8,6 +8,7 @@
 
 package org.dspace.eperson;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;
@@ -62,6 +63,23 @@ public class EPersonTest extends AbstractUnitTest
             context.restoreAuthSystemState();
         }
     }
+
+    @Override
+    public void destroy() {
+        context.turnOffAuthorisationSystem();
+        try {
+            EPerson testPerson = ePersonService.findByEmail(context, "kevin@dspace.org");
+            if(testPerson != null)
+            {
+                ePersonService.delete(context, testPerson);
+            }
+        } catch (Exception ex) {
+            log.error("Error in destroy", ex);
+            fail("Error in destroy: " + ex.getMessage());
+        }
+        super.destroy();
+    }
+
 
     /**
      * Test of equals method, of class EPerson.

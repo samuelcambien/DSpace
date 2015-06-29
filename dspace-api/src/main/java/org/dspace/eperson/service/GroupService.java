@@ -17,7 +17,6 @@ import java.util.List;
  */
 public interface GroupService extends DSpaceObjectService<Group>, DSpaceObjectLegacySupportService<Group> {
 
-    public static final int ID = 0; // sort by ID
     public static final int NAME = 1; // sort by NAME (default)
 
 

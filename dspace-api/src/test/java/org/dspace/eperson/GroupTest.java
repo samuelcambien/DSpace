@@ -155,25 +155,27 @@ public class GroupTest extends AbstractUnitTest {
     public void findAll() throws SQLException {
         List<Group> groups = groupService.findAll(context, GroupService.NAME);
         assertThat("findAll 1", groups, notNullValue());
+        System.out.println("TEST GROUP OUTPUT " + groups);
         //We should find 5 groups: anonymous, admin & our 3 test groups
         assertEquals("findAll 2", groups.size(), 5);
     }
 
-    @Test
-    public void findAllIdSort() throws SQLException {
-        List<Group> groups = groupService.findAll(context, GroupService.ID);
-
-        assertThat("findAllIdSort 1", groups, notNullValue());
-
-        //Check our sorting order by adding to a treeSet & check against arraylist values
-        List<String> listNames = new ArrayList<String>();
-        Set<String> setNames = new TreeSet<String>();
-        for (Group group : groups) {
-            listNames.add(group.getID().toString());
-            setNames.add(group.getID().toString());
-        }
-        assertTrue("findAllIdSort 2 ", ArrayUtils.isEquals(setNames.toArray(new String[setNames.size()]), listNames.toArray(new String[listNames.size()])));
-    }
+    //No longer possible, wouldn't make sense since we are using UUID'S
+//    @Test
+//    public void findAllIdSort() throws SQLException {
+//        List<Group> groups = groupService.findAll(context, GroupService.ID);
+//
+//        assertThat("findAllIdSort 1", groups, notNullValue());
+//
+//        //Check our sorting order by adding to a treeSet & check against arraylist values
+//        List<String> listNames = new ArrayList<String>();
+//        Set<String> setNames = new TreeSet<String>();
+//        for (Group group : groups) {
+//            listNames.add(group.getID().toString());
+//            setNames.add(group.getID().toString());
+//        }
+//        assertTrue("findAllIdSort 2 ", ArrayUtils.isEquals(setNames.toArray(new String[setNames.size()]), listNames.toArray(new String[listNames.size()])));
+//    }
 
 
     @Test

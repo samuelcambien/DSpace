@@ -285,7 +285,7 @@ public interface CollectionService extends DSpaceObjectService<Collection>, DSpa
      * @return Collection [] of collections with matching permissions
      * @throws SQLException
      */
-    public List<Collection> findAuthorized(Context context, Collection collection, Community community, int actionID) throws java.sql.SQLException;
+    public List<Collection> findAuthorized(Context context, Community community, int actionID) throws java.sql.SQLException;
 
     public Collection findByGroup(Context context, Group group) throws SQLException;
 }

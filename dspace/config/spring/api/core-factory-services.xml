@@ -12,13 +12,14 @@
     <bean id="itemImportServiceFactory" class="org.dspace.app.itemimport.factory.ItemImportServiceFactoryImpl"/>
     <bean id="mediaFilterServiceFactory" class="org.dspace.app.mediafilter.factory.MediaFilterServiceFactoryImpl"/>
     <bean id="sfxServiceFactory" class="org.dspace.app.sfx.factory.SfxServiceFactoryImpl"/>
-    <bean id="utilServiceFactory" class="org.dspace.app.util.factory.UtilServiceFactoryImpl"/>
+    <bean id="appUtilServiceFactory" class="org.dspace.app.util.factory.UtilServiceFactoryImpl"/>
 
 
 
     <bean id="authenticateServiceFactory" class="org.dspace.authenticate.factory.AuthenticateServiceFactoryImpl"/>
 
     <bean id="authorityServiceFactory" class="org.dspace.authority.factory.AuthorityServiceFactoryImpl"/>
+    <bean id="contentAuthorityServiceFactory" class="org.dspace.content.authority.factory.ContentAuthorityServiceFactoryImpl"/>
 
     <bean id="authorizeServiceFactory" class="org.dspace.authorize.factory.AuthorizeServiceFactoryImpl"/>
     <bean id="checkerServiceFactory" class="org.dspace.checker.factory.CheckerServiceFactoryImpl"/>

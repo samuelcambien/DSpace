@@ -172,7 +172,7 @@ public class EZIDIdentifierProvider
         try {
             EZIDRequest request = requestFactory.getInstance(loadAuthority(),
                     loadUser(), loadPassword());
-            response = request.create(identifier, crosswalkMetadata(object));
+            response = request.create(identifier, crosswalkMetadata(context, object));
         } catch (IdentifierException | IOException | URISyntaxException e) {
             log.error("Identifier '{}' not registered:  {}", identifier, e.getMessage());
             return;
@@ -208,7 +208,7 @@ public class EZIDIdentifierProvider
         try {
             EZIDRequest request = requestFactory.getInstance(loadAuthority(),
                     loadUser(), loadPassword());
-            Map<String, String> metadata = crosswalkMetadata(dso);
+            Map<String, String> metadata = crosswalkMetadata(context, dso);
             metadata.put("_status", "reserved");
             response = request.create(identifier, metadata);
         } catch (IOException | URISyntaxException e) {
@@ -253,7 +253,7 @@ public class EZIDIdentifierProvider
         EZIDResponse response;
         try
         {
-            response = request.mint(crosswalkMetadata(dso));
+            response = request.mint(crosswalkMetadata(context, dso));
         } catch (IOException | URISyntaxException ex) {
             log.error("Failed to send EZID request:  {}", ex.getMessage());
             throw new IdentifierException("DOI request not sent:  " + ex.getMessage());
@@ -560,7 +560,7 @@ public class EZIDIdentifierProvider
     /**
      * Map selected DSpace metadata to fields recognized by DataCite.
      */
-    Map<String, String> crosswalkMetadata(DSpaceObject dso)
+    Map<String, String> crosswalkMetadata(Context context, DSpaceObject dso)
     {
         if ((null == dso) || !(dso instanceof Item))
         {
@@ -608,7 +608,7 @@ public class EZIDIdentifierProvider
         {
             DataCiteXMLCreator xmlGen = new DataCiteXMLCreator();
             xmlGen.setDisseminationCrosswalkName(DATACITE_XML_CROSSWALK);
-            String xmlString = xmlGen.getXMLString(dso);
+            String xmlString = xmlGen.getXMLString(context, dso);
             log.debug("Generated DataCite XML:  {}", xmlString);
             mapped.put("datacite", xmlString);
         }
@@ -636,7 +636,7 @@ public class EZIDIdentifierProvider
         if (null == handle)
         {
             log.warn("{} #{} has no handle -- location not set.",
-                    dso.getTypeText(), dso.getID());
+                    contentServiceFactory.getDSpaceObjectService(dso).getTypeText(dso), dso.getID());
         }
         else
         {

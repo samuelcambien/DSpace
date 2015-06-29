@@ -18,6 +18,7 @@ import org.dspace.content.*;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -58,7 +59,7 @@ public class DIMDisseminationCrosswalk
 
     
     @Override
-    public Element disseminateElement(DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException
+    public Element disseminateElement(Context context, DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException
 	{
     	if (dso.getType() != Constants.ITEM)
         {
@@ -90,10 +91,10 @@ public class DIMDisseminationCrosswalk
 	}
    
     @Override
-    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
+    public List<Element> disseminateList(Context context, DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
 	{
 	    List<Element> result = new ArrayList<Element>(1);
-	    result.add(disseminateElement(dso));
+	    result.add(disseminateElement(context, dso));
 	    return result;
 	}
 

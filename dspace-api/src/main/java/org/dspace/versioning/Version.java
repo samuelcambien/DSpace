@@ -9,6 +9,7 @@ package org.dspace.versioning;
 
 import org.dspace.content.Item;
 import org.dspace.eperson.EPerson;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -72,7 +73,7 @@ public class Version {
         this.versionNumber = version_number;
     }
 
-    public EPerson getePerson() {
+    public EPerson getEPerson() {
         return ePerson;
     }
 
@@ -110,7 +111,8 @@ public class Version {
         {
             return true;
         }
-        if (!(o instanceof Version))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(o);
+        if (getClass() != objClass)
         {
             return false;
         }

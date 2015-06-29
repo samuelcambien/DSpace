@@ -1,5 +1,7 @@
 package org.dspace.eperson;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -44,7 +46,8 @@ public class Group2GroupCache implements Serializable {
         {
             return false;
         }
-        if (!(obj instanceof Group2GroupCache))
+        Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(obj);
+        if (getClass() != objClass)
         {
             return false;
         }

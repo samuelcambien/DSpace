@@ -81,7 +81,7 @@ public class CollectionDAOImpl extends AbstractHibernateDSODAO<Collection> imple
                         Restrictions.eq("admins", group)
                 )
         );
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
     @Override

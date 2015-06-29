@@ -11,6 +11,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.core.*;
 import org.dspace.eperson.Group;
+import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
 import java.sql.SQLException;
@@ -284,7 +285,8 @@ public class Collection extends DSpaceObject implements DSpaceObjectLegacySuppor
          {
              return false;
          }
-         if (!(other instanceof Collection))
+         Class<?> objClass = HibernateProxyHelper.getClassWithoutInitializingProxy(other);
+         if (this.getClass() != objClass)
          {
              return false;
          }

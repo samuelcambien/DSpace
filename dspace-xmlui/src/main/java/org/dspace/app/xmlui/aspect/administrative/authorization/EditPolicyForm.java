@@ -9,6 +9,7 @@ package org.dspace.app.xmlui.aspect.administrative.authorization;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -16,12 +17,18 @@ import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
 import org.dspace.app.xmlui.wing.element.*;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
+import org.dspace.authorize.factory.AuthorizeServiceFactory;
+import org.dspace.authorize.service.AuthorizeService;
+import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.content.*;
 import org.dspace.content.Item;
+import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
+
 /**
  * @author Alexey Maslov
  */
@@ -104,6 +111,10 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
     private static final Message T_error_duplicated_policy =
             message("xmlui.administrative.authorization.EditPolicyForm.error_duplicated_policy");
 
+   	protected GroupService groupService = EPersonServiceFactory.getInstance().getGroupService();
+   	protected AuthorizeService authorizeService = AuthorizeServiceFactory.getInstance().getAuthorizeService();
+   	protected ResourcePolicyService resourcePolicyService = AuthorizeServiceFactory.getInstance().getResourcePolicyService();
+
 
     // How many search results are displayed at once
     private static final int RESULTS_PER_PAGE = 10;
@@ -125,9 +136,9 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
            * has to have a parent resource. policyID may, however, be -1 for new, not-yet-created policies and
            * the groupID is only set if the group is being changed. */
         int objectType = parameters.getParameterAsInteger("objectType",-1);
-        int objectID = parameters.getParameterAsInteger("objectID",-1);
+        String objectID = parameters.getParameter("objectID", null);
         int policyID = parameters.getParameterAsInteger("policyID",-1);
-        int groupID = parameters.getParameterAsInteger("groupID",-1);
+        String groupID = parameters.getParameter("groupID", null);
         int actionID = parameters.getParameterAsInteger("actionID",-1);
         int page = parameters.getParameterAsInteger("page",0);
         String query = decodeFromURL(parameters.getParameter("query","-1"));
@@ -137,7 +148,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
         String rpEndDate = parameters.getParameter("endDate", null);
 
         // The current policy, if it exists (i.e. we are not creating a new one)
-        ResourcePolicy policy = ResourcePolicy.find(context, policyID);
+        ResourcePolicy policy = resourcePolicyService.find(context, policyID);
 
         if (policy != null){
             if(rpName==null || rpName.equals(""))
@@ -158,8 +169,8 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
         // The currently set group; it's value depends on wether previously clicked the "Set" button to change 
         // the associated group, came here to edit an existing group, or create a new one. 
         Group currentGroup;
-        if (groupID != -1) {
-            currentGroup = Group.find(context, groupID);
+        if (groupID != null) {
+            currentGroup = groupService.find(context, UUID.fromString(groupID));
         }
         else if (policy != null) {
             currentGroup = policy.getGroup();
@@ -191,23 +202,17 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
 
 
         /* Set up our current Dspace object */
-        DSpaceObject dso;
-        switch (objectType) {
-            case Constants.COMMUNITY: dso = Community.find(context, objectID); break;
-            case Constants.COLLECTION: dso = Collection.find(context, objectID); break;
-            case Constants.ITEM: dso = org.dspace.content.Item.find(context, objectID); break;
-            case Constants.BUNDLE: dso = Bundle.find(context, objectID); break;
-            case Constants.BITSTREAM: dso = Bitstream.find(context, objectID); break;
-            default: dso = null;
+        DSpaceObject dso = null;
+        if(objectID != null){
+            dso = ContentServiceFactory.getInstance().getDSpaceObjectService(objectType).find(context, UUID.fromString(objectID));
         }
-
 
         // DIVISION: edit-container-policies
         Division main = body.addInteractiveDivision("edit-policy",contextPath+"/admin/authorize",Division.METHOD_POST,"primary administrative authorization");
 
         if (policyID >= 0) {
-            objectID = policy.getResourceID();
-            objectType = policy.getResourceType();
+            objectID = policy.getdSpaceObject().getID().toString();
+            objectType = policy.getdSpaceObject().getType();
             main.setHead(T_main_head_edit.parameterize(policyID,Constants.typeText[objectType],objectID));
         }
         else
@@ -262,15 +267,15 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
         // currently set group
         actionsList.addLabel(T_policy_currentGroup);
         Select groupSelect = actionsList.addItem().addSelect("group_id");
-        for (Group group : Group.findAll(context, Group.NAME))
+        for (Group group : groupService.findAll(context, GroupService.NAME))
         {
             if (group == currentGroup)
             {
-                groupSelect.addOption(true, group.getID(), group.getName());
+                groupSelect.addOption(true, group.getID().toString(), group.getName());
             }
             else
             {
-                groupSelect.addOption(group.getID(), group.getName());
+                groupSelect.addOption(group.getID().toString(), group.getName());
             }
         }
         if (errors.contains("group_id"))
@@ -337,14 +342,14 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
      */
     private void addGroupSearch(Division div, Group sourceGroup, DSpaceObject dso, String query, int page) throws WingException, SQLException
     {
-        Group[] groups = Group.search(context, query, page*RESULTS_PER_PAGE, (page+1)*RESULTS_PER_PAGE);
-        int totalResults = Group.searchResultCount(context, query);
-        ArrayList<ResourcePolicy> otherPolicies = (ArrayList<ResourcePolicy>) AuthorizeServiceImpl.getPolicies(context, dso);
+        java.util.List<Group> groups = groupService.search(context, query, page*RESULTS_PER_PAGE, (page+1)*RESULTS_PER_PAGE);
+        int totalResults = groupService.searchResultCount(context, query);
+        ArrayList<ResourcePolicy> otherPolicies = (ArrayList<ResourcePolicy>) authorizeService.getPolicies(context, dso);
 
 
         if (totalResults > RESULTS_PER_PAGE) {
             int firstIndex = page*RESULTS_PER_PAGE+1;
-            int lastIndex = page*RESULTS_PER_PAGE + groups.length;
+            int lastIndex = page*RESULTS_PER_PAGE + groups.size();
             String baseURL = contextPath+"/admin/authorize?administrative-continue="+knot.getId();
 
             String nextURL = null, prevURL = null;
@@ -361,7 +366,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
         }
 
 
-        Table table = div.addTable("policy-edit-search-group",groups.length + 1, 1);
+        Table table = div.addTable("policy-edit-search-group",groups.size() + 1, 1);
 
         Row header = table.addRow(Row.ROLE_HEADER);
 
@@ -388,7 +393,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
             int groupsMatched = 0;
             for (ResourcePolicy otherPolicy : otherPolicies) {
                 if (otherPolicy.getGroup() == group) {
-                    otherAuthorizations.append(otherPolicy.getActionText()).append(", ");
+                    otherAuthorizations.append(resourcePolicyService.getActionText(otherPolicy)).append(", ");
                     groupsMatched++;
                 }
             }
@@ -411,7 +416,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
             }
 
         }
-        if (groups.length <= 0) {
+        if (groups.size() <= 0) {
             table.addRow().addCell(1, 4).addContent(T_no_results);
         }
     }

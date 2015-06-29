@@ -6,6 +6,8 @@ import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
+import org.dspace.eperson.Group;
+import org.dspace.xmlworkflow.WorkflowConfigurationException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -62,4 +64,6 @@ public interface WorkflowService<T extends WorkflowItem> {
     public void deleteCollection(Context context, Collection collection) throws SQLException, IOException, AuthorizeException;
 
     public List<String> getEPersonDeleteConstraints(Context context, EPerson ePerson) throws SQLException;
+
+    public Group getWorkflowRoleGroup(Context context, Collection collection, String roleName, Group roleGroup) throws SQLException, IOException, WorkflowConfigurationException, AuthorizeException, WorkflowException;
 }

@@ -29,6 +29,9 @@ import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
+import org.dspace.handle.factory.HandleServiceFactory;
+import org.dspace.handle.service.HandleService;
+import org.dspace.workflow.WorkflowException;
 
 /**
  * An abstract implementation of a DSpace Package Ingester, which
@@ -71,6 +74,7 @@ public abstract class AbstractPackageIngester
 
     protected final CollectionService collectionService = ContentServiceFactory.getInstance().getCollectionService();
     protected final ItemService itemService = ContentServiceFactory.getInstance().getItemService();
+    protected final HandleService handleService = HandleServiceFactory.getInstance().getHandleService();
 
     /** 
      * References to other packages -- these are the next packages to ingest recursively
@@ -208,20 +212,14 @@ public abstract class AbstractPackageIngester
                             // it is mapped to this Collection.
                             String childHandle = getIngestedMap().get(childPkg);
                             if(childHandle!=null)
-                            // Since running 'ingestAll' on an item, will only ingest one Item at most,
-                            // Just make sure that item is mapped to this collection.
-                            Item childItem = (Item)dsoIngestedList.get(oldSize);
-                            Collection collection = (Collection)dso;
-                            if (!itemService.isIn(childItem, collection))
                             {
-                                Item childItem = (Item) HandleManager.resolveToObject(context, childHandle);
+                                Item childItem = (Item) handleService.resolveToObject(context, childHandle);
                                 // Ensure Item is mapped to Collection that referenced it
                                 Collection collection = (Collection) dso;
-                                if (childItem!=null && !childItem.isIn(collection))
+                                if (childItem!=null && !itemService.isIn(childItem, collection))
                                 {
-                                    collection.addItem(childItem);
+                                    collectionService.addItem(context, collection, childItem);
                                 }
-                                collectionService.addItem(context, collection, childItem);
                             }
                         }
                     }
@@ -337,20 +335,14 @@ public abstract class AbstractPackageIngester
                             // it is mapped to this Collection.
                             String childHandle = getIngestedMap().get(childPkg);
                             if(childHandle!=null)
-                            // Since running 'replaceAll' on an item, will only ingest one Item at most,
-                            // Just make sure that item is mapped to this collection.
-                            Item childItem = (Item)dsoIngestedList.get(oldSize);
-                            Collection collection = (Collection)replacedDso;
-                            if (!itemService.isIn(childItem, collection))
                             {
-                                Item childItem = (Item) HandleManager.resolveToObject(context, childHandle);
+                                Item childItem = (Item) handleService.resolveToObject(context, childHandle);
                                 // Ensure Item is mapped to Collection that referenced it
                                 Collection collection = (Collection) replacedDso;
-                                if (childItem!=null && !childItem.isIn(collection))
+                                if (childItem!=null && !itemService.isIn(childItem, collection))
                                 {
-                                    collection.addItem(childItem);
+                                    collectionService.addItem(context, collection, childItem);
                                 }
-                                collectionService.addItem(context, collection, childItem);
                             }
                         }
                     }

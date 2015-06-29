@@ -52,7 +52,7 @@ public class MostRecentChecksumDAOImpl extends AbstractHibernateDAO<MostRecentCh
     public MostRecentChecksum findByBitstream(Context context, Bitstream bitstream) throws SQLException {
         Criteria criteria = createCriteria(context, MostRecentChecksum.class);
         criteria.add(Restrictions.eq("bitstream", bitstream));
-        return uniqueResult(criteria);
+        return singleResult(criteria);
     }
 
 
