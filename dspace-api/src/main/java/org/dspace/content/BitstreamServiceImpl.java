@@ -166,8 +166,9 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
     }
 
     @Override
-    public String getFormatDescription(Bitstream bitstream) {
-        if (bitstream.getFormat().getShortDescription().equals("Unknown"))
+    public String getFormatDescription(Context context, Bitstream bitstream) throws SQLException
+    {
+        if (bitstream.getFormat(context).getShortDescription().equals("Unknown"))
         {
             // Get user description if there is one
             String desc = bitstream.getUserFormatDescription();
@@ -181,7 +182,7 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
         }
 
         // not null or Unknown
-        return bitstream.getFormat().getShortDescription();
+        return bitstream.getFormat(context).getShortDescription();
     }
 
     @Override
@@ -376,6 +377,16 @@ public class BitstreamServiceImpl extends DSpaceObjectServiceImpl<Bitstream> imp
             }
         }
         return null;
+    }
+
+    @Override
+    public BitstreamFormat getFormat(Context context, Bitstream bitstream) throws SQLException {
+        if(bitstream.getBitstreamFormat() == null)
+        {
+            return bitstreamFormatService.findUnknown(context);
+        }else{
+            return bitstream.getBitstreamFormat();
+        }
     }
 
     @Override

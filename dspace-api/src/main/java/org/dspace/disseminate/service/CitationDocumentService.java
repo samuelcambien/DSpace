@@ -42,7 +42,7 @@ public interface CitationDocumentService {
     public Boolean isCitationEnabledForBitstream(Bitstream bitstream, Context context) throws SQLException;
 
 
-    public boolean canGenerateCitationVersion(Bitstream bitstream);
+    public boolean canGenerateCitationVersion(Context context, Bitstream bitstream) throws SQLException;
 
     /**
      * Creates a

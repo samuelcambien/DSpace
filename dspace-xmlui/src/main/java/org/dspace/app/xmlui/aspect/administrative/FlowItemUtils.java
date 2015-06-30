@@ -608,7 +608,7 @@ public class FlowItemUtils
 		result.setContinue(false);
 		
 		Bitstream bitstream = bitstreamService.find(context, bitstreamID);
-		BitstreamFormat currentFormat = bitstream.getFormat();
+		BitstreamFormat currentFormat = bitstream.getFormat(context);
 
 		//Step 1:
 		// Update the bitstream's description and name

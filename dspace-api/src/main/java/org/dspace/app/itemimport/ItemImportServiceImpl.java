@@ -1394,7 +1394,7 @@ public class ItemImportServiceImpl implements ItemImportService, InitializingBea
             if (!isTest)
             {
                 // find bitstream
-                List<Bitstream> bitstreams = itemService.getNonInternalBitstreams(myItem);
+                List<Bitstream> bitstreams = itemService.getNonInternalBitstreams(c, myItem);
                 for (int j = 0; j < bitstreams.size() && notfound; j++)
                 {
                     if (bitstreams.get(j).getName().equals(bitstreamName))

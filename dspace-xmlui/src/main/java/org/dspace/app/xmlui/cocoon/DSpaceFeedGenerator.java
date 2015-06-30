@@ -162,12 +162,12 @@ public class DSpaceFeedGenerator extends AbstractGenerator
                     dso = handleService.resolveToObject(context, handle);
                 }
                 
-                validity.add(dso);
+                validity.add(context, dso);
                 
                 // add recently submitted items
                 for(Item item : getRecentlySubmittedItems(context,dso))
                 {
-                    validity.add(item);
+                    validity.add(context, item);
                 }
 
                 this.validity = validity.complete();
@@ -235,7 +235,7 @@ public class DSpaceFeedGenerator extends AbstractGenerator
             }
         
             SyndicationFeed feed = new SyndicationFeed(SyndicationFeed.UITYPE_XMLUI);
-            feed.populate(ObjectModelHelper.getRequest(objectModel),
+            feed.populate(ObjectModelHelper.getRequest(objectModel), context,
                           dso, getRecentlySubmittedItems(context,dso), FeedUtils.i18nLabels);
             feed.setType(this.format);
             Document dom = feed.outputW3CDom();

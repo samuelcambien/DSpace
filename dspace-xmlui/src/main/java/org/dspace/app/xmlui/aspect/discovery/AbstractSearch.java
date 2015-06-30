@@ -172,7 +172,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
                 DSpaceValidity validity = new DSpaceValidity();
 
                 DSpaceObject scope = getScope();
-                validity.add(scope);
+                validity.add(context, scope);
 
                 performSearch(scope);
 
@@ -184,7 +184,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer implement
                     validity.add("size:" + results.size());
 
                     for (DSpaceObject dso : results) {
-                        validity.add(dso);
+                        validity.add(context, dso);
                     }
                 }
 

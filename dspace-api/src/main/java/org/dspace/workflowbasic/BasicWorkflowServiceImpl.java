@@ -980,7 +980,7 @@ public class BasicWorkflowServiceImpl implements BasicWorkflowService
                 + usersName + " on " + now + " (GMT) ";
 
         // add bitstream descriptions (name, size, checksums)
-        provDescription += installItemService.getBitstreamProvenanceMessage(item);
+        provDescription += installItemService.getBitstreamProvenanceMessage(context, item);
 
         // Add to item as a DC field
         itemService.addMetadata(context, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", provDescription);
@@ -1011,7 +1011,7 @@ public class BasicWorkflowServiceImpl implements BasicWorkflowService
         }
 
         // add sizes and checksums of bitstreams
-        provmessage += installItemService.getBitstreamProvenanceMessage(myitem);
+        provmessage += installItemService.getBitstreamProvenanceMessage(context, myitem);
 
         // Add message to the DC
         itemService.addMetadata(context, myitem, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", provmessage);

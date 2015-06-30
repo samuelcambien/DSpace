@@ -125,13 +125,13 @@ public class SidebarFacetsTransformer extends AbstractDSpaceTransformer implemen
                 // Add the actual collection;
                 if (dso != null)
                 {
-                    val.add(dso);
+                    val.add(context, dso);
                 }
 
                 val.add("numFound:" + queryResults.getDspaceObjects().size());
 
                 for (DSpaceObject resultDso : queryResults.getDspaceObjects()) {
-                    val.add(resultDso);
+                    val.add(context, resultDso);
                 }
 
                 for (String facetField : queryResults.getFacetResults().keySet()) {

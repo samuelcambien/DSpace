@@ -72,7 +72,7 @@ public interface InstallItemService {
      *
      * @return provenance description
      */
-    public String getBitstreamProvenanceMessage(Item myitem)
+    public String getBitstreamProvenanceMessage(Context context, Item myitem)
     						throws SQLException;
 
 }

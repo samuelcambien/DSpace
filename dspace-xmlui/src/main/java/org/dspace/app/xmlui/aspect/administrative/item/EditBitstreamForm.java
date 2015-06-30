@@ -97,7 +97,7 @@ public class EditBitstreamForm extends AbstractDSpaceTransformer
 		// Get the bitstream and all the various formats
                 // Administrator is allowed to see internal formats too.
 		Bitstream bitstream = bitstreamService.find(context, bitstreamID);
-		BitstreamFormat currentFormat = bitstream.getFormat();
+		BitstreamFormat currentFormat = bitstream.getFormat(context);
                 java.util.List<BitstreamFormat> bitstreamFormats = authorizeService.isAdmin(context) ?
 					bitstreamFormatService.findAll(context) :
 					bitstreamFormatService.findNonInternal(context);

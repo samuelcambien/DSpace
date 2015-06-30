@@ -110,7 +110,7 @@ public class StatisticsDataVisits extends StatisticsData
         ArrayList<DatasetQuery> datasetQueries = new ArrayList<DatasetQuery>();
         for (int i = 0; i < getDatasetGenerators().size(); i++) {
             DatasetGenerator dataSet = getDatasetGenerators().get(i);
-            processAxis(dataSet, datasetQueries);
+            processAxis(context, dataSet, datasetQueries);
         }
 
         // Now lets determine our values.
@@ -382,7 +382,7 @@ public class StatisticsDataVisits extends StatisticsData
         return dataset;
     }
 
-    protected void processAxis(DatasetGenerator datasetGenerator, List<DatasetQuery> queries) throws SQLException {
+    protected void processAxis(Context context, DatasetGenerator datasetGenerator, List<DatasetQuery> queries) throws SQLException {
         if(datasetGenerator instanceof DatasetDSpaceObjectGenerator){
             DatasetDSpaceObjectGenerator dspaceObjAxis = (DatasetDSpaceObjectGenerator) datasetGenerator;
             // Get the types involved
@@ -408,7 +408,7 @@ public class StatisticsDataVisits extends StatisticsData
                             Bundle bundle = item.getBundles().get(j);
                             for (int k = 0; k < bundle.getBitstreams().size(); k++) {
                                 Bitstream bitstream = bundle.getBitstreams().get(k).getBitstream();
-                                if(!bitstream.getFormat().isInternal()){
+                                if(!bitstream.getFormat(context).isInternal()){
                                     // Add a separate query for each bitstream
                                     query.setDso(bitstream, bitstream.getType(), dsoLength);
                                 }

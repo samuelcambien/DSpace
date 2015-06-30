@@ -99,12 +99,12 @@ public class CommunityRecentSubmissions extends AbstractDSpaceTransformer implem
 	            community = (Community) dso;
 
 	            DSpaceValidity validity = new DSpaceValidity();
-	            validity.add(community);
+	            validity.add(context, community);
 
 	            // Recently submitted items
 	            for (Item item : getRecentlySubmittedItems(community))
 	            {
-	                validity.add(item);
+	                validity.add(context, item);
 	            }
 
 	            this.validity = validity.complete();

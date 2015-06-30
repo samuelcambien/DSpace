@@ -19,6 +19,7 @@ import org.dspace.app.util.service.MetadataExposureService;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Static utility class to manage configuration for exposure (hiding) of
@@ -65,6 +66,7 @@ public class MetadataExposureServiceImpl implements MetadataExposureService
 
     protected final String CONFIG_PREFIX = "metadata.hide.";
 
+    @Autowired(required = true)
     protected AuthorizeService authorizeService;
 
     @Override

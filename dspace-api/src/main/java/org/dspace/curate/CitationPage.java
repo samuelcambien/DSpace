@@ -143,12 +143,12 @@ public class CitationPage extends AbstractCurationTask {
             // that are PDFs.
             for (BundleBitstream bundleBitstream : bundleBitstreams) {
                 Bitstream bitstream = bundleBitstream.getBitstream();
-                BitstreamFormat format = bitstream.getFormat();
+                BitstreamFormat format = bitstream.getFormat(Curator.curationContext());
 
                 //If bitstream is a PDF document then it is citable.
                 CitationDocumentService citationDocument = DisseminateServiceFactory.getInstance().getCitationDocumentService();
 
-                if(citationDocument.canGenerateCitationVersion(bitstream)) {
+                if(citationDocument.canGenerateCitationVersion(Curator.curationContext(), bitstream)) {
                     this.resBuilder.append(item.getHandle() + " - "
                             + bitstream.getName() + " is citable.");
                     try {
@@ -231,7 +231,7 @@ public class CitationPage extends AbstractCurationTask {
         //Setup a good name for our bitstream and make
         //it the same format as the source document.
         citedBitstream.setName(context, bitstream.getName());
-        bitstreamService.setFormat(context, citedBitstream, bitstream.getFormat());
+        bitstreamService.setFormat(context, citedBitstream, bitstream.getFormat(Curator.curationContext()));
         citedBitstream.setDescription(context, bitstream.getDescription());
 
         this.resBuilder.append(" Added "

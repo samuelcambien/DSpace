@@ -114,12 +114,12 @@ public class CollectionRecentSubmissions extends AbstractDSpaceTransformer imple
 	            DSpaceValidity validity = new DSpaceValidity();
 
 	            // Add the actual collection;
-	            validity.add(collection);
+	            validity.add(context, collection);
 
 	            // add recently submitted items
 	            for(Item item : getRecentlySubmittedItems(collection))
 	            {
-	                validity.add(item);
+	                validity.add(context, item);
 	            }
 
 	            this.validity = validity.complete();

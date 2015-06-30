@@ -115,7 +115,7 @@ public class EditFileStep extends AbstractStep
 		String actionURL = contextPath + "/handle/"+collection.getHandle() + "/submit/" + knot.getId() + ".continue";
 
     	// Get the bitstream and all the various formats
-		BitstreamFormat currentFormat = bitstream.getFormat();
+		BitstreamFormat currentFormat = bitstream.getFormat(context);
         BitstreamFormat guessedFormat = bitstreamFormatService.guessFormat(context, bitstream);
     	java.util.List<BitstreamFormat> bitstreamFormats = bitstreamFormatService.findNonInternal(context);
     	

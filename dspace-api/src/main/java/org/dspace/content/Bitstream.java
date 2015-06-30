@@ -99,7 +99,12 @@ public class Bitstream extends DSpaceObject implements DSpaceObjectLegacySupport
      */
     public int getSequenceID()
     {
-        return sequenceId;
+        if(sequenceId == null)
+        {
+            return -1;
+        }else{
+            return sequenceId;
+        }
     }
 
     /**
@@ -232,14 +237,19 @@ public class Bitstream extends DSpaceObject implements DSpaceObjectLegacySupport
         return getBitstreamService().getMetadataFirstValue(this, MetadataSchema.DC_SCHEMA, "format", null, Item.ANY);
     }
 
+    protected BitstreamFormat getBitstreamFormat()
+    {
+        return bitstreamFormat;
+    }
+
     /**
      * Get the format of the bitstream
      * 
      * @return the format of this bitstream
      */
-    public BitstreamFormat getFormat()
+    public BitstreamFormat getFormat(Context context) throws SQLException
     {
-        return bitstreamFormat;
+        return getBitstreamService().getFormat(context, this);
     }
 
     void setFormat(BitstreamFormat bitstreamFormat) {
@@ -347,9 +357,9 @@ public class Bitstream extends DSpaceObject implements DSpaceObjectLegacySupport
      *
      * @return a description of the format.
      */
-    public String getFormatDescription()
+    public String getFormatDescription(Context context) throws SQLException
     {
-        return getBitstreamService().getFormatDescription(this);
+        return getBitstreamService().getFormatDescription(context, this);
     }
 
     /**

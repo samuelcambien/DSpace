@@ -132,7 +132,7 @@ public final class CheckerCommand
             if (reportVerbose
                     || !ChecksumResultCode.CHECKSUM_MATCH.equals(info.getChecksumResult().getResultCode()))
             {
-                collector.collect(info);
+                collector.collect(context, info);
             }
 
             bitstream = dispatcher.next();

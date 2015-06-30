@@ -140,7 +140,7 @@ public class CommunityBrowser extends AbstractDSpaceTransformer implements Cache
 	            {
 	                TreeNode node = stack.pop();
 	                
-	                validity.add(node.getDSO());
+	                validity.add(context, node.getDSO());
 	                
 	                // If we are configured to use collection strengths (i.e. item counts) then include that number in the validity.
 	                boolean showCount = ConfigurationManager.getBooleanProperty("webui.strengths.show");

@@ -219,7 +219,7 @@ public interface ItemService extends DSpaceObjectService<Item>, DSpaceObjectLega
      *
      * @return non-internal bitstreams.
      */
-    public List<Bitstream> getNonInternalBitstreams(Item item) throws SQLException;
+    public List<Bitstream> getNonInternalBitstreams(Context context, Item item) throws SQLException;
 
     /**
      * Remove just the DSpace license from an item This is useful to update the

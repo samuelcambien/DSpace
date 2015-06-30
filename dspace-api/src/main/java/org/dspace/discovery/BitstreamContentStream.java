@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 /**
  * Construct a <code>ContentStream</code> from a <code>File</code>
@@ -29,11 +30,11 @@ public class BitstreamContentStream extends ContentStreamBase
     protected final Bitstream file;
     protected BitstreamService bitstreamService;
 
-    public BitstreamContentStream(Context context, Bitstream f ) {
+    public BitstreamContentStream(Context context, Bitstream f ) throws SQLException {
         file = f;
         this.context = context;
 
-        contentType = f.getFormat().getMIMEType();
+        contentType = f.getFormat(context).getMIMEType();
         name = file.getName();
         size = file.getSize();
         sourceInfo = file.getName();

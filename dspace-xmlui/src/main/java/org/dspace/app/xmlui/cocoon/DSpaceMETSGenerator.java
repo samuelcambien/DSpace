@@ -110,7 +110,7 @@ public class DSpaceMETSGenerator extends AbstractGenerator
             
 			// Generate the METS document
 			contentHandler.startDocument();
-			adapter.renderMETS(contentHandler,lexicalHandler);
+			adapter.renderMETS(context, contentHandler,lexicalHandler);
 			contentHandler.endDocument();
 			
 		} catch (WingException we) {

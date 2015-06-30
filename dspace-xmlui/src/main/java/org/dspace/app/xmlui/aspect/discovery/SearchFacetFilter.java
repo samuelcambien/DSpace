@@ -142,7 +142,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
 
                 if (dso != null) {
                     // Add the actual collection;
-                    validity.add(dso);
+                    validity.add(context, dso);
                 }
 
                 // add recently submitted items, serialize solr query contents.
@@ -151,7 +151,7 @@ public class SearchFacetFilter extends AbstractDSpaceTransformer implements Cach
                 validity.add("numFound:" + response.getDspaceObjects().size());
 
                 for (DSpaceObject resultDso : queryResults.getDspaceObjects()) {
-                    validity.add(resultDso);
+                    validity.add(context, resultDso);
                 }
 
                 for (String facetField : queryResults.getFacetResults().keySet()) {

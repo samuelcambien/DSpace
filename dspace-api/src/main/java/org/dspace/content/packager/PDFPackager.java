@@ -239,7 +239,7 @@ public class PDFPackager
         {
             throw new PackageValidationException("Cannot find BitstreamFormat \"" + BITSTREAM_FORMAT_NAME + "\"");
         }
-        Bitstream pkgBs = PackageUtils.getBitstreamByFormat(item, pdff, Constants.DEFAULT_BUNDLE_NAME);
+        Bitstream pkgBs = PackageUtils.getBitstreamByFormat(context, item, pdff, Constants.DEFAULT_BUNDLE_NAME);
         if (pkgBs == null)
         {
             throw new PackageValidationException("Cannot find Bitstream with format \"" + BITSTREAM_FORMAT_NAME + "\"");

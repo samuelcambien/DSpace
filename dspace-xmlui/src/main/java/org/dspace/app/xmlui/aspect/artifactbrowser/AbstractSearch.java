@@ -183,7 +183,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
 	            DSpaceValidity validity = new DSpaceValidity();
 	            
 	            DSpaceObject scope = getScope();
-	            validity.add(scope);
+	            validity.add(context, scope);
 	            
 	            performSearch();
 
@@ -195,7 +195,7 @@ public abstract class AbstractSearch extends AbstractDSpaceTransformer
 	            for (String handle : handles)
 	            {
 	                DSpaceObject resultDSO = handleService.resolveToObject(context, handle);
-	                validity.add(resultDSO);
+	                validity.add(context, resultDSO);
 	            }
 	            
 	            this.validity = validity.complete();

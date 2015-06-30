@@ -837,7 +837,7 @@ public abstract class AbstractMETSIngester extends AbstractPackageIngester
             // set it:
             // 1. attempt to guess from MIME type
             // 2. if that fails, guess from "name" extension.
-            if (bitstream.getFormat().equals(unknownFormat))
+            if (bitstream.getFormat(context).equals(unknownFormat))
             {
                 if (log.isDebugEnabled())
                 {

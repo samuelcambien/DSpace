@@ -182,7 +182,7 @@ public class PrivateItems extends AbstractDSpaceTransformer implements
 
                 if (dso != null)
                 {
-                    newValidity.add(dso);
+                    newValidity.add(context, dso);
                 }
 
                 BrowseInfo info = getBrowseInfo();
@@ -192,7 +192,7 @@ public class PrivateItems extends AbstractDSpaceTransformer implements
                     // Add the browse items to the validity
                     for (Item item : info.getResults())
                     {
-                        newValidity.add(item);
+                        newValidity.add(context, item);
                 }
 
                 validity = newValidity.complete();

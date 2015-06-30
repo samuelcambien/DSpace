@@ -117,7 +117,7 @@ public class StandardOpenSearchGenerator extends AbstractOpenSearchGenerator
                 }
 
                 // generates the OpenSearch result
-                resultsDoc = openSearchService.getResultsDoc(format, query, qResults.getHitCount(), qResults.getStart(), qResults.getPageSize(), scope, results, FeedUtils.i18nLabels);
+                resultsDoc = openSearchService.getResultsDoc(context, format, query, qResults.getHitCount(), qResults.getStart(), qResults.getPageSize(), scope, results, FeedUtils.i18nLabels);
                 FeedUtils.unmangleI18N(resultsDoc);
             }
 

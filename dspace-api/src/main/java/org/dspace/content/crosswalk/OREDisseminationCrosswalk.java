@@ -83,7 +83,7 @@ public class OREDisseminationCrosswalk
      * @throws SQLException
      * @throws AuthorizeException
      */
-    private Element disseminateItem(Item item) throws CrosswalkException, IOException, SQLException, AuthorizeException 
+    private Element disseminateItem(Context context, Item item) throws CrosswalkException, IOException, SQLException, AuthorizeException
     {
     	String oaiUrl = null;
         String dsUrl = ConfigurationManager.getProperty("dspace.url");
@@ -233,7 +233,7 @@ public class OREDisseminationCrosswalk
         		arLink.setAttribute("rel", ORE_NS.getURI()+"aggregates");
         		arLink.setAttribute("href",dsUrl + "/bitstream/handle/" + item.getHandle() + "/" + encodeForURL(bs.getName()) + "?sequence=" + bs.getSequenceID());
         		arLink.setAttribute("title",bs.getName());
-        		arLink.setAttribute("type",bs.getFormat().getMIMEType());
+        		arLink.setAttribute("type",bs.getFormat(context).getMIMEType());
         		arLink.setAttribute("length",Long.toString(bs.getSize()));
         		
         		aggregation.addContent(arLink);
@@ -302,7 +302,7 @@ public class OREDisseminationCrosswalk
     public Element disseminateElement(Context context, DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException
 	{
     	switch(dso.getType()) {
-	    	case Constants.ITEM: return disseminateItem((Item)dso);
+	    	case Constants.ITEM: return disseminateItem(context, (Item)dso);
 	    	case Constants.COLLECTION: break;
 	    	case Constants.COMMUNITY: break;
 	    	default: throw new CrosswalkObjectNotSupported("ORE implementation unable to disseminate unknown DSpace object.");

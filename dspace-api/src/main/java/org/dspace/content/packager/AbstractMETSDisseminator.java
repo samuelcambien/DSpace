@@ -445,7 +445,7 @@ public abstract class AbstractMETSDisseminator
                                 bitstream, Constants.READ);
                         if (auth ||
                                 (unauth != null && unauth.equalsIgnoreCase("zero"))) {
-                            String zname = makeBitstreamURL(bitstream, params);
+                            String zname = makeBitstreamURL(context, bitstream, params);
                             ZipEntry ze = new ZipEntry(zname);
                             if (log.isDebugEnabled()) {
                                 log.debug(new StringBuilder().append("Writing CONTENT stream of bitstream(").append(bitstream.getID()).append(") to Zip: ").append(zname).append(", size=").append(bitstream.getSize()).toString());
@@ -488,7 +488,7 @@ public abstract class AbstractMETSDisseminator
                                  ((Community)dso).getLogo();
             if (logoBs != null)
             {
-                String zname = makeBitstreamURL(logoBs, params);
+                String zname = makeBitstreamURL(context, logoBs, params);
                 ZipEntry ze = new ZipEntry(zname);
                 if (log.isDebugEnabled())
                 {
@@ -965,7 +965,7 @@ public abstract class AbstractMETSDisseminator
                         }
                     }
                     file.setGROUPID(groupID);
-                    file.setMIMETYPE(bitstream.getFormat().getMIMEType());
+                    file.setMIMETYPE(bitstream.getFormat(context).getMIMEType());
                     file.setSIZE(auth ? bitstream.getSize() : 0);
 
                     // Translate checksum and type to METS
@@ -983,7 +983,7 @@ public abstract class AbstractMETSDisseminator
                     // FLocat: point to location of bitstream contents.
                     FLocat flocat = new FLocat();
                     flocat.setLOCTYPE(Loctype.URL);
-                    flocat.setXlinkHref(makeBitstreamURL(bitstream, params));
+                    flocat.setXlinkHref(makeBitstreamURL(context, bitstream, params));
                     file.getContent().add(flocat);
 
                     // technical metadata for bitstream
@@ -1053,7 +1053,7 @@ public abstract class AbstractMETSDisseminator
             if (logoBs != null)
             {
                 fileSec = new FileSec();
-                addLogoBitstream(logoBs, fileSec, div0, params);
+                addLogoBitstream(context, logoBs, fileSec, div0, params);
             }
         }
         else if (dso.getType() == Constants.COMMUNITY)
@@ -1085,7 +1085,7 @@ public abstract class AbstractMETSDisseminator
             if (logoBs != null)
             {
                 fileSec = new FileSec();
-                addLogoBitstream(logoBs, fileSec, div0, params);
+                addLogoBitstream(context, logoBs, fileSec, div0, params);
             }
         }
         else if (dso.getType() == Constants.SITE)
@@ -1135,12 +1135,11 @@ public abstract class AbstractMETSDisseminator
     // Install logo bitstream into METS for Community, Collection.
     // Add a file element, and refer to it from an fptr in the first div
     // of the main structMap.
-    protected void addLogoBitstream(Bitstream logoBs, FileSec fileSec, Div div0, PackageParameters params)
-    {
+    protected void addLogoBitstream(Context context, Bitstream logoBs, FileSec fileSec, Div div0, PackageParameters params) throws SQLException {
         edu.harvard.hul.ois.mets.File file = new edu.harvard.hul.ois.mets.File();
         String fileID = gensym("logo");
         file.setID(fileID);
-        file.setMIMETYPE(logoBs.getFormat().getMIMEType());
+        file.setMIMETYPE(logoBs.getFormat(context).getMIMEType());
         file.setSIZE(logoBs.getSize());
 
         // Translate checksum and type to METS
@@ -1162,7 +1161,7 @@ public abstract class AbstractMETSDisseminator
         //Create <fileGroup USE="LOGO"> with a <FLocat> pointing at bitstream
         FLocat flocat = new FLocat();
         flocat.setLOCTYPE(Loctype.URL);
-        flocat.setXlinkHref(makeBitstreamURL(logoBs, params));
+        flocat.setXlinkHref(makeBitstreamURL(context, logoBs, params));
         file.getContent().add(flocat);
         FileGrp fileGrp = new FileGrp();
         fileGrp.setUSE("LOGO");
@@ -1390,7 +1389,7 @@ public abstract class AbstractMETSDisseminator
             {
                 //Since we are including the LICENSE bitstreams, lets find our LICENSE bitstream path & link to it.
                 Bitstream licenseBs = PackageUtils.findDepositLicense(context, (Item)dso);
-                mdRef.setXlinkHref(makeBitstreamURL(licenseBs, params));
+                mdRef.setXlinkHref(makeBitstreamURL(context, licenseBs, params));
             }
         }
         //If this <mdRef> is a reference to a Creative Commons Textual License
@@ -1406,7 +1405,7 @@ public abstract class AbstractMETSDisseminator
             {
                 //Since we are including the CC-LICENSE bitstreams, lets find our CC-LICENSE (textual) bitstream path & link to it.
                 Bitstream ccText = creativeCommonsService.getLicenseTextBitstream(i);
-                mdRef.setXlinkHref(makeBitstreamURL(ccText, params));
+                mdRef.setXlinkHref(makeBitstreamURL(context, ccText, params));
             }
         }
         //If this <mdRef> is a reference to a Creative Commons RDF License
@@ -1422,7 +1421,7 @@ public abstract class AbstractMETSDisseminator
             {
                 //Since we are including the CC-LICENSE bitstreams, lets find our CC-LICENSE (RDF) bitstream path & link to it.
                 Bitstream ccRdf = creativeCommonsService.getLicenseRdfBitstream(i);
-                mdRef.setXlinkHref(makeBitstreamURL(ccRdf, params));
+                mdRef.setXlinkHref(makeBitstreamURL(context, ccRdf, params));
             }
         }
     }
@@ -1478,8 +1477,7 @@ public abstract class AbstractMETSDisseminator
      * @param params Packager Parameters
      * @return String in URL format naming path to bitstream.
      */
-    public String makeBitstreamURL(Bitstream bitstream, PackageParameters params)
-    {
+    public String makeBitstreamURL(Context context, Bitstream bitstream, PackageParameters params) throws SQLException {
         // if bare manifest, use external "persistent" URI for bitstreams
         if (params != null && (params.getBooleanProperty("manifestOnly", false)))
         {
@@ -1534,7 +1532,7 @@ public abstract class AbstractMETSDisseminator
         else
         {
             String base = "bitstream_"+String.valueOf(bitstream.getID());
-            List<String> ext = bitstream.getFormat().getExtensions();
+            List<String> ext = bitstream.getFormat(context).getExtensions();
             return (ext.size() > 0) ? base+"."+ext.get(0) : base;
         }
     }

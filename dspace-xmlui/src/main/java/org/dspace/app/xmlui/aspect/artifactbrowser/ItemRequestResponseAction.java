@@ -202,14 +202,14 @@ public class ItemRequestResponseAction extends AbstractAction
                 List<BundleBitstream> bundleBitstreams = bundle.getBitstreams();
                 for (BundleBitstream bundleBitstream : bundleBitstreams) {
                     Bitstream bitstream = bundleBitstream.getBitstream();
-                    if (!bitstream.getFormat().isInternal() /*&& RequestItemManager.isRestricted(context, bitstreams[k])*/) {
-                        email.addAttachment(bitstreamStorageService.retrieve(context, bitstream), bitstream.getName(), bitstream.getFormat().getMIMEType());
+                    if (!bitstream.getFormat(context).isInternal() /*&& RequestItemManager.isRestricted(context, bitstreams[k])*/) {
+                        email.addAttachment(bitstreamStorageService.retrieve(context, bitstream), bitstream.getName(), bitstream.getFormat(context).getMIMEType());
                     }
                 }
             }
         } else {
             Bitstream bit = requestItem.getBitstream();
-            email.addAttachment(bitstreamStorageService.retrieve(context, requestItem.getBitstream()), bit.getName(), bit.getFormat().getMIMEType());
+            email.addAttachment(bitstreamStorageService.retrieve(context, requestItem.getBitstream()), bit.getName(), bit.getFormat(context).getMIMEType());
         }     
         
         email.send();

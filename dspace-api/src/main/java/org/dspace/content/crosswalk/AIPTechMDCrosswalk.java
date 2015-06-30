@@ -251,7 +251,7 @@ public class AIPTechMDCrosswalk implements IngestionCrosswalk, DisseminationCros
             {
                 dc.add(makeDC("format", null, bsUfmt));
             }
-            BitstreamFormat bsf = bitstream.getFormat();
+            BitstreamFormat bsf = bitstream.getFormat(context);
             dc.add(makeDC("format", "medium", bsf.getShortDescription()));
             dc.add(makeDC("format", "mimetype", bsf.getMIMEType()));
             dc.add(makeDC("format", "supportlevel", bitstreamFormatService.getSupportLevelText(bsf)));

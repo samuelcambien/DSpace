@@ -22,6 +22,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
 import org.dspace.handle.HandleServiceImpl;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.w3c.dom.Document;
@@ -159,7 +160,7 @@ public class SyndicationFeed
     /**
      * Fills in the feed and entry-level metadata from DSpace objects.
      */
-    public void populate(HttpServletRequest request, DSpaceObject dso,
+    public void populate(HttpServletRequest request, Context context, DSpaceObject dso,
                          DSpaceObject items[], Map<String, String> labels)
     {
         String logoURL = null;
@@ -374,10 +375,10 @@ public class SyndicationFeed
                             List<BundleBitstream> bits = bunds.get(0).getBitstreams();
                             for (BundleBitstream bundleBitstream : bits) {
                                 Bitstream bit = bundleBitstream.getBitstream();
-                                String mime = bit.getFormat().getMIMEType();
+                                String mime = bit.getFormat(context).getMIMEType();
                                 if (podcastableMIMETypes.contains(mime)) {
                                     SyndEnclosure enc = new SyndEnclosureImpl();
-                                    enc.setType(bit.getFormat().getMIMEType());
+                                    enc.setType(bit.getFormat(context).getMIMEType());
                                     enc.setLength(bit.getSize());
                                     enc.setUrl(urlOfBitstream(request, bit));
                                     enclosures.add(enc);

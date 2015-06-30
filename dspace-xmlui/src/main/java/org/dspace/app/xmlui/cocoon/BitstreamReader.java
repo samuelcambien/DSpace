@@ -377,7 +377,7 @@ public class BitstreamReader extends AbstractReader implements Recyclable
                 this.bitstreamSize = bitstream.getSize();
             }
 
-            this.bitstreamMimeType = bitstream.getFormat().getMIMEType();
+            this.bitstreamMimeType = bitstream.getFormat(context).getMIMEType();
             this.bitstreamName = bitstream.getName();
             if (context.getCurrentUser() == null)
             {

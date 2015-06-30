@@ -117,18 +117,18 @@ public class Navigation extends AbstractDSpaceTransformer implements CacheablePr
 		        try {
 		            DSpaceValidity validity = new DSpaceValidity();
 
-		            validity.add(eperson);
+		            validity.add(context, eperson);
 
 		            java.util.List<Group> groups = groupService.allMemberGroups(context, eperson);
 		            for (Group group : groups)
 		            {
-		            	validity.add(group);
+		            	validity.add(context, group);
 		            }
 
                     DSpaceObject dso = HandleUtil.obtainHandle(objectModel);
                     if(dso != null)
                     {
-                        validity.add(dso);
+                        validity.add(context, dso);
                     }
 
 		            this.validity = validity.complete();

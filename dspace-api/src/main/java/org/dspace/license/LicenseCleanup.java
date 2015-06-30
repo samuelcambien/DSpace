@@ -177,7 +177,7 @@ public class LicenseCleanup
 
         newBitstream.setName(context, bitstream.getName());
         newBitstream.setDescription(context, bitstream.getDescription());
-        newBitstream.setFormat(context, bitstream.getFormat());
+        newBitstream.setFormat(context, bitstream.getFormat(context));
         newBitstream.setSource(context, bitstream.getSource());
         newBitstream.setUserFormatDescription(context, bitstream
                 .getUserFormatDescription());

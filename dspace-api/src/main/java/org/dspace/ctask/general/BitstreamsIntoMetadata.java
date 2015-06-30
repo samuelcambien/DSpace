@@ -115,7 +115,7 @@ public class BitstreamsIntoMetadata extends AbstractCurationTask
      * @param type The type of bitstream
      */
     protected void addMetadata(Item item, Bitstream bitstream, String type) throws SQLException {
-        String value = bitstream.getFormat().getMIMEType() + "##";
+        String value = bitstream.getFormat(Curator.curationContext()).getMIMEType() + "##";
         value += bitstream.getName() + "##";
         value += bitstream.getSize() + "##";
         value += item.getHandle() + "##";

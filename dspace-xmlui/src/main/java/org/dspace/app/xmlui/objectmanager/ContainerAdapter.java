@@ -445,7 +445,8 @@ public class ContainerAdapter extends AbstractAdapter
      *   </fileGrp>
      * </fileSec>
      */
-    protected void renderFileSection() throws SAXException
+    @Override
+    protected void renderFileSection(Context context) throws SAXException, SQLException
     {
     	AttributeMap attributes;
     	
@@ -468,7 +469,7 @@ public class ContainerAdapter extends AbstractAdapter
             // Add the actual file element
             String fileID = getFileID(logo);
             String groupID = getGroupFileID(logo);
-            renderFile(null, logo, fileID, groupID);
+            renderFile(context, null, logo, fileID, groupID);
             
             // ////////////////////////////////
             // End th file group and file section

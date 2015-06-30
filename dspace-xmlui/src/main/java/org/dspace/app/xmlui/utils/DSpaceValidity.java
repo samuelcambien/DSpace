@@ -18,6 +18,7 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
+import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 
@@ -226,7 +227,7 @@ public class DSpaceValidity implements SourceValidity
      * @param dso
      *          The object to add to the validity.
      */
-    public void add(DSpaceObject dso) throws SQLException
+    public void add(Context context, DSpaceObject dso) throws SQLException
     {
         if (this.completed)
         {
@@ -250,7 +251,7 @@ public class DSpaceValidity implements SourceValidity
             validityKey.append(communityService.getMetadata(community, "name"));
             
             // Add the communities logo
-            this.add(community.getLogo());
+            this.add(context, community.getLogo());
 
         } 
         else if (dso instanceof Collection)
@@ -268,7 +269,7 @@ public class DSpaceValidity implements SourceValidity
             validityKey.append(collectionService.getMetadata(collection, "name")); 
             
             // Add the logo also;
-            this.add(collection.getLogo());
+            this.add(context, collection.getLogo());
             
         }
         else if (dso instanceof Item)
@@ -291,7 +292,7 @@ public class DSpaceValidity implements SourceValidity
             for(Bundle bundle : item.getBundles())
             {
                 // Add each of the items bundles & bitstreams.
-                this.add(bundle);
+                this.add(context, bundle);
             }
         }
         else if (dso instanceof Bundle)
@@ -305,7 +306,7 @@ public class DSpaceValidity implements SourceValidity
             
             for(BundleBitstream bundleBitstream : bundle.getBitstreams())
             {
-                this.add(bundleBitstream.getBitstream());
+                this.add(context, bundleBitstream.getBitstream());
             }
         }
         else if (dso instanceof Bitstream)
@@ -322,7 +323,7 @@ public class DSpaceValidity implements SourceValidity
             validityKey.append(bitstream.getChecksumAlgorithm());
             validityKey.append(bitstream.getSize());
             validityKey.append(bitstream.getUserFormatDescription());
-            validityKey.append(bitstream.getFormat().getDescription());
+            validityKey.append(bitstream.getFormat(context).getDescription());
         }
         else if (dso instanceof EPerson)
         {

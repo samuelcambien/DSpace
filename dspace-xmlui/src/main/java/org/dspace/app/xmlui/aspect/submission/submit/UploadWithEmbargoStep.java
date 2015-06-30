@@ -322,7 +322,7 @@ public class UploadWithEmbargoStep extends UploadStep
                     row.addCellContent(desc);
                 }
 	            
-                BitstreamFormat format = bitstream.getFormat();
+                BitstreamFormat format = bitstream.getFormat(context);
 	            if (format == null)
 	            {
 	            	row.addCellContent(T_unknown_format);
@@ -420,7 +420,7 @@ public class UploadWithEmbargoStep extends UploadStep
         for (BundleBitstream bundleBitstream : bitstreams)
         {
             Bitstream bitstream = bundleBitstream.getBitstream();
-            BitstreamFormat bitstreamFormat = bitstream.getFormat();
+            BitstreamFormat bitstreamFormat = bitstream.getFormat(context);
             
             String name = bitstream.getName();
             String url = makeBitstreamLink(item, bitstream);

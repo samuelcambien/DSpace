@@ -7,6 +7,8 @@
  */
 package org.dspace.checker;
 
+import org.dspace.core.Context;
+
 import java.sql.SQLException;
 
 /**
@@ -25,5 +27,5 @@ public interface ChecksumResultsCollector
      * @param info
      *            BitstreamInfo representing the check results.
      */
-    void collect(MostRecentChecksum info) throws SQLException;
+    void collect(Context context, MostRecentChecksum info) throws SQLException;
 }

@@ -126,7 +126,7 @@ public class CollectionSearch extends AbstractDSpaceTransformer implements Cache
 	            DSpaceValidity validity = new DSpaceValidity();
 
 	            // Add the actual collection;
-	            validity.add(collection);
+	            validity.add(context, collection);
 
 	            this.validity = validity.complete();
 	        }

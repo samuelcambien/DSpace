@@ -157,7 +157,7 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
 
                 String description = bitstream.getDescription();
                 String format = null;
-                BitstreamFormat bitstreamFormat = bitstream.getFormat();
+                BitstreamFormat bitstreamFormat = bitstream.getFormat(context);
                 if (bitstreamFormat != null) {
                     format = bitstreamFormat.getShortDescription();
                 }

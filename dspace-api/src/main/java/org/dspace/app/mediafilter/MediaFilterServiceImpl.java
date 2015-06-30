@@ -205,7 +205,7 @@ public class MediaFilterServiceImpl implements MediaFilterService, InitializingB
             List<String> fmts = filterFormats.get(filterClass.getClass().getName() +
                     (pluginName != null ? FILTER_PLUGIN_SEPARATOR + pluginName : ""));
 
-            if (fmts.contains(myBitstream.getFormat().getShortDescription())) {
+            if (fmts.contains(myBitstream.getFormat(context).getShortDescription())) {
                 try {
                     // only update item if bitstream not skipped
                     if (processBitstream(context, myItem, myBitstream, filterClass)) {
@@ -242,7 +242,7 @@ public class MediaFilterServiceImpl implements MediaFilterService, InitializingB
                 String[] mimeTypes = srif.getInputMIMETypes();
                 if (mimeTypes != null) {
                     for (String mimeType : mimeTypes) {
-                        if (mimeType.equalsIgnoreCase(myBitstream.getFormat().getMIMEType())) {
+                        if (mimeType.equalsIgnoreCase(myBitstream.getFormat(context).getMIMEType())) {
                             applyFilter = true;
                         }
                     }
@@ -253,7 +253,7 @@ public class MediaFilterServiceImpl implements MediaFilterService, InitializingB
                     String[] descriptions = srif.getInputDescriptions();
                     if (descriptions != null) {
                         for (String desc : descriptions) {
-                            if (desc.equalsIgnoreCase(myBitstream.getFormat().getShortDescription())) {
+                            if (desc.equalsIgnoreCase(myBitstream.getFormat(context).getShortDescription())) {
                                 applyFilter = true;
                             }
                         }
@@ -265,7 +265,7 @@ public class MediaFilterServiceImpl implements MediaFilterService, InitializingB
                     String[] extensions = srif.getInputExtensions();
                     if (extensions != null) {
                         for (String ext : extensions) {
-                            List<String> formatExtensions = myBitstream.getFormat().getExtensions();
+                            List<String> formatExtensions = myBitstream.getFormat(context).getExtensions();
                             if (formatExtensions != null && formatExtensions.contains(ext)) {
                                 applyFilter = true;
                             }

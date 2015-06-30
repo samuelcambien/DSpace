@@ -120,14 +120,14 @@ public class CommunityViewer extends AbstractDSpaceTransformer implements Cachea
 	            community = (Community) dso;
 	            
 	            DSpaceValidity validity = new DSpaceValidity();
-	            validity.add(community);
+	            validity.add(context, community);
 	            
 	            List<Community> subCommunities = community.getSubcommunities();
 	            List<Collection> collections = community.getCollections();
 	            // Sub communities
 	            for (Community subCommunity : subCommunities)
 	            {
-	                validity.add(subCommunity);
+	                validity.add(context, subCommunity);
 	                
 	                // Include the item count in the validity, only if the value is shown.
 	                boolean showCount = ConfigurationManager.getBooleanProperty("webui.strengths.show");
@@ -142,7 +142,7 @@ public class CommunityViewer extends AbstractDSpaceTransformer implements Cachea
 	            // Sub collections
 	            for (Collection collection : collections)
 	            {
-	                validity.add(collection);
+	                validity.add(context, collection);
 	                
 	                // Include the item count in the validity, only if the value is shown.
 	                boolean showCount = ConfigurationManager.getBooleanProperty("webui.strengths.show");

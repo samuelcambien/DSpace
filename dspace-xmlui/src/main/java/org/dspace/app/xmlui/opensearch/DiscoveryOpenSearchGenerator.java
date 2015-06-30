@@ -124,7 +124,7 @@ public class DiscoveryOpenSearchGenerator extends AbstractOpenSearchGenerator
 	            DSpaceObject[] results = new DSpaceObject[queryResults.getDspaceObjects().size()];
 	            queryResults.getDspaceObjects().toArray(results);
 	            
-	            resultsDoc = openSearchService.getResultsDoc(format, query, (int) queryResults.getTotalSearchResults(), start, rpp, scope, results, FeedUtils.i18nLabels);
+	            resultsDoc = openSearchService.getResultsDoc(context, format, query, (int) queryResults.getTotalSearchResults(), start, rpp, scope, results, FeedUtils.i18nLabels);
                 FeedUtils.unmangleI18N(resultsDoc);
             }
 

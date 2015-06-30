@@ -123,7 +123,7 @@ public class BrowseFacet extends AbstractDSpaceTransformer implements CacheableP
 
                 if (dso != null) {
                     // Add the actual collection;
-                    validity.add(dso);
+                    validity.add(context, dso);
                 }
 
                 // add recently submitted items, serialize solr query contents.
@@ -132,7 +132,7 @@ public class BrowseFacet extends AbstractDSpaceTransformer implements CacheableP
                 validity.add("numFound:" + response.getDspaceObjects().size());
 
                 for (DSpaceObject resultDso : response.getDspaceObjects()) {
-                    validity.add(resultDso);
+                    validity.add(context, resultDso);
                 }
 
                 for (String facetField : response.getFacetResults().keySet()) {

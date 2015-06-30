@@ -315,7 +315,7 @@ public class UploadStep extends AbstractSubmissionStep
                     row.addCellContent(desc);
                 }
 
-                BitstreamFormat format = bitstream.getFormat();
+                BitstreamFormat format = bitstream.getFormat(context);
                 if (format == null)
                 {
                     row.addCellContent(T_unknown_format);
@@ -461,7 +461,7 @@ public class UploadStep extends AbstractSubmissionStep
         for (BundleBitstream bundleBitstream : bitstreams)
         {
             Bitstream bitstream = bundleBitstream.getBitstream();
-            BitstreamFormat bitstreamFormat = bitstream.getFormat();
+            BitstreamFormat bitstreamFormat = bitstream.getFormat(context);
 
             String name = bitstream.getName();
             String url = makeBitstreamLink(item, bitstream);

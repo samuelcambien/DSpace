@@ -676,7 +676,8 @@ public class ItemAdapter extends AbstractAdapter
      *   </fileGrp>
      * </fileSec>
      */
-    protected void renderFileSection() throws SQLException, SAXException
+    @Override
+    protected void renderFileSection(Context context) throws SQLException, SAXException
     {
         AttributeMap attributes;
         
@@ -1007,13 +1008,13 @@ public class ItemAdapter extends AbstractAdapter
     
     // FIXME: this method is a copy of the one inherited. However the
     // original method is final so we must rename it.
-	protected void renderFileWithAllowed(Item item, Bitstream bitstream, String fileID, String groupID, String admID) throws SAXException
-	{
+	protected void renderFileWithAllowed(Item item, Bitstream bitstream, String fileID, String groupID, String admID) throws SAXException, SQLException
+    {
 		AttributeMap attributes;
 		
 		// //////////////////////////////
     	// Determine the file attributes
-        BitstreamFormat format = bitstream.getFormat();
+        BitstreamFormat format = bitstream.getFormat(context);
         String mimeType = null;
         if (format != null)
         {

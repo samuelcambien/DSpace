@@ -166,7 +166,7 @@ public class InstallItemServiceImpl implements InstallItemService
         }
 
          String provDescription = "Made available in DSpace on " + now
-                + " (GMT). " + getBitstreamProvenanceMessage(item);
+                + " (GMT). " + getBitstreamProvenanceMessage(c, item);
 
         // If an issue date was passed in and it wasn't set to "today" (literal string)
         // then note this previous issue date in provenance message
@@ -220,11 +220,11 @@ public class InstallItemServiceImpl implements InstallItemService
     }
 
     @Override
-    public String getBitstreamProvenanceMessage(Item myitem)
+    public String getBitstreamProvenanceMessage(Context context, Item myitem)
     						throws SQLException
     {
         // Get non-internal format bitstreams
-        List<Bitstream> bitstreams = itemService.getNonInternalBitstreams(myitem);
+        List<Bitstream> bitstreams = itemService.getNonInternalBitstreams(context, myitem);
 
         // Create provenance description
         StringBuilder myMessage = new StringBuilder();

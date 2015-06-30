@@ -61,7 +61,7 @@ public interface OpenSearchService {
      * @return formatted search results
      * @throws java.io.IOException
      */
-    public String getResultsString(String format, String query, int totalResults, int start, int pageSize,
+    public String getResultsString(Context context, String format, String query, int totalResults, int start, int pageSize,
                                           DSpaceObject scope, DSpaceObject[] results,
                                           Map<String, String> labels) throws IOException;
     /**
@@ -78,7 +78,7 @@ public interface OpenSearchService {
      * @return formatted search results
      * @throws IOException
      */
-    public Document getResultsDoc(String format, String query, int totalResults, int start, int pageSize,
+    public Document getResultsDoc(Context context, String format, String query, int totalResults, int start, int pageSize,
                                          DSpaceObject scope, DSpaceObject[] results, Map<String, String> labels)
             throws IOException;
 

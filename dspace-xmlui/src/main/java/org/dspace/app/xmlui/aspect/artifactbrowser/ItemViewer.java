@@ -139,7 +139,7 @@ public class ItemViewer extends AbstractDSpaceTransformer implements CacheablePr
 	            dso = HandleUtil.obtainHandle(objectModel);
 
 	            DSpaceValidity validity = new DSpaceValidity();
-	            validity.add(dso);
+	            validity.add(context, dso);
 	            this.validity =  validity.complete();
 	        }
 	        catch (Exception e)

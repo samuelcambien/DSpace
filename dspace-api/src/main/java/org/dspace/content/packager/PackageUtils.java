@@ -247,7 +247,7 @@ public class PackageUtils
      * @param bnName - bundle name to match, or null for all.
      * @return the format found or null if none found.
      */
-    public static Bitstream getBitstreamByFormat(Item item,
+    public static Bitstream getBitstreamByFormat(Context context, Item item,
             BitstreamFormat bsf, String bnName)
         throws SQLException
     {
@@ -266,7 +266,7 @@ public class PackageUtils
 
             for (BundleBitstream bundleBitstream : bundleBitstreams) {
                 Bitstream bitstream = bundleBitstream.getBitstream();
-                if (bitstream.getFormat().getID() == fid) {
+                if (bitstream.getFormat(context).getID() == fid) {
                     return bitstream;
                 }
             }
@@ -410,7 +410,7 @@ public class PackageUtils
             {
                 // The License should have a file format of "License"
                 Bitstream bitstream = bundleBitstream.getBitstream();
-                if (bitstream.getFormat().getID() == licenseFormatId) {
+                if (bitstream.getFormat(context).getID() == licenseFormatId) {
                     //found a bitstream with format "License" -- return it
                     return bitstream;
                 }

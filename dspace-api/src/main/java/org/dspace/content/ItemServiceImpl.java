@@ -83,7 +83,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
             primaryBitstream = originalBundles.get(0).getPrimaryBitstream();
         }
         if (primaryBitstream != null) {
-            if (primaryBitstream.getFormat().getMIMEType().equals("text/html")) {
+            if (primaryBitstream.getFormat(context).getMIMEType().equals("text/html")) {
                 return null;
             }
 
@@ -307,7 +307,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
     }
 
     @Override
-    public List<Bitstream> getNonInternalBitstreams(Item item) throws SQLException {
+    public List<Bitstream> getNonInternalBitstreams(Context context, Item item) throws SQLException {
         List<Bitstream> bitstreamList = new ArrayList<Bitstream>();
 
         // Go through the bundles and bitstreams picking out ones which aren't
@@ -319,7 +319,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
             for (BundleBitstream bundleBitstream : bitstreams) {
                 Bitstream bitstream = bundleBitstream.getBitstream();
-                if (!bitstream.getFormat().isInternal()) {
+                if (!bitstream.getFormat(context).isInternal()) {
                     // Bitstream is not of an internal format
                     bitstreamList.add(bitstream);
                 }
@@ -377,7 +377,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
             List<BundleBitstream> bits = bund.getBitstreams();
 
             for (BundleBitstream bit : bits) {
-                BitstreamFormat bft = bit.getBitstream().getFormat();
+                BitstreamFormat bft = bit.getBitstream().getFormat(context);
 
                 if (bft.getID() == licensetype) {
                     removethisbundle = true;
@@ -488,7 +488,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
         // in_archive flag is now false
         item.setArchived(false);
 
-        prov.append(installItemService.getBitstreamProvenanceMessage(item));
+        prov.append(installItemService.getBitstreamProvenanceMessage(context, item));
 
         addMetadata(context, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", prov.toString());
 
@@ -537,7 +537,7 @@ public class ItemServiceImpl extends DSpaceObjectServiceImpl<Item> implements It
 
         // Add suitable provenance - includes user, date, collections +
         // bitstream checksums
-        prov.append(installItemService.getBitstreamProvenanceMessage(item));
+        prov.append(installItemService.getBitstreamProvenanceMessage(context, item));
 
         addMetadata(context, item, MetadataSchema.DC_SCHEMA, "description", "provenance", "en", prov.toString());
 

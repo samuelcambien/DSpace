@@ -128,13 +128,13 @@ public class OpenSearchServiceImpl implements OpenSearchService, InitializingBea
     }
 
     @Override
-    public String getResultsString(String format, String query, int totalResults, int start, int pageSize,
+    public String getResultsString(Context context, String format, String query, int totalResults, int start, int pageSize,
     		                          	  DSpaceObject scope, DSpaceObject[] results,
     		                          	  Map<String, String> labels) throws IOException
     {
         try
         {
-            return getResults(format, query, totalResults, start, pageSize, scope, results, labels).outputString();
+            return getResults(context, format, query, totalResults, start, pageSize, scope, results, labels).outputString();
         }
         catch (FeedException e)
         {
@@ -144,13 +144,13 @@ public class OpenSearchServiceImpl implements OpenSearchService, InitializingBea
     }
 
     @Override
-    public Document getResultsDoc(String format, String query, int totalResults, int start, int pageSize,
+    public Document getResultsDoc(Context context, String format, String query, int totalResults, int start, int pageSize,
     		                          DSpaceObject scope, DSpaceObject[] results, Map<String, String> labels)
                                       throws IOException
     {
         try
         {
-            return getResults(format, query, totalResults, start, pageSize, scope, results, labels).outputW3CDom();
+            return getResults(context, format, query, totalResults, start, pageSize, scope, results, labels).outputW3CDom();
         }
         catch (FeedException e)
         {
@@ -159,7 +159,7 @@ public class OpenSearchServiceImpl implements OpenSearchService, InitializingBea
         }
     }
 
-    protected SyndicationFeed getResults(String format, String query, int totalResults, int start, int pageSize,
+    protected SyndicationFeed getResults(Context context, String format, String query, int totalResults, int start, int pageSize,
                                           DSpaceObject scope, DSpaceObject[] results, Map<String, String> labels)
     {
         // Encode results in requested format
@@ -173,7 +173,7 @@ public class OpenSearchServiceImpl implements OpenSearchService, InitializingBea
         }
     	
         SyndicationFeed feed = new SyndicationFeed(labels.get(SyndicationFeed.MSG_UITYPE));
-        feed.populate(null, scope, results, labels);
+        feed.populate(null, context, scope, results, labels);
         feed.setType(format);
         feed.addModule(openSearchMarkup(query, totalResults, start, pageSize));
     	return feed;

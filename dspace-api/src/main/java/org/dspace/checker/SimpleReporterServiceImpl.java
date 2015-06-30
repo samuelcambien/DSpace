@@ -271,7 +271,7 @@ public class SimpleReporterServiceImpl implements SimpleReporterService
         {
             osw.write(msg("howto-add-unchecked-bitstreams"));
             osw.write("\n\n\n");
-            this.printDSpaceInfoRecords(bitstreams, osw);
+            this.printDSpaceInfoRecords(context, bitstreams, osw);
         }
 
         return bitstreams.size();
@@ -324,7 +324,7 @@ public class SimpleReporterServiceImpl implements SimpleReporterService
      * @throws IOException
      *             if io error occurs
      */
-    protected void printDSpaceInfoRecords(List<Bitstream> bitstreams, OutputStreamWriter osw)
+    protected void printDSpaceInfoRecords(Context context, List<Bitstream> bitstreams, OutputStreamWriter osw)
             throws IOException, SQLException {
 
         for (Bitstream info : bitstreams)
@@ -332,7 +332,7 @@ public class SimpleReporterServiceImpl implements SimpleReporterService
             StringBuffer buf = new StringBuffer(1000);
             buf.append("------------------------------------------------ \n");
             buf.append(msg("format-id")).append(" =  ").append(
-                    info.getFormat().getID()).append("\n");
+                    info.getFormat(context).getID()).append("\n");
             buf.append(msg("deleted")).append(" = ").append(info.isDeleted())
                     .append("\n");
             buf.append(msg("bitstream-id")).append(" = ").append(

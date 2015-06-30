@@ -60,7 +60,7 @@ public class CommunityDAOImpl extends AbstractHibernateDSODAO<Community> impleme
     @Override
     public List<Community> findAllNoParent(Context context, MetadataField sortField) throws SQLException {
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append(" FROM Community as community ");
+        queryBuilder.append("SELECT community FROM Community as community ");
         addMetadataLeftJoin(queryBuilder, Community.class.getSimpleName().toLowerCase(), Arrays.asList(sortField));
         addMetadataValueWhereQuery(queryBuilder, ListUtils.EMPTY_LIST, null, " community.parentCommunities IS EMPTY");
         addMetadataSortQuery(queryBuilder, Arrays.asList(sortField), ListUtils.EMPTY_LIST);

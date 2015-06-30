@@ -97,7 +97,7 @@ public class DeleteBitstreamsConfirm extends AbstractDSpaceTransformer
 		for (Bitstream bitstream : bitstreams) 
 		{
 			String format = null;
-			BitstreamFormat bitstreamFormat = bitstream.getFormat();
+			BitstreamFormat bitstreamFormat = bitstream.getFormat(context);
 			if (bitstreamFormat != null)
             {
                 format = bitstreamFormat.getShortDescription();

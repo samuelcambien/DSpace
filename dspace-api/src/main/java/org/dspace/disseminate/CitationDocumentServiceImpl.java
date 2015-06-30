@@ -259,7 +259,7 @@ public class CitationDocumentServiceImpl implements CitationDocumentService, Ini
 
             boolean adminUser = authorizeService.isAdmin(context);
 
-            if(!adminUser && canGenerateCitationVersion(bitstream)) {
+            if(!adminUser && canGenerateCitationVersion(context, bitstream)) {
                 return true;
             }
         }
@@ -284,9 +284,9 @@ public class CitationDocumentServiceImpl implements CitationDocumentService, Ini
     }
 
     @Override
-    public boolean canGenerateCitationVersion(Bitstream bitstream)
+    public boolean canGenerateCitationVersion(Context context, Bitstream bitstream) throws SQLException
     {
-        return VALID_TYPES.contains(bitstream.getFormat().getMIMEType());
+        return VALID_TYPES.contains(bitstream.getFormat(context).getMIMEType());
     }
 
     @Override

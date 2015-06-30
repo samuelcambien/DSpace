@@ -192,7 +192,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
 
                 if (dso != null)
                 {
-                    validity.add(dso);
+                    validity.add(context, dso);
                 }
                 
                 BrowseInfo info = getBrowseInfo();
@@ -205,7 +205,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
                     // Add the browse items to the validity
                     for (Item item : (java.util.List<Item>) info.getResults())
                     {
-                        validity.add(item);
+                        validity.add(context, item);
                     }
                 }
                 else

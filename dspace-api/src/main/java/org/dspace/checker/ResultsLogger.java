@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.dspace.content.Bitstream;
+import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;
 
 /**
@@ -83,7 +84,7 @@ public class ResultsLogger implements ChecksumResultsCollector
      * @see org.dspace.checker.ChecksumResultsCollector#collect(org.dspace.checker.MostRecentChecksum)
      */
     @Override
-    public void collect(MostRecentChecksum info) throws SQLException {
+    public void collect(Context context, MostRecentChecksum info) throws SQLException {
         Bitstream bitstream = info.getBitstream();
         LOG.info("******************************************************");
         LOG.info(msg("bitstream-id") + ": " + bitstream.getID());
@@ -95,7 +96,7 @@ public class ResultsLogger implements ChecksumResultsCollector
         LOG.info(msg("name") + ": " + bitstream.getName());
         LOG.info(msg("store-number") + ": " + bitstream.getStoreNumber());
         LOG.info(msg("size") + ": " + bitstream.getSize());
-        LOG.info(msg("bitstream-format") + ": " + (bitstream.getFormat() != null ? bitstream.getFormat().getID() : "-1"));
+        LOG.info(msg("bitstream-format") + ": " + (bitstream.getFormat(context) != null ? bitstream.getFormat(context).getID() : "-1"));
         LOG.info(msg("user-format-description") + ": "
                 + bitstream.getUserFormatDescription());
         LOG.info(msg("source") + ": " + bitstream.getSource());

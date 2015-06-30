@@ -112,16 +112,16 @@ public class CollectionViewer extends AbstractDSpaceTransformer implements Cache
 	            DSpaceValidity validity = new DSpaceValidity();
 	            
 	            // Add the actual collection;
-	            validity.add(collection);
+	            validity.add(context, collection);
 	            
 	            // Add the eperson viewing the collection
-	            validity.add(eperson);
+	            validity.add(context, eperson);
 	            
 	            // Include any groups they are a member of
 	            List<Group> groups = groupService.allMemberGroups(context, eperson);
 	            for (Group group : groups)
 	            {
-	            	validity.add(group);
+	            	validity.add(context, group);
 	            }
 	            
 	            this.validity = validity.complete();

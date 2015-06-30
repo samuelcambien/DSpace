@@ -56,7 +56,7 @@ public class ProfileFormats extends AbstractCurationTask
             for (BundleBitstream bundleBitstream : bundle.getBitstreams())
             {
                 Bitstream bs = bundleBitstream.getBitstream();
-                String fmt = bs.getFormat().getShortDescription();
+                String fmt = bs.getFormat(Curator.curationContext()).getShortDescription();
                 Integer count = fmtTable.get(fmt);
                 if (count == null)
                 {
@@ -75,18 +75,16 @@ public class ProfileFormats extends AbstractCurationTask
     {
         try
         {
-            Context c = new Context();
             StringBuilder sb = new StringBuilder();
             for (String fmt : fmtTable.keySet())
             {
-                BitstreamFormat bsf = bitstreamFormatService.findByShortDescription(c, fmt);
+                BitstreamFormat bsf = bitstreamFormatService.findByShortDescription(Curator.curationContext(), fmt);
                 sb.append(String.format("%6d", fmtTable.get(fmt))).append(" (").
                 append(bitstreamFormatService.getSupportLevelText(bsf).charAt(0)).append(") ").
                 append(bsf.getDescription()).append("\n");
             }
             report(sb.toString());
             setResult(sb.toString());
-            c.complete();
         }
         catch (SQLException sqlE)
         {

@@ -112,7 +112,7 @@ public class AddBitstreamsAction extends UpdateBitstreamsAction {
 	        
 	        	String append = ". Added " + Integer.toString(bitstream_bundles_updated)
 	        	                + " bitstream(s) on " + DCDate.getCurrent() + " : "
-	        	                + installItemService.getBitstreamProvenanceMessage(item);
+	        	                + installItemService.getBitstreamProvenanceMessage(context, item);
 	        	MetadataUtilities.appendMetadata(context, item, dtom, false, append);
 	        }
 	}

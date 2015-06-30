@@ -100,7 +100,7 @@ public interface BitstreamService extends DSpaceObjectService<Bitstream>, DSpace
      *
      * @return a description of the format.
      */
-    public String getFormatDescription(Bitstream bitstream);
+    public String getFormatDescription(Context context, Bitstream bitstream) throws SQLException;
 
     /**
      * Set the format of the bitstream. If the user has supplied a type
@@ -164,4 +164,6 @@ public interface BitstreamService extends DSpaceObjectService<Bitstream>, DSpace
     public Bitstream getBitstreamByName(Item item, String bundleName, String bitstreamName) throws SQLException;
 
     public Bitstream getFirstBitstream(Item item, String bundleName) throws SQLException;
+
+    public BitstreamFormat getFormat(Context context, Bitstream bitstream) throws SQLException;
 }

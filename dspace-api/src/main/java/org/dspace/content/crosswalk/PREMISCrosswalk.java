@@ -257,7 +257,7 @@ public class PREMISCrosswalk
         String bsName = bitstream.getName();
         if (bsName == null)
         {
-            List<String> ext = bitstream.getFormat().getExtensions();
+            List<String> ext = bitstream.getFormat(context).getExtensions();
             bsName = "bitstream_"+sid+ (ext.size() > 0 ? ext.get(0) : "");
         }
         if (handle != null && baseUrl != null)
@@ -314,7 +314,7 @@ public class PREMISCrosswalk
         Element format = new Element("format", PREMIS_NS);
         Element formatDes = new Element("formatDesignation", PREMIS_NS);
         Element formatName = new Element("formatName", PREMIS_NS);
-        formatName.setText(bitstream.getFormat().getMIMEType());
+        formatName.setText(bitstream.getFormat(context).getMIMEType());
         formatDes.addContent(formatName);
         format.addContent(formatDes);
         ochar.addContent(format);
