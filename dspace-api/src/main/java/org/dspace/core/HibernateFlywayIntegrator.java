@@ -58,7 +58,7 @@ public class HibernateFlywayIntegrator implements Integrator {
         try {
             flyway.migrate();
         } catch (FlywayException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while performing flyway migration", e);
         }
     }
 

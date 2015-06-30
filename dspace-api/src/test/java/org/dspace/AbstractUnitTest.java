@@ -108,13 +108,7 @@ public class AbstractUnitTest
             {
                 kernelImpl.start(ConfigurationManager.getProperty("dspace.dir"));
             }
-            
-            // Applies/initializes our mock database by invoking its constructor
-            // (NOTE: This also initializes the DatabaseManager, which in turn
-            // calls DatabaseUtils to initialize the entire DB via Flyway)
-            //TODO: HIBERNATE FIX THIS
-//            new MockDatabaseManager();
-            
+
             // Initialize mock indexer (which does nothing, since Solr isn't running)
             new MockIndexEventConsumer();
             
