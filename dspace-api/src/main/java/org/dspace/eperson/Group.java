@@ -46,6 +46,7 @@ public class Group extends DSpaceObject implements DSpaceObjectLegacySupport
     /** lists of epeople and groups in the group */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
+            schema = "public",
             name = "epersongroup2eperson",
             joinColumns = {@JoinColumn(name = "eperson_group_id") },
             inverseJoinColumns = {@JoinColumn(name = "eperson_id") }
@@ -54,6 +55,7 @@ public class Group extends DSpaceObject implements DSpaceObjectLegacySupport
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
+            schema = "public",
             name = "group2group",
             joinColumns = {@JoinColumn(name = "parent_id") },
             inverseJoinColumns = {@JoinColumn(name = "child_id") }

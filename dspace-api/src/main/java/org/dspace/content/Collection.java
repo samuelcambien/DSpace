@@ -79,6 +79,7 @@ public class Collection extends DSpaceObject implements DSpaceObjectLegacySuppor
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinTable(
+            schema = "public",
             name = "community2collection",
             joinColumns = {@JoinColumn(name = "collection_id") },
             inverseJoinColumns = {@JoinColumn(name = "community_id") }

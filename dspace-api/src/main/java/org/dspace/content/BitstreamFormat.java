@@ -59,7 +59,7 @@ public class BitstreamFormat
     private boolean internal = false;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name="fileextension", joinColumns=@JoinColumn(name="bitstream_format_id"))
+    @CollectionTable(name="fileextension", joinColumns=@JoinColumn(name="bitstream_format_id"), schema = "public")
         @CollectionId(
                 columns = @Column(name="file_extension_id"),
                 type=@Type(type="integer"),

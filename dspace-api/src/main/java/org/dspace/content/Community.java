@@ -41,6 +41,7 @@ public class Community extends DSpaceObject implements DSpaceObjectLegacySupport
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
+            schema = "public",
             name = "community2community",
             joinColumns = {@JoinColumn(name = "parent_comm_id") },
             inverseJoinColumns = {@JoinColumn(name = "child_comm_id") }

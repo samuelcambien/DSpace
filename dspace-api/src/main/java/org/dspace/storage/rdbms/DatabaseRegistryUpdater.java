@@ -87,6 +87,7 @@ public class DatabaseRegistryUpdater implements KernelStartupCallbackService
         catch(Exception e)
         {
             log.error("Error attempting to update Bitstream Format and/or Metadata Registries", e);
+            throw new RuntimeException("Error attempting to update Bitstream Format and/or Metadata Registries", e);
         }
         finally
         {

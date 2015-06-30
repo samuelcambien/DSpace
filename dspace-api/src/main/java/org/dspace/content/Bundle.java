@@ -47,6 +47,7 @@ public class Bundle extends DSpaceObject implements DSpaceObjectLegacySupport
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
+            schema = "public",
             name = "item2bundle",
             joinColumns = {@JoinColumn(name = "bundle_id", referencedColumnName = "uuid") },
             inverseJoinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "uuid") }
