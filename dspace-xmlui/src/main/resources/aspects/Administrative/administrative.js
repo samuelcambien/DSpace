@@ -7,7 +7,14 @@
  */
 
 
-importClass(Packages.org.dspace.authorize.AuthorizeManager);
+importClass(Packages.org.dspace.authorize.service.AuthorizeService);
+importClass(Packages.org.dspace.authorize.factory.AuthorizeServiceFactory);
+importClass(Packages.org.dspace.content.factory.ContentServiceFactory)
+importClass(Packages.org.dspace.content.service.DSpaceObjectService)
+importClass(Packages.org.dspace.content.service.CommunityService)
+importClass(Packages.org.dspace.content.CommunityServiceImpl)
+importClass(Packages.java.util.UUID)
+
 importClass(Packages.org.dspace.core.Constants);
 importClass(Packages.org.dspace.content.Bitstream);
 importClass(Packages.org.dspace.content.Bundle);
@@ -19,7 +26,7 @@ importClass(Packages.org.dspace.eperson.EPerson);
 importClass(Packages.org.dspace.eperson.Group);
 importClass(Packages.org.dspace.app.util.Util);
 
-importClass(Packages.org.dspace.xmlworkflow.WorkflowFactory);
+importClass(Packages.org.dspace.xmlworkflow.factory.XmlWorkflowFactory);
 importClass(Packages.java.util.Set);
 
 importClass(Packages.org.dspace.app.xmlui.utils.FlowscriptUtils);
@@ -53,6 +60,11 @@ function getObjectModel()
 function getDSContext()
 {
 	return ContextUtil.obtainContext(getObjectModel());
+}
+
+function getCommunityService()
+{
+    return ContentServiceFactory.getInstance().getCommunityService();
 }
 
 /**
@@ -177,36 +189,13 @@ function isAuthorized(objectType, objectID, action) {
     // under all cases this method will exit and the objects sent
     // for garbage collecting before and continuations and are used.
 
-    var object = null;
-    switch (objectType) {
-    case Constants.BITSTREAM:
-        object = Bitstream.find(getDSContext(),objectID);
-        break;
-    case Constants.BUNDLE:
-        object = Bundle.find(getDSContext(),objectID);
-        break;
-    case Constants.ITEM:
-        object = Item.find(getDSContext(),objectID);
-        break;
-    case Constants.COLLECTION:
-        object = Collection.find(getDSContext(),objectID);
-        break;
-    case Constants.COMMUNITY:
-        object = Community.find(getDSContext(),objectID);
-        break;
-    case Constants.GROUP:
-        object = Group.find(getDSContext(),objectID);
-        break;
-    case Constants.EPERSON:
-        object = EPerson.find(getDSContext(),objectID);
-        break;
-    }
+    var object = ContentServiceFactory.getInstance().getDSpaceObjectService(objectType).find(getDSContext(), objectID);
 
     // If we couldn't find the object then return false
     if (object == null)
         return false;
 
-    return AuthorizeManager.authorizeActionBoolean(getDSContext(),object,action);
+    return AuthorizeServiceFactory.getInstance().getAuthorizeService().authorizeActionBoolean(getDSContext(),object,action);
 }
 
 /**
@@ -295,22 +284,21 @@ function assertAdminCollection(collectionID) {
 	}
 }
 
-
 /**
  * Return whether the currently authenticated eperson can edit this community.
  */
 function canEditCommunity(communityID)
 {
-	if (communityID == -1) {
+	if (communityID == null) {
 		return isAdministrator();
 	}
 	
-	var community = Community.find(getDSContext(),communityID);
+	var community = getCommunityService().find(getDSContext(),communityID);
 	
 	if (community == null) {
 		return isAdministrator();
 	}
-	return community.canEditBoolean();
+	return getCommunityService().canEditBoolean(getDSContext(),community);
 }
 
 /**
@@ -373,7 +361,7 @@ function assertEditGroup(groupID)
  * administrator.
  */
 function isAdministrator() {
-	return AuthorizeManager.isAdmin(getDSContext());
+	return AuthorizeServiceFactory.getInstance().getAuthorizeService().isAdmin(getDSContext());
 }
 
 /**
@@ -598,6 +586,10 @@ function startCreateCommunity()
 {
 	var communityID = cocoon.request.get("communityID");
 
+    if(communityID != null) {
+        communityID = UUID.fromString(communityID);
+    }
+
 	doCreateCommunity(communityID);
 
 	// Root level community, cancel out to the global community list.
@@ -611,14 +603,14 @@ function startCreateCommunity()
  */
 function startEditCommunity()
 {
-	var communityID = cocoon.request.get("communityID");
+    var communityID = UUID.fromString(cocoon.request.get("communityID"));
 
 	assertEditCommunity(communityID);
 
 	doEditCommunity(communityID);
 
 	// Go back to the community
-	var community = Community.find(getDSContext(),communityID);
+	var community = getCommunityService().find(getDSContext(),communityID);
 	cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+community.getHandle(),true);
 	getDSContext().complete();
 	community = null;
@@ -2936,10 +2928,6 @@ function doCreateCommunity(parentCommunityID)
 	if (parentCommunityID == null && cocoon.request.getParameter("communityID") != null)
 	{
 		parentCommunityID = cocoon.request.getParameter("communityID");
-	}
-	else if (parentCommunityID == null)
-	{
-		parentCommunityID = -1;
 	}
 
 	assertEditCommunity(parentCommunityID);

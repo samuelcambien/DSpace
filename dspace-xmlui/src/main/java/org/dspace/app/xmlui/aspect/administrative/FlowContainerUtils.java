@@ -7,19 +7,6 @@
  */
 package org.dspace.app.xmlui.aspect.administrative;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.dspace.app.xmlui.utils.UIException;
@@ -32,33 +19,44 @@ import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.browse.BrowseException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
+import org.dspace.content.Item;
+import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
-import org.dspace.eperson.factory.EPersonServiceFactory;
-import org.dspace.eperson.service.GroupService;
-import org.dspace.harvest.HarvestedCollection;
-import org.dspace.content.Item;
-import org.dspace.harvest.OAIHarvester;
-import org.dspace.harvest.HarvestScheduler;
-import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
+import org.dspace.eperson.service.GroupService;
+import org.dspace.harvest.HarvestScheduler;
+import org.dspace.harvest.HarvestedCollection;
+import org.dspace.harvest.OAIHarvester;
 import org.dspace.harvest.factory.HarvestServiceFactory;
 import org.dspace.harvest.service.HarvestedCollectionService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
-import org.dspace.xmlworkflow.Role;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.WorkflowUtils;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Utility methods to processes actions on Communities and Collections.
@@ -792,12 +790,11 @@ public class FlowContainerUtils
 	{
 		FlowResult result = new FlowResult();
 
-		Community parent = communityService.find(context, communityID);
 		Community newCommunity;
-		
-		if (parent != null)
+
+		if (communityID != null)
         {
-            newCommunity = communityService.createSubcommunity(context, parent);
+            newCommunity = communityService.createSubcommunity(context, communityService.find(context, communityID));
         }
 		else
         {

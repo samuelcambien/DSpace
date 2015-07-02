@@ -7,23 +7,18 @@
  */
 package org.dspace.app.xmlui.aspect.administrative.community;
 
-import java.sql.SQLException;
-import java.util.UUID;
-
+import org.apache.commons.lang.StringUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
-import org.dspace.app.xmlui.wing.element.Body;
-import org.dspace.app.xmlui.wing.element.Division;
-import org.dspace.app.xmlui.wing.element.List;
-import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.app.xmlui.wing.element.Para;
-import org.dspace.app.xmlui.wing.element.Text;
-import org.dspace.app.xmlui.wing.element.TextArea;
+import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Community;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CommunityService;
+
+import java.sql.SQLException;
+import java.util.UUID;
 
 
 /**
@@ -63,9 +58,14 @@ public class CreateCommunityForm extends AbstractDSpaceTransformer
 	
 	public void addBody(Body body) throws WingException, SQLException, AuthorizeException
 	{
-		UUID communityID = UUID.fromString(parameters.getParameter("communityID", null));
-		Community parentCommunity = communityService.find(context, communityID);
-		
+        Community parentCommunity = null;
+        String communityIDString = parameters.getParameter("communityID", null);
+
+        if(!StringUtils.isBlank(communityIDString)) {
+            UUID communityID = UUID.fromString(communityIDString);
+            parentCommunity = communityService.find(context, communityID);
+        }
+
 		// DIVISION: main
 	    Division main = body.addInteractiveDivision("create-community",contextPath+"/admin/community",Division.METHOD_MULTIPART,"primary administrative community");
 	    /* Whether the parent community is null is what determines if 
