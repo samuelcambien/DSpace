@@ -5,7 +5,6 @@ import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.core.Context;
-import org.dspace.core.GenericDAO;
 
 import java.sql.SQLException;
 import java.util.Iterator;

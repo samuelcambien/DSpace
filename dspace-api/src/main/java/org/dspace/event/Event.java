@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 import org.dspace.content.DSpaceObject;

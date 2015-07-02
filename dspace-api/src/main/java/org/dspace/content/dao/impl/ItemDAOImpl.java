@@ -1,20 +1,16 @@
 package org.dspace.content.dao.impl;
 
 import org.dspace.content.Collection;
-import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.content.dao.ItemDAO;
 import org.dspace.core.Context;
-import org.dspace.core.AbstractHibernateDAO;
 import org.dspace.core.AbstractHibernateDSODAO;
 import org.dspace.eperson.EPerson;
 import org.hibernate.Query;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 
 /**

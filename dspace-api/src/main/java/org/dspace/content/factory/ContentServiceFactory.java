@@ -1,7 +1,6 @@
 package org.dspace.content.factory;
 
 import org.dspace.content.DSpaceObject;
-import org.dspace.content.DSpaceObjectLegacySupport;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.content.service.*;

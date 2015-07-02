@@ -7,7 +7,6 @@
  */
 package org.dspace.content;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;

@@ -8,12 +8,9 @@
 package org.dspace.content;
 
 import org.dspace.AbstractUnitTest;
-import org.dspace.authorize.AuthorizeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.SQLException;
 
 import static org.junit.Assert.* ;
 import static org.hamcrest.CoreMatchers.*;

@@ -6,14 +6,12 @@ import org.dspace.content.MetadataField;
 import org.dspace.content.dao.CollectionDAO;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.core.AbstractHibernateDAO;
 import org.dspace.core.AbstractHibernateDSODAO;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.SQLException;

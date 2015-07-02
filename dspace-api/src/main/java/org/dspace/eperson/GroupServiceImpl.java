@@ -15,12 +15,10 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.eperson.dao.Group2GroupCacheDAO;
-//import org.dspace.eperson.dao.Group2GroupDAO;
 import org.dspace.eperson.dao.GroupDAO;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
-import org.dspace.eperson.service.SupervisorService;
 import org.dspace.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 

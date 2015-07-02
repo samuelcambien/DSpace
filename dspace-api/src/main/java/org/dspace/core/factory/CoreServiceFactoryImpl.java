@@ -1,6 +1,5 @@
 package org.dspace.core.factory;
 
-import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.core.service.LicenseService;
 import org.dspace.core.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;

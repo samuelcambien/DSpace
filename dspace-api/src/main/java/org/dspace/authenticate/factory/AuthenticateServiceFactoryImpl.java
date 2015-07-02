@@ -1,8 +1,6 @@
 package org.dspace.authenticate.factory;
 
 import org.dspace.authenticate.service.AuthenticationService;
-import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.authorize.service.ResourcePolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

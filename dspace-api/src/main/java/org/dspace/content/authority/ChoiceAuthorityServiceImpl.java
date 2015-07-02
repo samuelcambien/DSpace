@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 import org.dspace.content.Collection;
-import org.dspace.content.MetadataField;
 import org.dspace.content.MetadataValue;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.core.ConfigurationManager;

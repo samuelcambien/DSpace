@@ -13,7 +13,6 @@ import java.util.List;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
-import org.dspace.statistics.SolrLoggerServiceImpl;
 import org.dspace.statistics.content.filter.StatisticsFilter;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
 import org.dspace.statistics.service.SolrLoggerService;

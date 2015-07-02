@@ -9,11 +9,9 @@ package org.dspace.content;
 
 import java.io.FileInputStream;
 import java.io.File;
-import java.sql.SQLException;
 
 import org.dspace.AbstractUnitTest;
 import org.apache.log4j.Logger;
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.content.service.BitstreamService;

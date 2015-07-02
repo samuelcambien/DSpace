@@ -11,7 +11,6 @@ import org.hibernate.criterion.Restrictions;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.

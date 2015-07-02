@@ -7,7 +7,6 @@
  */
 package org.dspace.content;
 
-import org.dspace.authorize.AuthorizeServiceImpl;
 import mockit.NonStrictExpectations;
 import java.sql.SQLException;
 import java.util.List;

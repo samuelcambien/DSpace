@@ -1,6 +1,5 @@
 package org.dspace.app.sfx.factory;
 
-import org.dspace.app.mediafilter.service.MediaFilterService;
 import org.dspace.app.sfx.service.SFXFileReaderService;
 import org.dspace.utils.DSpace;
 

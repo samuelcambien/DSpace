@@ -8,7 +8,6 @@
 package org.dspace.content;
 
 import org.dspace.AbstractUnitTest;
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.SiteService;
 import org.dspace.core.ConfigurationManager;

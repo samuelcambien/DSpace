@@ -1,7 +1,5 @@
 package org.dspace.core;
 
-import org.dspace.storage.rdbms.DatabaseLegacyReindexer;
-import org.dspace.storage.rdbms.DatabaseRegistryUpdater;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.hibernate.cfg.Configuration;

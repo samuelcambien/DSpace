@@ -25,8 +25,6 @@ import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
-import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
-import org.dspace.xmlworkflow.XmlWorkflowServiceImpl;
 
 /**
  * This is the class which defines what happens once a submission completes!

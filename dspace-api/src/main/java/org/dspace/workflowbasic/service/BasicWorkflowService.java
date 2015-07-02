@@ -1,7 +1,6 @@
 package org.dspace.workflowbasic.service;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.workflow.WorkflowService;

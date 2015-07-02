@@ -2,10 +2,8 @@ package org.dspace.handle.service;
 
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;
-import org.dspace.handle.Handle;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 /**

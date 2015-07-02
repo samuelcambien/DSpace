@@ -8,7 +8,6 @@
 package org.dspace.app.bulkedit;
 
 import org.dspace.authority.AuthorityValue;
-import org.dspace.authority.AuthorityValueServiceImpl;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.StringUtils;
 

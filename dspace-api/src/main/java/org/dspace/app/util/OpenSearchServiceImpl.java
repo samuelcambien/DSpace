@@ -10,7 +10,6 @@ package org.dspace.app.util;
 import org.dspace.app.util.service.OpenSearchService;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleServiceImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;

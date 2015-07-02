@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -37,7 +36,7 @@ public class WorkspaceItem implements InProgressSubmission
     private int workspaceItemId;
 
     /** The item this workspace object pertains to */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

@@ -18,7 +18,6 @@ import org.dspace.AbstractIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.*;
-import org.dspace.core.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -7,7 +7,6 @@
  */
 package org.dspace.storage.rdbms;
 
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 import org.dspace.browse.IndexBrowse;
@@ -15,8 +14,6 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.search.DSIndexer;
 import org.dspace.services.KernelStartupCallbackService;
-import org.flywaydb.core.api.MigrationInfo;
-import org.flywaydb.core.api.callback.FlywayCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

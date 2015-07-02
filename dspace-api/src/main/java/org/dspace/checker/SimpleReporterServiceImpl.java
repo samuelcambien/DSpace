@@ -12,14 +12,11 @@ import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-import org.dspace.checker.factory.CheckerServiceFactory;
 import org.dspace.checker.service.MostRecentChecksumService;
 import org.dspace.checker.service.SimpleReporterService;
 import org.dspace.content.Bitstream;
-import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.core.Context;
 import org.dspace.core.I18nUtil;

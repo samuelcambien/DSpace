@@ -16,7 +16,6 @@ import org.apache.commons.cli.PosixParser;
 
 import org.apache.log4j.Logger;
 import org.dspace.storage.bitstore.factory.StorageServiceFactory;
-import org.dspace.storage.bitstore.service.BitstreamStorageService;
 
 /**
  * Cleans up asset store.

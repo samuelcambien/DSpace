@@ -41,8 +41,6 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.Util;
 import org.dspace.content.*;
 import org.dspace.content.Collection;
-import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
-import org.dspace.content.authority.MetadataAuthorityServiceImpl;
 import org.dspace.content.authority.factory.ContentAuthorityServiceFactory;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.authority.service.MetadataAuthorityService;
@@ -57,19 +55,10 @@ import org.dspace.core.Context;
 import org.dspace.core.Email;
 import org.dspace.core.I18nUtil;
 import org.dspace.core.LogManager;
-import org.dspace.handle.HandleServiceImpl;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 import org.dspace.sort.SortOption;
 import org.dspace.sort.OrderFormat;
-import org.dspace.sort.SortOption;
-
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * DSIndexer contains the methods that index Items and their metadata,

@@ -1,6 +1,5 @@
 package org.dspace.disseminate.factory;
 
-import org.dspace.authenticate.service.AuthenticationService;
 import org.dspace.disseminate.service.CitationDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 

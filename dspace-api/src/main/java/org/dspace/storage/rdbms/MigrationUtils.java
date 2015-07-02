@@ -8,12 +8,10 @@
 package org.dspace.storage.rdbms;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.dialect.Dialect;
 
 /**
  * This Utility class offers utility methods which may be of use to perform

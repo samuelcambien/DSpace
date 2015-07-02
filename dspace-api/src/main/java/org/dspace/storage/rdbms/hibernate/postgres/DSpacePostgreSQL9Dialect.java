@@ -5,8 +5,6 @@ import org.hibernate.metamodel.spi.TypeContributions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.PostgresUUIDType;
 
-import java.sql.Types;
-
 /**
  * UUID's are not supported by default in hibernate due to differences in the database in order to fix this a custom sql dialect is needed.
  * Source: https://forum.hibernate.org/viewtopic.php?f=1&t=1014157

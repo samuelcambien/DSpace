@@ -35,7 +35,7 @@ public class BasicWorkflowItem implements WorkflowItem
 
 
     /** The item this workflow object pertains to */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", unique = true)
     private Item item;
 

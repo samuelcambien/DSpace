@@ -8,7 +8,6 @@
 package org.dspace.curate;
 
 import org.dspace.content.Item;
-import java.util.Arrays;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

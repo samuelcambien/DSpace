@@ -17,8 +17,6 @@ import java.util.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * User: kevin (kevin at atmire.com)

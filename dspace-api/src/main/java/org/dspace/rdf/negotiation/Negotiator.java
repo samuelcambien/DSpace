@@ -8,7 +8,6 @@
 package org.dspace.rdf.negotiation;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,11 +15,9 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.dspace.content.Site;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.SiteService;
 import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Context;
 import org.dspace.rdf.RDFConfiguration;
 import org.dspace.utils.DSpace;
 

@@ -11,7 +11,6 @@ package org.dspace.identifier;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.ObjectUtils;

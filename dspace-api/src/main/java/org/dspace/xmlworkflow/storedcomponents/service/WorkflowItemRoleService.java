@@ -8,7 +8,6 @@ import org.dspace.xmlworkflow.storedcomponents.WorkflowItemRole;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 /**

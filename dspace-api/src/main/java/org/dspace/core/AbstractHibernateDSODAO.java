@@ -4,7 +4,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.MetadataField;
-import org.dspace.eperson.EPerson;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 

@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.dspace.content.Community;
 import org.dspace.content.Collection;
 import org.dspace.content.factory.ContentServiceFactory;
-import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;

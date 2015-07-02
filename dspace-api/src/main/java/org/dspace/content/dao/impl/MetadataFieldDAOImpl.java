@@ -6,7 +6,6 @@ import org.dspace.content.dao.MetadataFieldDAO;
 import org.dspace.core.Context;
 import org.dspace.core.AbstractHibernateDAO;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.SQLException;

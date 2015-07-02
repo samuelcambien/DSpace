@@ -8,7 +8,6 @@
 package org.dspace.ctask.general;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

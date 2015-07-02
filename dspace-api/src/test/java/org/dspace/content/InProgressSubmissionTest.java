@@ -9,12 +9,9 @@ package org.dspace.content;
 
 import org.apache.log4j.Logger;
 import org.dspace.AbstractUnitTest;
-import org.dspace.authorize.AuthorizeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.SQLException;
 
 /**
  * Unit Tests for interface InProgressSubmission. As it is an interface

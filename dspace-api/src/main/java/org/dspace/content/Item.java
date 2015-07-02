@@ -7,17 +7,14 @@
  */
 package org.dspace.content;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
-import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.hibernate.proxy.HibernateProxyHelper;
 
@@ -62,7 +59,7 @@ public class Item extends DSpaceObject implements DSpaceObjectLegacySupport
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified = new Date();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST})
     @JoinColumn(name = "owning_collection")
     private Collection owningCollection;
 
@@ -70,7 +67,7 @@ public class Item extends DSpaceObject implements DSpaceObjectLegacySupport
     private Collection templateItemOf;
 
     /** The e-person who submitted this item */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "submitter_id")
     private EPerson submitter = null;
 

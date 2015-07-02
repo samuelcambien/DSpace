@@ -9,7 +9,6 @@ package org.dspace.app.util;
 
 import org.dspace.core.ConfigurationManager;
 import org.apache.log4j.Logger;
-import org.dspace.core.Context;
 
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;

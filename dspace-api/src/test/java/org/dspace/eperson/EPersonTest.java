@@ -8,7 +8,6 @@
 
 package org.dspace.eperson;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;

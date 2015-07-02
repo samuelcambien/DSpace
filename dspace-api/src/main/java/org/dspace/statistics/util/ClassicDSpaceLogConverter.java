@@ -12,12 +12,10 @@ import org.apache.log4j.Logger;
 import org.dspace.app.statistics.LogAnalyser;
 import org.dspace.app.statistics.LogLine;
 import org.dspace.content.*;
-import org.dspace.handle.HandleServiceImpl;
 import org.dspace.core.Context;
 import org.dspace.handle.factory.HandleServiceFactory;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.text.SimpleDateFormat;

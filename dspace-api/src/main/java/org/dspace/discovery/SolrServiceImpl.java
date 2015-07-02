@@ -49,7 +49,6 @@ import org.apache.solr.common.util.NamedList;
 import org.apache.solr.handler.extraction.ExtractingParams;
 import org.dspace.content.*;
 import org.dspace.content.Collection;
-import org.dspace.content.authority.ChoiceAuthorityServiceImpl;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.service.ChoiceAuthorityService;
 import org.dspace.content.authority.service.MetadataAuthorityService;

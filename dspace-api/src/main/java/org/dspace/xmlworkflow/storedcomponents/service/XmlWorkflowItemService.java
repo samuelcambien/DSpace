@@ -5,7 +5,6 @@ import org.dspace.core.Context;
 import org.dspace.workflow.WorkflowItemService;
 import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 

@@ -1,10 +1,6 @@
 package org.dspace.app.itemexport.factory;
 
 import org.dspace.app.itemexport.service.ItemExportService;
-import org.dspace.eperson.service.AccountService;
-import org.dspace.eperson.service.EPersonService;
-import org.dspace.eperson.service.GroupService;
-import org.dspace.eperson.service.RegistrationDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

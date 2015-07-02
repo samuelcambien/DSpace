@@ -16,7 +16,6 @@ import org.dspace.eperson.Group;
 import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
-import java.sql.SQLException;
 import java.util.*;
 
 /**

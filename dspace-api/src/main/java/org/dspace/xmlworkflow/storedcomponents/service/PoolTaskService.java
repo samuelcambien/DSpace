@@ -9,7 +9,6 @@ import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 /**

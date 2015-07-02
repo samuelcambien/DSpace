@@ -11,7 +11,6 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.taskdefs.Get;
 import org.dspace.core.ConfigurationManager;
-import org.dspace.statistics.SolrLoggerServiceImpl;
 import org.dspace.statistics.factory.StatisticsServiceFactory;
 import org.dspace.statistics.service.SolrLoggerService;
 

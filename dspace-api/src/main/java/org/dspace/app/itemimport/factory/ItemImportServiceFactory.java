@@ -1,6 +1,5 @@
 package org.dspace.app.itemimport.factory;
 
-import org.dspace.app.itemexport.service.ItemExportService;
 import org.dspace.app.itemimport.service.ItemImportService;
 import org.dspace.utils.DSpace;
 

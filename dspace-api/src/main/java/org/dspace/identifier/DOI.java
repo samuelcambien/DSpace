@@ -8,11 +8,7 @@
 
 package org.dspace.identifier;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.dspace.content.DSpaceObject;
-import org.dspace.identifier.doi.DOIIdentifierException;
 
 import javax.persistence.*;
 

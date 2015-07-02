@@ -8,7 +8,6 @@
 package org.dspace.embargo;
 
 import java.sql.SQLException;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 

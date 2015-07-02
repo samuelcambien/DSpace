@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamFormatService;
 import org.dspace.content.service.MetadataFieldService;
@@ -910,8 +909,8 @@ public class ItemTest  extends AbstractDSpaceObjectTest
     @Test
     public void testGetNonInternalBitstreams() throws Exception
     {
-        assertThat("testGetNonInternalBitstreams 0", itemService.getNonInternalBitstreams(it), notNullValue());
-        assertTrue("testGetNonInternalBitstreams 1", itemService.getNonInternalBitstreams(it).size() == 0);
+        assertThat("testGetNonInternalBitstreams 0", itemService.getNonInternalBitstreams(context, it), notNullValue());
+        assertTrue("testGetNonInternalBitstreams 1", itemService.getNonInternalBitstreams(context, it).size() == 0);
     }
 
     /**

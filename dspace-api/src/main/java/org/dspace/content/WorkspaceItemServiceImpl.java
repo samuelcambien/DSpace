@@ -14,8 +14,6 @@ import org.dspace.core.LogManager;
 import org.dspace.eperson.EPerson;
 import org.dspace.workflow.WorkflowItem;
 import org.dspace.workflow.WorkflowService;
-import org.dspace.workflow.factory.WorkflowServiceFactory;
-import org.dspace.workflowbasic.BasicWorkflowItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;

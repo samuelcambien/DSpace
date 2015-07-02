@@ -2,7 +2,6 @@ package org.dspace.content;
 
 import org.dspace.content.dao.SiteDAO;
 import org.dspace.content.service.SiteService;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.handle.service.HandleService;
 import org.dspace.services.ConfigurationService;

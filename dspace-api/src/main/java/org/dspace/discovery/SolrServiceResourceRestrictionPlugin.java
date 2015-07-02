@@ -10,7 +10,6 @@ package org.dspace.discovery;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.DSpaceObject;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Restriction plugin that ensures that indexes all the resource policies.

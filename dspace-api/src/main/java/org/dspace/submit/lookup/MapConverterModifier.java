@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.dspace.core.ConfigurationManager;
 import org.dspace.services.ConfigurationService;
 
 import gr.ekt.bte.core.AbstractModifier;

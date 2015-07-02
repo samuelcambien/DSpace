@@ -1,6 +1,5 @@
 package org.dspace.statistics.factory;
 
-import org.dspace.disseminate.service.CitationDocumentService;
 import org.dspace.statistics.service.ElasticSearchLoggerService;
 import org.dspace.statistics.service.SolrLoggerService;
 import org.dspace.utils.DSpace;

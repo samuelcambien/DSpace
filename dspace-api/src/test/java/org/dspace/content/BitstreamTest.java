@@ -98,7 +98,7 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
         Bitstream found =  bitstreamService.find(context, id);
         assertThat("testBSFind 0", found, notNullValue());
         //the item created by default has no name nor type set
-        assertThat("testBSFind 1", found.getFormat().getMIMEType(), equalTo("application/octet-stream"));
+        assertThat("testBSFind 1", found.getFormat(context).getMIMEType(), equalTo("application/octet-stream"));
         assertThat("testBSFind 2", found.getName(), nullValue());
         assertThat("testBSFind 3", found.getID(), equalTo(id));
     }
@@ -136,7 +136,7 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
         Bitstream created = bitstreamService.create(context, new FileInputStream(f));
 
         //the item created by default has no name nor type set
-        assertThat("testCreate 0", created.getFormat().getMIMEType(), equalTo("application/octet-stream"));
+        assertThat("testCreate 0", created.getFormat(context).getMIMEType(), equalTo("application/octet-stream"));
         assertThat("testCreate 1", created.getName(), nullValue());
     }
 
@@ -155,7 +155,7 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
         File f = new File(testProps.get("test.bitstream").toString());
         Bitstream registered = bitstreamService.register(context,assetstore, f.getName());
         //the item created by default has no name nor type set
-        assertThat("testRegister 0", registered.getFormat().getMIMEType(), equalTo("application/octet-stream"));
+        assertThat("testRegister 0", registered.getFormat(context).getMIMEType(), equalTo("application/octet-stream"));
         assertThat("testRegister 1", registered.getName(), nullValue());
     }
 
@@ -342,8 +342,7 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
      * Test of getFormatDescription method, of class Bitstream.
      */
     @Test
-    public void testGetFormatDescription()
-    {
+    public void testGetFormatDescription() throws SQLException {
         //format is unknown by default
         String format = "Unknown";
         assertThat("testGetFormatDescription 0", bs.getFormatDescription(context),
@@ -360,8 +359,8 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
     @Test
     public void testGetFormat() throws SQLException
     {
-        assertThat("testGetFormat 0", bs.getFormat(), notNullValue());
-        assertThat("testGetFormat 1", bs.getFormat(), equalTo(bitstreamFormatService.findUnknown(context)));
+        assertThat("testGetFormat 0", bs.getFormat(context), notNullValue());
+        assertThat("testGetFormat 1", bs.getFormat(context), equalTo(bitstreamFormatService.findUnknown(context)));
     }
 
     /**
@@ -373,8 +372,8 @@ public class BitstreamTest extends AbstractDSpaceObjectTest
         int id = 3;
         BitstreamFormat format = bitstreamFormatService.find(context, id);
         bs.setFormat(format);
-        assertThat("testSetFormat 0", bs.getFormat(), notNullValue());
-        assertThat("testSetFormat 1", bs.getFormat(), equalTo(bitstreamFormatService.find(context, id)));
+        assertThat("testSetFormat 0", bs.getFormat(context), notNullValue());
+        assertThat("testSetFormat 1", bs.getFormat(context), equalTo(bitstreamFormatService.find(context, id)));
     }
 
     /**

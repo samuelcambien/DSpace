@@ -10,7 +10,6 @@ package org.dspace.content;
 import java.sql.SQLException;
 import java.util.*;
 
-import org.apache.log4j.Logger;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BundleService;
 import org.dspace.core.Constants;

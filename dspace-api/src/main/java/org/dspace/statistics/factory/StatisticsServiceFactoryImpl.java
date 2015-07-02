@@ -3,7 +3,6 @@ package org.dspace.statistics.factory;
 import org.dspace.statistics.service.ElasticSearchLoggerService;
 import org.dspace.statistics.service.SolrLoggerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
 /**
  * User: kevin (kevin at atmire.com)

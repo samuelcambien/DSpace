@@ -12,14 +12,12 @@ import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.SupervisedItemService;
 import org.dspace.content.service.WorkspaceItemService;
-import org.dspace.eperson.SupervisorServiceImpl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.AbstractUnitTest;
-import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;

@@ -8,17 +8,12 @@
 package org.dspace.storage.rdbms;
 
 import java.io.File;
-import java.sql.Connection;
 import org.dspace.administer.MetadataImporter;
 import org.dspace.administer.RegistryLoader;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
-import org.dspace.eperson.Group;
-import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
 import org.dspace.services.KernelStartupCallbackService;
-import org.flywaydb.core.api.MigrationInfo;
-import org.flywaydb.core.api.callback.FlywayCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

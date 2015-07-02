@@ -10,7 +10,6 @@ package org.dspace.browse;
 import java.util.*;
 
 import org.apache.log4j.Logger;
-import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;

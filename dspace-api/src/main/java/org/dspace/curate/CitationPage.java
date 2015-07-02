@@ -14,7 +14,6 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.content.service.BundleService;
 import org.dspace.core.Context;
-import org.dspace.disseminate.CitationDocumentServiceImpl;
 import org.dspace.disseminate.factory.DisseminateServiceFactory;
 import org.dspace.disseminate.service.CitationDocumentService;
 

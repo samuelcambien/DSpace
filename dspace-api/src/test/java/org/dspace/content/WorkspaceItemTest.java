@@ -7,7 +7,6 @@
  */
 package org.dspace.content;
 
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;

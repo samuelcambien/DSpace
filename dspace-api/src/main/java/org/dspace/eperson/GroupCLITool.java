@@ -3,7 +3,6 @@ package org.dspace.eperson;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.eperson.factory.EPersonServiceFactory;
-import org.dspace.eperson.service.GroupService;
 
 import java.sql.SQLException;
 

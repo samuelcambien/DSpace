@@ -8,14 +8,12 @@
 package org.dspace.content.dao;
 
 import org.dspace.content.Collection;
-import org.dspace.content.Community;
 import org.dspace.content.Item;
 import org.dspace.content.MetadataField;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Iterator;
 
 public interface ItemDAO extends DSpaceObjectLegacySupportDAO<Item>

@@ -17,7 +17,6 @@ import org.dspace.eperson.Group;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 

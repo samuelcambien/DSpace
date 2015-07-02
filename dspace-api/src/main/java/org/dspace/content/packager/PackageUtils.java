@@ -27,15 +27,12 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.*;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
-import org.dspace.handle.HandleServiceImpl;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
-import org.dspace.license.CreativeCommonsServiceImpl;
+import org.dspace.license.service.CreativeCommonsService;
 import org.dspace.workflow.WorkflowException;
 import org.dspace.workflow.WorkflowService;
 import org.dspace.workflow.factory.WorkflowServiceFactory;
-import org.dspace.workflowbasic.BasicWorkflowServiceImpl;
-import org.dspace.xmlworkflow.XmlWorkflowServiceImpl;
 
 /**
  * Container class for code that is useful to many packagers.
@@ -286,7 +283,7 @@ public class PackageUtils
     public static boolean isMetaInfoBundle(Bundle bn)
     {
         return (bn.getName().equals(Constants.LICENSE_BUNDLE_NAME) ||
-                bn.getName().equals(CreativeCommonsServiceImpl.CC_BUNDLE_NAME) ||
+                bn.getName().equals(CreativeCommonsService.CC_BUNDLE_NAME) ||
                 bn.getName().equals(Constants.METADATA_BUNDLE_NAME));
     }
 

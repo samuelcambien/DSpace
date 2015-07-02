@@ -21,7 +21,6 @@ import org.dspace.services.ConfigurationService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.*;
 

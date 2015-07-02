@@ -7,14 +7,12 @@
  */
 package org.dspace.versioning;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
 import org.dspace.content.service.BitstreamService;
 import org.dspace.content.service.BundleService;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Context;
-import org.dspace.storage.bitstore.BitstreamStorageServiceImpl;
 import org.dspace.storage.bitstore.service.BitstreamStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 

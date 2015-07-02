@@ -39,7 +39,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 /**
  * Class to load intermediate statistics files (produced from log files by <code>ClassicDSpaceLogConverter</code>) into Elastic Search

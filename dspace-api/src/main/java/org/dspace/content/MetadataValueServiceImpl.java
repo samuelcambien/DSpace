@@ -77,7 +77,7 @@ public class MetadataValueServiceImpl implements MetadataValueService {
     }
 
 
-//    @Override
+    @Override
     public void delete(Context context, MetadataValue metadataValue) throws SQLException {
         log.info(LogManager.getHeader(context, "delete_metadata_value",
                 " metadata_value_id=" + metadataValue.getValueId()));

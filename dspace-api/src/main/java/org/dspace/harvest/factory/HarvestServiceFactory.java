@@ -1,7 +1,5 @@
 package org.dspace.harvest.factory;
 
-import org.dspace.handle.service.HandleService;
-import org.dspace.harvest.HarvestedCollection;
 import org.dspace.harvest.service.HarvestSchedulingService;
 import org.dspace.harvest.service.HarvestedCollectionService;
 import org.dspace.harvest.service.HarvestedItemService;

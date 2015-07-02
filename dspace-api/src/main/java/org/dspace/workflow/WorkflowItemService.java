@@ -6,7 +6,6 @@ import org.dspace.content.Item;
 import org.dspace.content.service.InProgressSubmissionService;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
-import org.dspace.workflowbasic.BasicWorkflowItem;
 
 import java.io.IOException;
 import java.sql.SQLException;

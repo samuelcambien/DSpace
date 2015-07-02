@@ -1,6 +1,5 @@
 package org.dspace.app.mediafilter.factory;
 
-import org.dspace.app.itemimport.service.ItemImportService;
 import org.dspace.app.mediafilter.service.MediaFilterService;
 import org.dspace.utils.DSpace;
 

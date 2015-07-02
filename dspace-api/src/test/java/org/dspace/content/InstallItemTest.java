@@ -10,7 +10,6 @@ package org.dspace.content;
 import mockit.*;
 
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.*;
 import org.dspace.core.Constants;
@@ -226,7 +225,7 @@ public class InstallItemTest extends AbstractUnitTest
                     + two.getChecksum() + " ("
                     + two.getChecksumAlgorithm() + ")\n";
 
-        assertThat("testGetBitstreamProvenanceMessage 0", installItemService.getBitstreamProvenanceMessage(item), equalTo(testMessage));
+        assertThat("testGetBitstreamProvenanceMessage 0", installItemService.getBitstreamProvenanceMessage(context, item), equalTo(testMessage));
     }
 
     /**

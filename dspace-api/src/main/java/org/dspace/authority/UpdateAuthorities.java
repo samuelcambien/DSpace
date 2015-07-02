@@ -19,7 +19,6 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

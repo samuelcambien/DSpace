@@ -23,12 +23,10 @@ import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
-import org.dspace.content.Site;
 import org.dspace.content.crosswalk.CrosswalkException;
 import org.dspace.core.Constants;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
-import org.dspace.license.CreativeCommonsServiceImpl;
 
 import edu.harvard.hul.ois.mets.Agent;
 import edu.harvard.hul.ois.mets.Loctype;

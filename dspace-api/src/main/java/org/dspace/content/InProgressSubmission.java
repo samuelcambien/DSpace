@@ -7,10 +7,8 @@
  */
 package org.dspace.content;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.eperson.EPerson;
 
 /**

@@ -7,10 +7,8 @@
  */
 package org.dspace.content;
 
-import java.sql.SQLException;
 import java.util.Locale;
 import org.dspace.AbstractUnitTest;
-import org.dspace.authorize.AuthorizeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

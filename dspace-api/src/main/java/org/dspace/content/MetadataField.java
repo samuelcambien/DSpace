@@ -31,7 +31,7 @@ public class MetadataField {
     @SequenceGenerator(name="metadatafieldregistry_seq", sequenceName="metadatafieldregistry_seq", allocationSize = 1, initialValue = 1)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "metadata_schema_id",nullable = false)
     private MetadataSchema metadataSchema;
 

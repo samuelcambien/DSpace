@@ -11,10 +11,7 @@ import org.dspace.AbstractUnitTest;
 import org.apache.log4j.Logger;
 import static org.junit.Assert.*;
 
-import org.dspace.authorize.AuthorizeException;
 import org.junit.*;
-
-import java.sql.SQLException;
 
 /**
  * Unit Tests for class NonUniqueMetadataException. Being an exception

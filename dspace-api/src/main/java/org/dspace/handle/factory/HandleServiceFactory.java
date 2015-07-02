@@ -1,7 +1,5 @@
 package org.dspace.handle.factory;
 
-import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.authorize.service.ResourcePolicyService;
 import org.dspace.handle.service.HandleService;
 import org.dspace.utils.DSpace;
 

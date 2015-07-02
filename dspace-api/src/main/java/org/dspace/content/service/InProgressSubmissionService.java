@@ -4,7 +4,6 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.InProgressSubmission;
 import org.dspace.core.Context;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**

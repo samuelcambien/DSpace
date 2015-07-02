@@ -1,6 +1,5 @@
 package org.dspace.content.service;
 
-import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
 import org.dspace.content.BitstreamFormat;
 import org.dspace.core.Context;

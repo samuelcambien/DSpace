@@ -8,7 +8,6 @@
 package org.dspace.search;
 
 import org.apache.log4j.Logger;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.*;
@@ -25,12 +24,8 @@ import org.dspace.eperson.Group;
 import org.dspace.handle.factory.HandleServiceFactory;
 import org.dspace.handle.service.HandleService;
 
-import javax.swing.text.TableView;
-import java.io.Serializable;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

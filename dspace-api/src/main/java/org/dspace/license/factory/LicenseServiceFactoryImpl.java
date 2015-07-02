@@ -1,6 +1,5 @@
 package org.dspace.license.factory;
 
-import org.dspace.disseminate.service.CitationDocumentService;
 import org.dspace.license.service.CreativeCommonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 

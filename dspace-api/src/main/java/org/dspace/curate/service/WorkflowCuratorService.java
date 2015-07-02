@@ -1,18 +1,12 @@
 package org.dspace.curate.service;
 
-import org.dspace.authenticate.AuthenticationMethod;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 import org.dspace.curate.Curator;
-import org.dspace.eperson.EPerson;
-import org.dspace.eperson.Group;
 import org.dspace.workflowbasic.BasicWorkflowItem;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by kevin on 08/11/14.

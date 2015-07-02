@@ -16,7 +16,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  *

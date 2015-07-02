@@ -10,7 +10,6 @@ package org.dspace.content;
 import java.util.Iterator;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import mockit.NonStrictExpectations;

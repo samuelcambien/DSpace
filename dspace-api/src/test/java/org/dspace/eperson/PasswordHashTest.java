@@ -11,7 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.DecoderException;
 import org.dspace.AbstractUnitTest;
-import org.dspace.servicemanager.DSpaceKernelInit;
 import org.junit.*;
 import static org.junit.Assert.*;
 
