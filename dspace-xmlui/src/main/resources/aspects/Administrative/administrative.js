@@ -67,6 +67,16 @@ function getCommunityService()
     return ContentServiceFactory.getInstance().getCommunityService();
 }
 
+function getCollectionService()
+{
+    return ContentServiceFactory.getInstance().getCollectionService();
+}
+
+function getItemService()
+{
+    return ContentServiceFactory.getInstance().getItemService();
+}
+
 /**
  * Send the current page and wait for the flow to be continued. This method will
  * perform two useful actions: set the flow parameter & add result information.
@@ -238,12 +248,12 @@ function assertEditItem(itemID) {
  */
 function canEditCollection(collectionID)
 {
-	var collection = Collection.find(getDSContext(),collectionID);
+	var collection = getCollectionService().find(getDSContext(),collectionID);
 	
 	if (collection == null) {
 		return isAdministrator();
 	}
-	return collection.canEditBoolean();
+	return getCollectionService().canEditBoolean(getDSContext(), collection);
 }
 
 /**
@@ -264,7 +274,7 @@ function assertEditCollection(collectionID) {
  */
 function canAdminCollection(collectionID)
 {
-	var collection = Collection.find(getDSContext(),collectionID);
+	var collection = getCollectionService().find(getDSContext(),collectionID);
 	
 	if (collection == null) {
 		return isAdministrator();
@@ -318,7 +328,7 @@ function assertEditCommunity(communityID) {
  */
 function canAdminCommunity(communityID)
 {
-	var community = Community.find(getDSContext(),communityID);
+	var community = getCommunityService().find(getDSContext(),communityID);
 
 	if (community == null) {
 		return isAdministrator();
@@ -547,7 +557,7 @@ function startBatchImport()
  */
 function startCreateCollection()
 {
-	var communityID = cocoon.request.get("communityID");
+	var communityID = UUID.fromString(cocoon.request.get("communityID"));
 
 	assertAuthorized(Constants.COMMUNITY,communityID,Constants.ADD);
 
@@ -565,14 +575,14 @@ function startCreateCollection()
  */
 function startEditCollection()
 {
-	var collectionID = cocoon.request.get("collectionID");
+	var collectionID = UUID.fromString(cocoon.request.get("collectionID"));
 
 	assertEditCollection(collectionID);
 
 	doEditCollection(collectionID);
 
 	// Go back to the collection
-	var collection = Collection.find(getDSContext(),collectionID);
+	var collection = getCollectionService().find(getDSContext(),collectionID);
 	cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+collection.getHandle(),true);
 	getDSContext().complete();
 	collection = null;
@@ -2927,13 +2937,12 @@ function doCreateCommunity(parentCommunityID)
 	// If we are not passed a communityID from the flow, we assume that is passed in from the sitemap
 	if (parentCommunityID == null && cocoon.request.getParameter("communityID") != null)
 	{
-		parentCommunityID = cocoon.request.getParameter("communityID");
+		parentCommunityID = UUID.fromString(cocoon.request.getParameter("communityID"));
 	}
 
 	assertEditCommunity(parentCommunityID);
 
-
-	do {
+    do {
 		sendPageAndWait("admin/community/createCommunity",{"communityID":parentCommunityID},result);
     assertEditCommunity(parentCommunityID);
 		result=null;
