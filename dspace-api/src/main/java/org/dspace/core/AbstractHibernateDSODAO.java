@@ -63,7 +63,7 @@ public abstract class AbstractHibernateDSODAO<T extends DSpaceObject> extends Ab
                 if(StringUtils.isNotBlank(operator))
                 {
                     query.append(" (");
-                    query.append(metadataField.toString()).append(".value ").append(operator).append(" :queryParam");
+                    query.append("lower(" + metadataField.toString()).append(".value) ").append(operator).append(" lower(:queryParam)");
                     query.append(")");
                     if(i < metadataFields.size() - 1)
                     {

@@ -7,23 +7,12 @@
  */
 package org.dspace.app.xmlui.aspect.administrative.group;
 
-import java.sql.SQLException;
-import java.util.*;
-
+import org.apache.commons.lang.StringUtils;
 import org.dspace.app.xmlui.aspect.administrative.FlowGroupUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
-import org.dspace.app.xmlui.wing.element.Body;
-import org.dspace.app.xmlui.wing.element.Cell;
-import org.dspace.app.xmlui.wing.element.Division;
-import org.dspace.app.xmlui.wing.element.Highlight;
-import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.app.xmlui.wing.element.Para;
-import org.dspace.app.xmlui.wing.element.Row;
-import org.dspace.app.xmlui.wing.element.Table;
-import org.dspace.app.xmlui.wing.element.Text;
-import org.dspace.authorize.AuthorizeServiceImpl;
+import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
@@ -36,6 +25,10 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
+
+import java.sql.SQLException;
+import java.util.*;
+import java.util.List;
 
 /**
  * Present the user with the group's current state. The user may select to 
@@ -201,7 +194,7 @@ public class EditGroupForm extends AbstractDSpaceTransformer
 	{		
 		// Find the group in question
 		UUID groupID = null;
-		if (parameters.getParameter("groupID", null) != null)
+		if (StringUtils.isNotBlank(parameters.getParameter("groupID", null)))
 		{
 			groupID = UUID.fromString(parameters.getParameter("groupID",null));
 		}

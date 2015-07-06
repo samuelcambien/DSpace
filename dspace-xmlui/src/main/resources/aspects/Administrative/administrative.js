@@ -355,7 +355,7 @@ function assertAdminCommunity(communityID) {
 function assertEditGroup(groupID)
 {
 	// Check authorizations
-	if (groupID == -1)
+	if (groupID == null)
 	{
 		// only system admin can create "top level" group
 		assertAdministrator();
@@ -777,7 +777,7 @@ function doEditEPerson(epersonID)
         {
             // Jump to a group that this user is a member.
             assertAdministrator();
-            var groupID = cocoon.request.get("groupID");
+            var groupID = UUID.fromString(cocoon.request.get("groupID"));
             result = doEditGroup(groupID);
 
             // Don't continue after returning from editing a group.
@@ -893,7 +893,7 @@ function doManageGroups()
         else if (cocoon.request.get("submit_add"))
         {
             // Just create a blank group then pass it to the group editor.
-            result = doEditGroup(-1);
+            result = doEditGroup(null);
 
             if (result != null && result.getParameter("groupID"))
            		highlightID = result.getParameter("groupID");
@@ -901,7 +901,7 @@ function doManageGroups()
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("groupID"))
         {
             // Edit a specific group
-			var groupID = cocoon.request.get("groupID");
+			var groupID = UUID.fromString(cocoon.request.get("groupID"));
 			result = doEditGroup(groupID);
 			highlightID = groupID;
         }
@@ -1016,29 +1016,29 @@ function doEditGroup(groupID)
         	var name = names.nextElement();
         	var match = null;
 
-        	if ((match = name.match(/submit_add_eperson_(\d+)/)) != null)
+        	if ((match = name.match(/submit_add_eperson_([^]+)/)) != null)
         	{
         		// Add an eperson
-        		var epersonID = match[1];
+        		var epersonID = UUID.fromString(match[1]);
         		memberEPeopleIDs = FlowGroupUtils.addMember(memberEPeopleIDs,epersonID);
         		highlightEPersonID = epersonID;
         	}
 
-        	if ((match = name.match(/submit_add_group_(\d+)/)) != null)
+        	if ((match = name.match(/submit_add_group_([^]+)/)) != null)
         	{
         		// Add a group
         		var _groupID = match[1];
         		memberGroupIDs = FlowGroupUtils.addMember(memberGroupIDs,_groupID);
         		highlightGroupID = _groupID;
         	}
-        	if ((match = name.match(/submit_remove_eperson_(\d+)/)) != null)
+        	if ((match = name.match(/submit_remove_eperson_([^]+)/)) != null)
         	{
         		// remove an eperson
         		var epersonID = match[1];
 				memberEPeopleIDs = FlowGroupUtils.removeMember(memberEPeopleIDs,epersonID);
 				highlightEPersonID = epersonID;
         	}
-        	if ((match = name.match(/submit_remove_group_(\d+)/)) != null)
+        	if ((match = name.match(/submit_remove_group_([^]+)/)) != null)
         	{
         		// remove a group
         		var _groupID = match[1];

@@ -35,7 +35,6 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
         query.setParameter(metadataField.toString(), metadataField.getFieldID());
         query.setParameter("queryParam", searchValue);
 
-
         return uniqueResult(query);
     }
 
@@ -48,7 +47,7 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
 
         addMetadataLeftJoin(queryBuilder, groupTableName, sortFields);
         addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortColumn));
-//
+
         Query query = createQuery(context, queryBuilder.toString());
         for (MetadataField sortField : sortFields) {
             query.setParameter(sortField.toString(), sortField.getFieldID());
@@ -67,8 +66,7 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
     public List<Group> search(Context context, String query, List<MetadataField> queryFields, int offset, int limit) throws SQLException {
         String groupTableName = "g";
         String queryString = "SELECT " + groupTableName + " FROM Group as " + groupTableName;
-        String queryParam = "%"+query.toLowerCase()+"%";
-        Query hibernateQuery = getSearchQuery(context, queryString, queryParam, queryFields, ListUtils.EMPTY_LIST, null);
+        Query hibernateQuery = getSearchQuery(context, queryString, query, queryFields, ListUtils.EMPTY_LIST, null);
 
         if(0 <= offset)
         {
@@ -105,7 +103,7 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
             addMetadataLeftJoin(queryBuilder, "g", metadataFieldsToJoin);
         }
         if(queryParam != null) {
-            addMetadataValueWhereQuery(queryBuilder, queryFields, "like", "g.id like :queryParam");
+            addMetadataValueWhereQuery(queryBuilder, queryFields, "like", null);
         }
         if(!CollectionUtils.isEmpty(sortFields)) {
             addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortField));
@@ -113,7 +111,7 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
 
         Query query = createQuery(context, queryBuilder.toString());
         if(StringUtils.isNotBlank(queryParam)) {
-            query.setParameter("queryParam", "%"+queryParam.toLowerCase()+"%");
+            query.setParameter("queryParam", "%"+queryParam+"%");
         }
         for (MetadataField metadataField : metadataFieldsToJoin) {
             query.setParameter(metadataField.toString(), metadataField.getFieldID());

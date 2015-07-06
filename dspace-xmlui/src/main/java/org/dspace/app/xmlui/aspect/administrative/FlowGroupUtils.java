@@ -7,15 +7,6 @@
  */
 package org.dspace.app.xmlui.aspect.administrative;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
 import org.dspace.app.xmlui.utils.UIException;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.authorize.AuthorizeException;
@@ -31,6 +22,12 @@ import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.EPersonService;
 import org.dspace.eperson.service.GroupService;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Utility methods to processes actions on Groups. These methods are used
@@ -279,11 +276,13 @@ public class FlowGroupUtils {
 		
 		// Third, check if there are any members to remove
 		// i.e. scan the list on the group against the ids.
-		for (EPerson epersonMember : group.getMembers())
+		for (Iterator<EPerson> it = group.getMembers().iterator(); it.hasNext(); )
 		{
+            EPerson epersonMember = it.next();
 			if (!newEPeopleIDs.contains(epersonMember.getID()))
 			{
 				// The current eperson is not contained in the new list.
+                it.remove();
 				groupService.removeMember(context, group, epersonMember);
 			}
 			else
@@ -293,11 +292,13 @@ public class FlowGroupUtils {
 				newEPeopleIDs.remove((Object)epersonMember.getID());
 			}
 		}
-		for (Group groupMember : group.getMemberGroups())
+		for (Iterator<Group> it = group.getMemberGroups().iterator(); it.hasNext(); )
 		{
+            Group groupMember = it.next();
 			if (!newGroupIDs.contains(groupMember.getID()))
 			{
 				// The current group is not contained in the new list.
+                it.remove();
 				groupService.removeMember(context, group, groupMember);
 			}
 			else

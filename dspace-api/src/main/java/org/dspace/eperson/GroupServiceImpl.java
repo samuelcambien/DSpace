@@ -212,7 +212,11 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
 
     @Override
     public Group find(Context context, UUID id) throws SQLException {
-        return groupDAO.findByID(context, Group.class, id);
+        if(id == null) {
+            return null;
+        } else {
+            return groupDAO.findByID(context, Group.class, id);
+        }
     }
 
     @Override
@@ -252,14 +256,26 @@ public class GroupServiceImpl extends DSpaceObjectServiceImpl<Group> implements 
     @Override
     public List<Group> search(Context context, String query, int offset, int limit) throws SQLException
     {
-        MetadataField nameField = metadataFieldService.findByElement(context, MetadataSchema.DC_SCHEMA, "title", null);
-        return groupDAO.search(context, query, Arrays.asList(nameField), offset, limit);
+        try {
+            List<Group> group = new ArrayList<>();
+            group.add(find(context, UUID.fromString(query)));
+            return group;
+        } catch(IllegalArgumentException e) {
+            MetadataField nameField = metadataFieldService.findByElement(context, MetadataSchema.DC_SCHEMA, "title", null);
+            if(StringUtils.isBlank(query)) query = null;
+            return groupDAO.search(context, query, Arrays.asList(nameField), offset, limit);
+        }
     }
 
     @Override
     public int searchResultCount(Context context, String query) throws SQLException {
-        MetadataField nameField = metadataFieldService.findByElement(context, MetadataSchema.DC_SCHEMA, "title", null);
-        return groupDAO.searchResultCount(context, query, Arrays.asList(nameField));
+        try {
+            return find(context, UUID.fromString(query)) != null ? 1 : 0;
+        } catch(IllegalArgumentException e) {
+            MetadataField nameField = metadataFieldService.findByElement(context, MetadataSchema.DC_SCHEMA, "title", null);
+            if (StringUtils.isBlank(query)) query = null;
+            return groupDAO.searchResultCount(context, query, Arrays.asList(nameField));
+        }
     }
 
     @Override
