@@ -61,7 +61,7 @@ public class MetadataValue
     @Column(name = "confidence")
     private int confidence = -1;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
     @JoinColumn(name="dspace_object_id")
     protected DSpaceObject dSpaceObject;
 

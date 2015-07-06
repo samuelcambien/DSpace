@@ -35,7 +35,7 @@ public class DOI
     @Column(name = "doi", unique = true, length = 256)
     private String doi;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dspace_object")
     private DSpaceObject dSpaceObject;
 
