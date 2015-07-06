@@ -29,7 +29,7 @@ public class MetadataField {
     @Column(name="metadata_field_id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator="metadatafieldregistry_seq")
     @SequenceGenerator(name="metadatafieldregistry_seq", sequenceName="metadatafieldregistry_seq", allocationSize = 1, initialValue = 1)
-    private Integer id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "metadata_schema_id",nullable = false)

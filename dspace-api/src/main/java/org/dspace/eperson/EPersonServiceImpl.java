@@ -87,20 +87,29 @@ public class EPersonServiceImpl extends DSpaceObjectServiceImpl<EPerson> impleme
 
     @Override
     public List<EPerson> search(Context context, String query) throws SQLException {
+        if(StringUtils.isBlank(query)) query = null;
         return search(context, query, -1, -1);
     }
 
     @Override
     public List<EPerson> search(Context context, String query, int offset, int limit) throws SQLException {
-        MetadataField firstNameField = metadataFieldService.findByElement(context, "eperson", "firstname", null);
-        MetadataField lastNameField = metadataFieldService.findByElement(context, "eperson", "lastname", null);
-        return ePersonDAO.search(context, query, Arrays.asList(firstNameField, lastNameField), Arrays.asList(firstNameField, lastNameField), offset, limit);
+        try {
+            List<EPerson> ePerson = new ArrayList<>();
+            ePerson.add(find(context, UUID.fromString(query)));
+            return ePerson;
+        } catch(IllegalArgumentException e) {
+            MetadataField firstNameField = metadataFieldService.findByElement(context, "eperson", "firstname", null);
+            MetadataField lastNameField = metadataFieldService.findByElement(context, "eperson", "lastname", null);
+            if (StringUtils.isBlank(query)) query = null;
+            return ePersonDAO.search(context, query, Arrays.asList(firstNameField, lastNameField), Arrays.asList(firstNameField, lastNameField), offset, limit);
+        }
     }
 
     @Override
     public int searchResultCount(Context context, String query) throws SQLException {
         MetadataField firstNameField = metadataFieldService.findByElement(context, "eperson", "firstname", null);
         MetadataField lastNameField = metadataFieldService.findByElement(context, "eperson", "lastname", null);
+        if(StringUtils.isBlank(query)) query = null;
         return ePersonDAO.searchResultCount(context, query, Arrays.asList(firstNameField, lastNameField));
     }
 

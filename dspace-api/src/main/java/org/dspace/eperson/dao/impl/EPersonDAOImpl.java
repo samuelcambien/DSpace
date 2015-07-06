@@ -1,5 +1,7 @@
 package org.dspace.eperson.dao.impl;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dspace.content.MetadataField;
 import org.dspace.core.Context;
@@ -43,9 +45,9 @@ public class EPersonDAOImpl extends AbstractHibernateDSODAO<EPerson> implements 
     @Override
     public List<EPerson> search(Context context, String query, List<MetadataField> queryFields, List<MetadataField> sortFields, int offset, int limit) throws SQLException
     {
-        String queryString = "SELECT person FROM EPerson as person ";
-        String queryParam = "%"+query.toLowerCase()+"%";
-        Query hibernateQuery = getSearchQuery(context, queryString, queryParam, queryFields, sortFields, null);
+        String queryString = "SELECT " + EPerson.class.getSimpleName().toLowerCase() + " FROM EPerson as " + EPerson.class.getSimpleName().toLowerCase() + " ";
+        if(query != null) query= "%"+query.toLowerCase()+"%";
+        Query hibernateQuery = getSearchQuery(context, queryString, query, queryFields, sortFields, null);
 
         if(0 <= offset)
         {
@@ -61,9 +63,8 @@ public class EPersonDAOImpl extends AbstractHibernateDSODAO<EPerson> implements 
     @Override
     public int searchResultCount(Context context, String query, List<MetadataField> queryFields) throws SQLException
     {
-        String queryString = "SELECT count(*) FROM EPerson as person ";
-        String queryParam = "%"+query.toLowerCase()+"%";
-        Query hibernateQuery = getSearchQuery(context, queryString, queryParam, queryFields, null, null);
+        String queryString = "SELECT count(*) FROM EPerson as " + EPerson.class.getSimpleName().toLowerCase();
+        Query hibernateQuery = getSearchQuery(context, queryString, query, queryFields, ListUtils.EMPTY_LIST, null);
 
         return count(hibernateQuery);
     }
@@ -115,13 +116,22 @@ public class EPersonDAOImpl extends AbstractHibernateDSODAO<EPerson> implements 
         metadataFieldsToJoin.addAll(queryFields);
         metadataFieldsToJoin.addAll(sortFields);
 
-        addMetadataLeftJoin(queryBuilder, EPerson.class.getSimpleName().toLowerCase(), metadataFieldsToJoin);
-        addMetadataValueWhereQuery(queryBuilder, queryFields, "like", " person.id like :queryParam OR person.email like :queryParam");
-        addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortField));
+        if(!CollectionUtils.isEmpty(metadataFieldsToJoin)) {
+            addMetadataLeftJoin(queryBuilder, EPerson.class.getSimpleName().toLowerCase(), metadataFieldsToJoin);
+        }
+        if(queryParam != null) {
+            addMetadataValueWhereQuery(queryBuilder, queryFields, "like", EPerson.class.getSimpleName().toLowerCase() + ".email like :queryParam");
+        }
+        if(!CollectionUtils.isEmpty(sortFields)) {
+            addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortField));
+        }
 
-        Query query = createQuery(context, queryString);
+        Query query = createQuery(context, queryBuilder.toString());
         if(StringUtils.isNotBlank(queryParam)) {
-            query.setParameter("queryParam", queryParam);
+            query.setParameter("queryParam", "%"+queryParam.toLowerCase()+"%");
+        }
+        for (MetadataField metadataField : metadataFieldsToJoin) {
+            query.setParameter(metadataField.toString(), metadataField.getFieldID());
         }
 
         return query;

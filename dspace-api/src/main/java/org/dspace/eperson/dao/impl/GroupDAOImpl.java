@@ -85,8 +85,7 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
     public int searchResultCount(Context context, String query, List<MetadataField> queryFields) throws SQLException {
         String groupTableName = "g";
         String queryString = "SELECT count(*) FROM Group as " + groupTableName;
-        String queryParam = "%"+query.toLowerCase()+"%";
-        Query hibernateQuery = getSearchQuery(context, queryString, queryParam, queryFields, ListUtils.EMPTY_LIST, null);
+        Query hibernateQuery = getSearchQuery(context, queryString, query, queryFields, ListUtils.EMPTY_LIST, null);
 
         return count(hibernateQuery);
     }
@@ -102,13 +101,19 @@ public class GroupDAOImpl extends AbstractHibernateDSODAO<Group> implements Grou
             metadataFieldsToJoin.addAll(sortFields);
         }
 
-        addMetadataLeftJoin(queryBuilder, "g", metadataFieldsToJoin);
-        addMetadataValueWhereQuery(queryBuilder, queryFields, "like", "g.id like :queryParam");
-        addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortField));
+        if(!CollectionUtils.isEmpty(metadataFieldsToJoin)) {
+            addMetadataLeftJoin(queryBuilder, "g", metadataFieldsToJoin);
+        }
+        if(queryParam != null) {
+            addMetadataValueWhereQuery(queryBuilder, queryFields, "like", "g.id like :queryParam");
+        }
+        if(!CollectionUtils.isEmpty(sortFields)) {
+            addMetadataSortQuery(queryBuilder, sortFields, Collections.singletonList(sortField));
+        }
 
         Query query = createQuery(context, queryBuilder.toString());
         if(StringUtils.isNotBlank(queryParam)) {
-            query.setParameter("queryParam", queryParam);
+            query.setParameter("queryParam", "%"+queryParam.toLowerCase()+"%");
         }
         for (MetadataField metadataField : metadataFieldsToJoin) {
             query.setParameter(metadataField.toString(), metadataField.getFieldID());

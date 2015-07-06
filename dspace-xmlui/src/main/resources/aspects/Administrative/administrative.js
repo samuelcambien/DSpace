@@ -659,7 +659,7 @@ function doManageEPeople()
 {
     assertAdministrator();
 
-    var query = "";
+    var query = null;
     var page = 0;
     var highlightID = -1;
     var result;
@@ -694,7 +694,7 @@ function doManageEPeople()
             // Edit an existing eperson
             assertAdministrator();
 
-            var epersonID = cocoon.request.get("epersonID");
+            var epersonID = UUID.fromString(cocoon.request.get("epersonID"));
             result = doEditEPerson(epersonID);
             highlightID = epersonID;
 
@@ -993,7 +993,7 @@ function doEditGroup(groupID)
         else if (cocoon.request.get("submit_edit_eperson") && cocoon.request.get("epersonID"))
         {
             // Jump to a specific EPerson
-            var epersonID = cocoon.request.get("epersonID");
+            var epersonID = UUID.fromString(cocoon.request.get("epersonID"));
             result = doEditEPerson(epersonID);
 
             if (result != null)

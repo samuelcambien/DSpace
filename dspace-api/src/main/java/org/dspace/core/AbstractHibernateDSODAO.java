@@ -64,11 +64,11 @@ public abstract class AbstractHibernateDSODAO<T extends DSpaceObject> extends Ab
                 {
                     query.append(" (");
                     query.append(metadataField.toString()).append(".value ").append(operator).append(" :queryParam");
+                    query.append(")");
                     if(i < metadataFields.size() - 1)
                     {
                         query.append(" OR ");
                     }
-                    query.append(")");
                 }
             }
 
