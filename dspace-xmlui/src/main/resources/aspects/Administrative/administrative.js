@@ -14,6 +14,7 @@ importClass(Packages.org.dspace.content.service.DSpaceObjectService)
 importClass(Packages.org.dspace.content.service.CommunityService)
 importClass(Packages.org.dspace.content.CommunityServiceImpl)
 importClass(Packages.java.util.UUID)
+importClass(Packages.java.lang.Integer)
 
 importClass(Packages.org.dspace.core.Constants);
 importClass(Packages.org.dspace.content.Bitstream);
@@ -2101,25 +2102,25 @@ function doManageAuthorizations()
             }
             else if (result.getParameter("type") == Constants.COLLECTION && result.getParameter("collectionID"))
             {
-            	var collectionID = result.getParameter("collectionID");
+            	var collectionID = UUID.fromString(result.getParameter("collectionID"));
                 result = doAuthorizeCollection(collectionID);
             }
             else if (result.getParameter("type") == Constants.COMMUNITY && result.getParameter("communityID"))
             {
-            	var communityID = result.getParameter("communityID");
+            	var communityID = UUID.fromString(result.getParameter("communityID"));
                 result = doAuthorizeCommunity(communityID);
             }
         }
         // Clicking to edit a collection's authorizations
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("collection_id"))
         {
-            var collectionID = cocoon.request.get("collection_id");
+            var collectionID = UUID.fromString(cocoon.request.get("collection_id"));
             result = doAuthorizeCollection(collectionID);
         }
         // Clicking to edit a community's authorizations
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("community_id"))
         {
-            var communityID = cocoon.request.get("community_id");
+            var communityID = UUID.fromString(cocoon.request.get("community_id"));
             result = doAuthorizeCommunity(communityID);
         }
         // Wildcard/advanced authorizations
@@ -2362,11 +2363,11 @@ function doEditPolicy(objectType,objectID,policyID)
 
 	        if ((match = name.match(/submit_group_id_(\d+)/)) != null)
 			{
-	        	groupID = match[1];
+	        	groupID = UUID.fromString(match[1]);
 			}
 
 			if (cocoon.request.get("action_id"))
-        		actionID = cocoon.request.get("action_id");
+        		actionID = Integer.parseInt(cocoon.request.get("action_id"));
         }
 
         if (cocoon.request.get("page")) {
@@ -2377,14 +2378,13 @@ function doEditPolicy(objectType,objectID,policyID)
         if (cocoon.request.get("submit_search_groups")) {
         	query = cocoon.request.get("query");
         	if (cocoon.request.get("action_id"))
-        		actionID = cocoon.request.get("action_id");
+        		actionID = Integer.parseInt(cocoon.request.get("action_id"));
         	page = 0;
         }
         else if (cocoon.request.get("submit_save"))
         {
-            groupID = cocoon.request.get("group_id");
-            if (groupID == null) groupID = -1;
-
+            groupID = UUID.fromString(cocoon.request.get("group_id"));
+            //if (groupID == null) groupID = -1;
             name = cocoon.request.get("name");
             description = cocoon.request.get("description");
             startDate = cocoon.request.get("start_date");
@@ -2911,7 +2911,7 @@ function doCreateCollection(communityID)
 
 			// send the user to the authorization screen
 			if (result.getContinue() && result.getParameter("collectionID")) {
-				collectionID = result.getParameter("collectionID");
+				collectionID = UUID.fromString(result.getParameter("collectionID"));
 				result = doEditCollection(collectionID,true);
 				// If they return then pass them back to where they came from.
 				return result;
@@ -2953,7 +2953,7 @@ function doCreateCommunity(parentCommunityID)
 
 			// send the user to the newly created community
 			if (result.getContinue() && result.getParameter("communityID")) {
-				newCommunityID = result.getParameter("communityID");
+				newCommunityID = UUID.fromString(result.getParameter("communityID"));
 				result = doEditCommunity(newCommunityID);
 				return result;
 			}

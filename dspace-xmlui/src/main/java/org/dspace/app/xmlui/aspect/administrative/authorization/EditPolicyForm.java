@@ -7,10 +7,6 @@
  */
 package org.dspace.app.xmlui.aspect.administrative.authorization;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.UUID;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
@@ -21,13 +17,18 @@ import org.dspace.authorize.ResourcePolicy;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
-import org.dspace.content.*;
+import org.dspace.content.Bitstream;
+import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.dspace.eperson.Group;
 import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * @author Alexey Maslov
@@ -169,7 +170,7 @@ public class EditPolicyForm extends AbstractDSpaceTransformer
         // The currently set group; it's value depends on wether previously clicked the "Set" button to change 
         // the associated group, came here to edit an existing group, or create a new one. 
         Group currentGroup;
-        if (groupID != null) {
+        if (StringUtils.isNotBlank(groupID)) {
             currentGroup = groupService.find(context, UUID.fromString(groupID));
         }
         else if (policy != null) {

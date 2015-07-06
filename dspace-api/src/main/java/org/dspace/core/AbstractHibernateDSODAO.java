@@ -36,7 +36,6 @@ public abstract class AbstractHibernateDSODAO<T extends DSpaceObject> extends Ab
      */
     protected void addMetadataLeftJoin(StringBuilder query, String tableIdentifier, Collection<MetadataField> metadataFields)
     {
-
         for (MetadataField metadataField : metadataFields) {
             query.append(" left join ").append(tableIdentifier).append(".metadata ").append(metadataField.toString());
             query.append(" WITH ").append(metadataField.toString()).append(".metadataField.id").append(" = :").append(metadataField.toString());
