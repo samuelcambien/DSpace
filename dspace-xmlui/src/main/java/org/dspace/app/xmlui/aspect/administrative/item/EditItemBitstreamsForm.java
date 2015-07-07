@@ -7,31 +7,22 @@
  */
 package org.dspace.app.xmlui.aspect.administrative.item;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.UUID;
-
 import org.apache.commons.lang.StringUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
-import org.dspace.app.xmlui.wing.element.Body;
-import org.dspace.app.xmlui.wing.element.Button;
-import org.dspace.app.xmlui.wing.element.Cell;
-import org.dspace.app.xmlui.wing.element.CheckBox;
-import org.dspace.app.xmlui.wing.element.Division;
-import org.dspace.app.xmlui.wing.element.Highlight;
+import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.app.xmlui.wing.element.List;
-import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.app.xmlui.wing.element.Para;
-import org.dspace.app.xmlui.wing.element.Row;
-import org.dspace.app.xmlui.wing.element.Table;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.*;
+import org.dspace.content.Item;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Show a list of the item's bitstreams allowing the user to delete them, 
@@ -219,8 +210,9 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
                     downButton.setHelp(T_order_down);
 
                     //These values will only be used IF javascript is disabled or isn't working
-                    cell.addHidden(bundle.getID() + "_" + bitstream.getID() + "_up_value").setValue(retrieveOrderUpButtonValue((java.util.List<Integer>) bitstreamIdOrder.clone(), bitstreamIndex));
-                    cell.addHidden(bundle.getID() + "_" + bitstream.getID() + "_down_value").setValue(retrieveOrderDownButtonValue((java.util.List<Integer>) bitstreamIdOrder.clone(), bitstreamIndex));
+                    cell.addHidden(bundle.getID() + "_" + bitstream.getID() + "_up_value").setValue(retrieveOrderUpButtonValue((java.util.List<UUID>) bitstreamIdOrder.clone(), bitstreamIndex));
+                    String characters = retrieveOrderDownButtonValue((java.util.List<UUID>) bitstreamIdOrder.clone(), bitstreamIndex);
+                    cell.addHidden(bundle.getID() + "_" + bitstream.getID() + "_down_value").setValue(characters);
                 }else{
                     row.addCell().addContent(String.valueOf(bitstreamIndex));
                 }
@@ -268,23 +260,24 @@ public class EditItemBitstreamsForm extends AbstractDSpaceTransformer {
 
 	}
 
-    private String retrieveOrderUpButtonValue(java.util.List<Integer> bitstreamIdOrder, int bitstreamIndex) {
+    private String retrieveOrderUpButtonValue(java.util.List<UUID> bitstreamIdOrder, int bitstreamIndex) {
         if(0 != bitstreamIndex){
             //We don't have the first button, so create a value where the current bitstreamId moves one up
-            Integer temp = bitstreamIdOrder.get(bitstreamIndex);
+            UUID temp = bitstreamIdOrder.get(bitstreamIndex);
             bitstreamIdOrder.set(bitstreamIndex, bitstreamIdOrder.get(bitstreamIndex - 1));
             bitstreamIdOrder.set(bitstreamIndex - 1, temp);
         }
-        return StringUtils.join(bitstreamIdOrder.toArray(new Integer[bitstreamIdOrder.size()]), ",");
+        UUID[] uuids = new UUID[bitstreamIdOrder.size()];
+        return StringUtils.join(bitstreamIdOrder.toArray(uuids), ",");
     }
 
-    private String retrieveOrderDownButtonValue(java.util.List<Integer> bitstreamIdOrder, int bitstreamIndex) {
+    private String retrieveOrderDownButtonValue(java.util.List<UUID> bitstreamIdOrder, int bitstreamIndex) {
         if(bitstreamIndex < (bitstreamIdOrder.size()) -1){
             //We don't have the first button, so create a value where the current bitstreamId moves one up
-            Integer temp = bitstreamIdOrder.get(bitstreamIndex);
+            UUID temp = bitstreamIdOrder.get(bitstreamIndex);
             bitstreamIdOrder.set(bitstreamIndex, bitstreamIdOrder.get(bitstreamIndex + 1));
             bitstreamIdOrder.set(bitstreamIndex + 1, temp);
         }
-        return StringUtils.join(bitstreamIdOrder.toArray(new Integer[bitstreamIdOrder.size()]), ",");
+        return StringUtils.join(bitstreamIdOrder.toArray(new UUID[bitstreamIdOrder.size()]), ",");
     }
 }

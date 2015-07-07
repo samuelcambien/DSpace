@@ -7,13 +7,6 @@
  */
 package org.dspace.app.xmlui.aspect.submission;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -30,13 +23,14 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.WorkspaceItemService;
 import org.dspace.core.Context;
 import org.dspace.submit.AbstractProcessingStep;
-import org.dspace.workflowbasic.BasicWorkflowItem;
-import org.dspace.workflowbasic.factory.BasicWorkflowServiceFactory;
-import org.dspace.workflowbasic.service.BasicWorkflowItemService;
-import org.dspace.workflowbasic.service.BasicWorkflowService;
-import org.dspace.xmlworkflow.factory.XmlWorkflowServiceFactory;
-import org.dspace.xmlworkflow.storedcomponents.XmlWorkflowItem;
-import org.dspace.xmlworkflow.storedcomponents.service.XmlWorkflowItemService;
+import org.dspace.workflow.WorkflowItemService;
+import org.dspace.workflow.factory.WorkflowServiceFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This is a utility class to aid in the submission flow scripts. 
@@ -58,9 +52,7 @@ public class FlowUtils {
     private static final String DSPACE_SUBMISSION_INFO = "dspace.submission.info";
 
     protected static final WorkspaceItemService workspaceItemService = ContentServiceFactory.getInstance().getWorkspaceItemService();
-    protected static final BasicWorkflowItemService basicWorkflowService = BasicWorkflowServiceFactory.getInstance().getBasicWorkflowItemService();
-    protected static final XmlWorkflowItemService xmlWorkflowItemService = XmlWorkflowServiceFactory.getInstance().getXmlWorkflowItemService();
-
+    protected static final WorkflowItemService workflowService = WorkflowServiceFactory.getInstance().getWorkflowItemService();
 
 	/**
 	 * Return the InProgressSubmission, either workspaceItem or workflowItem,
@@ -80,13 +72,8 @@ public class FlowUtils {
 		{
 			return workspaceItemService.find(context, id);
 		}
-		else if (type == 'W')
-		{
-			return basicWorkflowService.find(context, id);
-		}
-        else if (type == 'X')
-        {
-            return xmlWorkflowItemService.find(context, id);
+		else if (type == 'W' || type == 'X') {
+            return workflowService.find(context, id);
         }
 		return null;
 	}

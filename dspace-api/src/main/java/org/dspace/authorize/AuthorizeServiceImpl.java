@@ -7,24 +7,27 @@
  */
 package org.dspace.authorize;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.authorize.service.ResourcePolicyService;
-import org.dspace.content.*;
+import org.dspace.content.Bitstream;
+import org.dspace.content.Collection;
+import org.dspace.content.DSpaceObject;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
+import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * AuthorizeManager handles all authorization checks for DSpace. For better
@@ -568,7 +571,7 @@ public class AuthorizeServiceImpl implements AuthorizeService
             } else
             {
                 // add policy just for anonymous
-                ResourcePolicy rp = createOrModifyPolicy(null, context, null, null, null, embargoDate, Constants.READ, reason, dso);
+                ResourcePolicy rp = createOrModifyPolicy(null, context, null, EPersonServiceFactory.getInstance().getGroupService().findByName(context, Group.ANONYMOUS), null, embargoDate, Constants.READ, reason, dso);
                 if (rp != null)
                     resourcePolicyService.update(context, rp);
             }

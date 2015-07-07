@@ -7,18 +7,6 @@
  */
 package org.dspace.discovery;
 
-import org.dspace.util.MultiFormatDateParser;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
@@ -56,28 +44,25 @@ import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
 import org.dspace.content.service.ItemService;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Constants;
-import org.dspace.core.Context;
-import org.dspace.core.Email;
-import org.dspace.core.I18nUtil;
-import org.dspace.core.LogManager;
-import org.dspace.discovery.configuration.DiscoveryConfiguration;
-import org.dspace.discovery.configuration.DiscoveryConfigurationParameters;
-import org.dspace.discovery.configuration.DiscoveryHitHighlightFieldConfiguration;
-import org.dspace.discovery.configuration.DiscoveryHitHighlightingConfiguration;
-import org.dspace.discovery.configuration.DiscoveryMoreLikeThisConfiguration;
-import org.dspace.discovery.configuration.DiscoveryRecentSubmissionsConfiguration;
-import org.dspace.discovery.configuration.DiscoverySearchFilter;
-import org.dspace.discovery.configuration.DiscoverySearchFilterFacet;
-import org.dspace.discovery.configuration.DiscoverySortConfiguration;
-import org.dspace.discovery.configuration.DiscoverySortFieldConfiguration;
-import org.dspace.discovery.configuration.HierarchicalSidebarFacetConfiguration;
+import org.dspace.core.*;
+import org.dspace.discovery.configuration.*;
 import org.dspace.handle.service.HandleService;
 import org.dspace.storage.rdbms.DatabaseUtils;
+import org.dspace.util.MultiFormatDateParser;
 import org.dspace.utils.DSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * SolrIndexer contains the methods that index Items and their metadata,
@@ -1923,7 +1908,7 @@ public class SolrServiceImpl implements SearchService, IndexingService {
     protected DSpaceObject findDSpaceObject(Context context, SolrDocument doc) throws SQLException {
 
         Integer type = (Integer) doc.getFirstValue("search.resourcetype");
-        UUID id = (UUID) doc.getFirstValue("search.resourceid");
+        UUID id = UUID.fromString((String) doc.getFirstValue("search.resourceid"));
         String handle = (String) doc.getFirstValue("handle");
 
         if (type != null && id != null)

@@ -35,7 +35,8 @@ public class BasicWorkflowItemDAOImpl extends AbstractHibernateDAO<BasicWorkflow
     public List<BasicWorkflowItem> findBySubmitter(Context context, EPerson ep) throws SQLException
     {
         Criteria criteria = createCriteria(context, BasicWorkflowItem.class);
-        criteria.add(Restrictions.eq("item.submitter", ep));
+        criteria.createAlias("item", "i");
+        criteria.add(Restrictions.eq("i.submitter", ep));
         criteria.addOrder(Order.asc("workflowitemId"));
         return list(criteria);
 
@@ -52,7 +53,7 @@ public class BasicWorkflowItemDAOImpl extends AbstractHibernateDAO<BasicWorkflow
     @Override
     public List<BasicWorkflowItem> findByPooledTasks(Context context, EPerson ePerson) throws SQLException
     {
-        String queryString = "select BasicWorkflowItem from BasicWorkflowItem as wf join TaskListItem.eperson tli where tli.eperson = :eperson ORDER BY wf.workflowitemId";
+        String queryString = "select wf from TaskListItem as tli join tli.workflowItem wf where tli.ePerson = :eperson ORDER BY wf.workflowitemId";
         Query query = createQuery(context, queryString);
         query.setParameter("eperson", ePerson);
         return list(query);

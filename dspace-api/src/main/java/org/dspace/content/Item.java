@@ -7,11 +7,6 @@
  */
 package org.dspace.content;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.ItemService;
 import org.dspace.core.Constants;
@@ -19,6 +14,10 @@ import org.dspace.eperson.EPerson;
 import org.hibernate.proxy.HibernateProxyHelper;
 
 import javax.persistence.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Class representing an item in DSpace.

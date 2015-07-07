@@ -45,13 +45,13 @@ public class ItemDAOImpl extends AbstractHibernateDSODAO<Item> implements ItemDA
     @Override
     public Iterator<Item> findBySubmitter(Context context, EPerson eperson, MetadataField metadataField) throws SQLException {
         StringBuilder query = new StringBuilder();
-        query.append("FROM Item as item ");
-        addMetadataLeftJoin(query, Item.class.getSimpleName(), Collections.singletonList(metadataField));
-        query.append(" WHERE inArchive = :in_archive");
+        query.append("SELECT item FROM Item as item ");
+        addMetadataLeftJoin(query, Item.class.getSimpleName().toLowerCase(), Collections.singletonList(metadataField));
+        query.append(" WHERE item.inArchive = :in_archive");
         addMetadataSortQuery(query, Collections.singletonList(metadataField), null);
 
-
         Query hibernateQuery = createQuery(context, query.toString());
+        hibernateQuery.setParameter(metadataField.toString(), metadataField.getFieldID());
         hibernateQuery.setParameter("in_archive", true);
         return iterate(hibernateQuery);
     }

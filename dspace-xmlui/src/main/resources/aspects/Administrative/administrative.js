@@ -227,9 +227,9 @@ function assertAuthorized(objectType, objectID, action) {
  */
 function canEditItem(itemID)
 {
-	var item = Item.find(getDSContext(),itemID);
+	var item = getItemService().find(getDSContext(),itemID);
 	
-	return item.canEdit();
+	return getItemService().canEdit(getDSContext(), item);
 }
 
 /**
@@ -497,13 +497,13 @@ function startManageAuthorizations()
  */
 function startEditItem()
 {
-	var itemID = cocoon.request.get("itemID");
+	var itemID = UUID.fromString(cocoon.request.get("itemID"));
 
 	assertEditItem(itemID);
 
 	doEditItem(itemID);
 
-	var item = Item.find(getDSContext(),itemID);
+	var item = getItemService().find(getDSContext(),itemID);
 	cocoon.redirectTo(cocoon.request.getContextPath()+"/handle/"+item.getHandle(),true);
 	getDSContext().complete();
 	item = null;
@@ -515,7 +515,7 @@ function startEditItem()
  */
 function startMapItems()
 {
-    var collectionID = cocoon.request.get("collectionID");
+    var collectionID = UUID.fromString(cocoon.request.get("collectionID"));
 
 	// they can edit the collection they are maping items into.
 	assertEditCollection(collectionID);
@@ -595,7 +595,7 @@ function startEditCollection()
  */
 function startCreateCommunity()
 {
-	var communityID = cocoon.request.get("communityID");
+	var communityID = UUID.fromString(cocoon.request.get("communityID"));
 
     if(communityID != null) {
         communityID = UUID.fromString(communityID);
@@ -688,7 +688,7 @@ function doManageEPeople()
             result = doAddEPerson();
 
             if (result != null && result.getParameter("epersonID"))
-              	highlightID = result.getParameter("epersonID");
+              	highlightID = UUID.fromString(result.getParameter("epersonID"));
         }
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("epersonID"))
         {
@@ -816,7 +816,7 @@ function doEditEPerson(epersonID)
         		// the user is loged in as another user, we can't let them continue on
         		// using this flow because they might not have permissions. So forward
         		// them to the homepage.
-			var siteRoot = cocoon.request.getContextPath();	
+			var siteRoot = cocoon.request.getContextPath();
 			if (siteRoot == "")
 			{
 				siteRoot = "/";
@@ -897,7 +897,7 @@ function doManageGroups()
             result = doEditGroup(null);
 
             if (result != null && result.getParameter("groupID"))
-           		highlightID = result.getParameter("groupID");
+           		highlightID = UUID.fromString(result.getParameter("groupID"));
         }
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("groupID"))
         {
@@ -933,9 +933,9 @@ function doEditGroup(groupID)
     var groupName        = FlowGroupUtils.getName(getDSContext(),groupID);
     var memberEPeopleIDs = FlowGroupUtils.getEPeopleMembers(getDSContext(),groupID);
     var memberGroupIDs   = FlowGroupUtils.getGroupMembers(getDSContext(),groupID);
-    
+
     assertEditGroup(groupID);
-    
+
     var highlightEPersonID;
     var highlightGroupID;
     var type = "";
@@ -968,7 +968,7 @@ function doEditGroup(groupID)
 
        		// In case a group was created, update our id.
        		if (result != null && result.getParameter("groupID"))
-           		groupID = result.getParameter("groupID");
+           		groupID = UUID.fromString(result.getParameter("groupID"));
        	}
         else if (cocoon.request.get("submit_search_epeople") && cocoon.request.get("query"))
         {
@@ -1003,7 +1003,7 @@ function doEditGroup(groupID)
         else if (cocoon.request.get("submit_edit_group") && cocoon.request.get("groupID"))
         {
             // Jump to another group.
-            var newGroupID = cocoon.request.get("groupID");
+            var newGroupID = UUID.fromString(cocoon.request.get("groupID"));
             result = doEditGroup(newGroupID); // ahhh recursion!
 
             if (result != null)
@@ -1098,7 +1098,7 @@ function doManageMetadataRegistry()
         if (cocoon.request.get("submit_edit") && cocoon.request.get("schemaID"))
         {
             // Edit a specific schema
-            var schemaID = cocoon.request.get("schemaID");
+            var schemaID = UUID.fromString(cocoon.request.get("schemaID"));
             result = doEditMetadataSchema(schemaID)
         }
         else if (cocoon.request.get("submit_add"))
@@ -1146,7 +1146,7 @@ function doEditMetadataSchema(schemaID)
         {
             // select an existing field for editing. This will load it into the
             // form for editing.
-            updateID = cocoon.request.get("fieldID");
+            updateID = UUID.fromString(cocoon.request.get("fieldID"));
             highlightID = updateID;
         }
         else if (cocoon.request.get("submit_add"))
@@ -1157,7 +1157,7 @@ function doEditMetadataSchema(schemaID)
             var note = cocoon.request.get("newNote");
             // processes adding field
             result = FlowRegistryUtils.processAddMetadataField(getDSContext(),schemaID,element,qualifier,note);
-            highlightID = result.getParameter("fieldID");
+            highlightID = UUID.fromString(result.getParameter("fieldID"));
         }
         else if (cocoon.request.get("submit_update") && updateID >= 0)
         {
@@ -1234,7 +1234,7 @@ function doMoveMetadataFields(fieldIDs)
     if (cocoon.request.get("submit_move") && cocoon.request.get("to_schema"))
     {
         // Actually move the fields
-        var schemaID = cocoon.request.get("to_schema");
+        var schemaID = UUID.fromString(cocoon.request.get("to_schema"));
         var result = FlowRegistryUtils.processMoveMetadataField(getDSContext(), schemaID,fieldIDs);
         return result;
     }
@@ -1289,12 +1289,12 @@ function doManageFormatRegistry()
         }
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("formatID"))
         {
-            var formatID = cocoon.request.get("formatID");
+            var formatID = UUID.fromString(cocoon.request.get("formatID"));
             result = doEditBitstreamFormat(formatID);
 
             // Highlight the format that was just edited.
             if (result != null && result.getParameter("formatID"))
-                highlightID = result.getParameter("formatID");
+                highlightID = UUID.fromString(result.getParameter("formatID"));
             else
                 highlightID = formatID;
         }
@@ -1305,7 +1305,7 @@ function doManageFormatRegistry()
 
              // Highlight the format that was just created.
             if (result != null && result.getParameter("formatID"))
-                highlightID = result.getParameter("formatID");
+                highlightID = UUID.fromString(result.getParameter("formatID"));
         }
         else if (cocoon.request.get("submit_delete") && cocoon.request.get("select_format"))
         {
@@ -1397,7 +1397,7 @@ function doManageItems()
 			// If an item was found then allow the user to edit the item.
 			if (result != null && result.getParameter("itemID"))
 			{
-				var itemID = result.getParameter("itemID");
+				var itemID = UUID.fromString(result.getParameter("itemID"));
 				result = doEditItem(itemID);
 			}
 		}
@@ -1473,7 +1473,7 @@ function doEditItemStatus(itemID)
 
 	var result;
 	do {
-		sendPageAndWait("admin/item/status",{"itemID":itemID},result);
+        sendPageAndWait("admin/item/status",{"itemID":itemID},result);
 		assertEditItem(itemID);
 		result = null;
 
@@ -1559,7 +1559,7 @@ function doEditItemBitstreams(itemID)
 		else if (cocoon.request.get("submit_edit") && cocoon.request.get("bitstreamID"))
 		{
 		    // Update the bitstream's metadata
-		    var bitstreamID = cocoon.request.get("bitstreamID");
+		    var bitstreamID = UUID.fromString(cocoon.request.get("bitstreamID"));
 			assertAuthorized(Constants.BITSTREAM,bitstreamID,Constants.WRITE)
 		    result = doEditBitstream(itemID, bitstreamID);
 		}
@@ -1616,7 +1616,7 @@ function doEditItemMetadata(itemID, templateCollectionID)
  * Curate an Item
  * Can only be performed by someone who is able to edit that Item.
  */
-function doCurateItem(itemID, task) 
+function doCurateItem(itemID, task)
 {
     var result;
 
@@ -1761,7 +1761,7 @@ function doMoveItem(itemID)
         }
         else if (cocoon.request.get("submit_move"))
         {
-            var collectionID = cocoon.request.get("collectionID");
+            var collectionID = UUID.fromString(cocoon.request.get("collectionID"));
             if (!collectionID)
             {
                 continue;
@@ -1832,7 +1832,7 @@ function doEditBitstream(itemID, bitstreamID)
             // Update the metadata
             var primary = cocoon.request.get("primary");
             var description = cocoon.request.get("description");
-            var formatID = cocoon.request.get("formatID");
+            var formatID = UUID.fromString(cocoon.request.get("formatID"));
             var userFormat = cocoon.request.get("user_format");
             var bitstreamName = cocoon.request.get("bitstreamName");
 
@@ -2097,7 +2097,7 @@ function doManageAuthorizations()
             result = FlowAuthorizationUtils.resolveItemIdentifier(getDSContext(),identifier);
             if (result.getParameter("type") == Constants.ITEM && result.getParameter("itemID"))
             {
-            	var itemID = result.getParameter("itemID");
+            	var itemID = UUID.fromString(result.getParameter("itemID"));
                 result = doAuthorizeItem(itemID);
             }
             else if (result.getParameter("type") == Constants.COLLECTION && result.getParameter("collectionID"))
@@ -2169,13 +2169,13 @@ function doAuthorizeContainer(containerType, containerID)
         }
         else if (cocoon.request.get("submit_add")) {
             // Create a new policy
-            result = doEditPolicy(containerType,containerID,-1);
+            result = doEditPolicy(containerType,containerID,null);
             if (result != null && result.getParameter("policyID"))
             	highlightID = result.getParameter("policyID");
         }
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("policy_id")) {
             // Edit an existing policy
-            var policyID = cocoon.request.get("policy_id");
+            var policyID = UUID.fromString(cocoon.request.get("policy_id"));
             result = doEditPolicy(containerType,containerID,policyID);
             highlightID = policyID;
         }
@@ -2187,7 +2187,7 @@ function doAuthorizeContainer(containerType, containerID)
         }
         else if (cocoon.request.get("submit_edit_group") && cocoon.request.get("group_id")) {
             // Edit a group from the authorization screen
-            var groupID = cocoon.request.get("group_id");
+            var groupID = UUID.fromString(cocoon.request.get("group_id"));
             result = doEditGroup(groupID);
         }
     }
@@ -2222,13 +2222,15 @@ function doAuthorizeItem(itemID)
         }
         else if (bundleID)
         {
+            bundleID = UUID.fromString(bundleID);
             // Create a new policy for a bundle
-            result = doEditPolicy(Constants.BUNDLE, bundleID,-1);
+            result = doEditPolicy(Constants.BUNDLE, bundleID, -1);
             if (result != null && result.getParameter("policyID"))
             	highlightID = result.getParameter("policyID");
         }
         else if (bitstreamID)
         {
+            bitstreamID = UUID.fromString(bitstreamID);
             // Create a new policy for a bitstream
              result = doEditPolicy(Constants.BITSTREAM, bitstreamID,-1);
             if (result != null && result.getParameter("policyID"))
@@ -2244,7 +2246,7 @@ function doAuthorizeItem(itemID)
                 && cocoon.request.get("object_id") && cocoon.request.get("object_type")) {
             // Edit an existing policy
             var policyID = cocoon.request.get("policy_id");
-            var objectID = cocoon.request.get("object_id");
+            var objectID = UUID.fromString(cocoon.request.get("object_id"));
             var objectType = cocoon.request.get("object_type");
             result = doEditPolicy(objectType,objectID,policyID);
             highlightID = policyID;
@@ -2257,7 +2259,7 @@ function doAuthorizeItem(itemID)
         }
         else if (cocoon.request.get("submit_edit_group") && cocoon.request.get("group_id")) {
             // Edit a group from the authorization screen
-            var groupID = cocoon.request.get("group_id");
+            var groupID = UUID.fromString(cocoon.request.get("group_id"));
             result = doEditGroup(groupID);
         }
     }
@@ -2297,9 +2299,9 @@ function doAdvancedAuthorization()
         // For all of the selected groups...
         groupIDs = cocoon.request.getParameterValues("group_id");
         // ...grant the ability to perform the following action...
-        actionID = cocoon.request.get("action_id");
+        actionID = UUID.fromString(cocoon.request.get("action_id"));
         // ...for all following object types...
-        resourceID = cocoon.request.get("resource_id");
+        resourceID = UUID.fromString(cocoon.request.get("resource_id"));
         // ...across the following collections.
         collectionIDs = cocoon.request.getParameterValues("collection_id");
 
@@ -2399,7 +2401,7 @@ function doEditPolicy(objectType,objectID,policyID)
         // TODO; make sure to handle the odd case of the target group getting deleted from inside the authorization flow
         else if (cocoon.request.get("submit_edit_group") && cocoon.request.get("group_id"))
         {
-            var editGroupID = cocoon.request.get("group_id");
+            var editGroupID = UUID.fromString(cocoon.request.get("group_id"));
             result = doEditGroup(editGroupID);
 
             if (result != null)
