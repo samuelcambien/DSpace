@@ -19,7 +19,6 @@ import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.eperson.EPerson;
 import org.dspace.eperson.Group;
-import org.dspace.eperson.factory.EPersonServiceFactory;
 import org.dspace.eperson.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -571,7 +570,7 @@ public class AuthorizeServiceImpl implements AuthorizeService
             } else
             {
                 // add policy just for anonymous
-                ResourcePolicy rp = createOrModifyPolicy(null, context, null, EPersonServiceFactory.getInstance().getGroupService().findByName(context, Group.ANONYMOUS), null, embargoDate, Constants.READ, reason, dso);
+                ResourcePolicy rp = createOrModifyPolicy(null, context, null, groupService.findByName(context, Group.ANONYMOUS), null, embargoDate, Constants.READ, reason, dso);
                 if (rp != null)
                     resourcePolicyService.update(context, rp);
             }
