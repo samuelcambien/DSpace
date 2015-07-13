@@ -250,6 +250,30 @@
    
    <profiles>
 
+       <profile>
+           <id>atmire-dev</id>
+           <properties>
+               <dspace.dir>/home/service-api/dspace</dspace.dir>
+               <dspace.name>DSpace Service-based API</dspace.name>
+               <dspace.hostname>dev.atmire.com</dspace.hostname>
+               <dspace.baseUrl>https://dev.atmire.com</dspace.baseUrl>
+               <dspace.url>https://dev.atmire.com/dspace-service-api</dspace.url>
+               <!-- <dspace.oai.url>https://dev.atmire.com/dspace-service-api-oai</dspace.oai.url> -->
+               <db.name>postgres</db.name>
+               <db.driver>org.postgresql.Driver</db.driver>
+               <db.url>jdbc:postgresql://localhost:5432/dspace-service-api</db.url>
+               <db.username>dspace</db.username>
+               <db.password>dspace</db.password>
+               <mail.server>no-mail-server</mail.server>
+               <mail.from.address>noreply@atmire.com</mail.from.address>
+               <feedback.recipient>noreply@atmire.com</feedback.recipient>
+               <mail.admin>noreply@atmire.com</mail.admin>
+               <alert.recipient>noreply@atmire.com</alert.recipient>
+               <mail.server.disabled>true</mail.server.disabled>
+               <solr.server>http://localhost:11860/solr</solr.server>
+           </properties>
+       </profile>
+
        <!-- By default the main dspace.cfg file will be filtered during the build
             using the "build.properties" file. This profile takes effect, unless
             "-Denv" is passed in (see 'environment' profile below for more info). -->
