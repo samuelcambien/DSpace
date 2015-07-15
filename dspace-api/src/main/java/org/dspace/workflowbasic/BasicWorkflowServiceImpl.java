@@ -7,21 +7,14 @@
  */
 package org.dspace.workflowbasic;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
-import javax.mail.MessagingException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.ResourcePolicy;
 import org.dspace.authorize.service.AuthorizeService;
-import org.dspace.content.*;
 import org.dspace.content.Collection;
+import org.dspace.content.*;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.InstallItemService;
 import org.dspace.content.service.ItemService;
@@ -38,6 +31,11 @@ import org.dspace.workflowbasic.service.BasicWorkflowItemService;
 import org.dspace.workflowbasic.service.BasicWorkflowService;
 import org.dspace.workflowbasic.service.TaskListItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 public class BasicWorkflowServiceImpl implements BasicWorkflowService
 {
@@ -216,7 +214,7 @@ public class BasicWorkflowServiceImpl implements BasicWorkflowService
     public List<BasicWorkflowItem> getOwnedTasks(Context context, EPerson e)
             throws java.sql.SQLException
     {
-        return workflowItemService.findBySubmitter(context, e);
+        return workflowItemService.findByOwner(context, e);
     }
 
 
