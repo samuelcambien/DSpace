@@ -78,6 +78,11 @@ function getItemService()
     return ContentServiceFactory.getInstance().getItemService();
 }
 
+function getAuthorizeService()
+{
+    return AuthorizeServiceFactory.getInstance().getAuthorizeService();
+}
+
 /**
  * Send the current page and wait for the flow to be continued. This method will
  * perform two useful actions: set the flow parameter & add result information.
@@ -206,7 +211,7 @@ function isAuthorized(objectType, objectID, action) {
     if (object == null)
         return false;
 
-    return AuthorizeServiceFactory.getInstance().getAuthorizeService().authorizeActionBoolean(getDSContext(),object,action);
+    return getAuthorizeService().authorizeActionBoolean(getDSContext(),object,action);
 }
 
 /**
@@ -280,7 +285,7 @@ function canAdminCollection(collectionID)
 	if (collection == null) {
 		return isAdministrator();
 	}
-	return AuthorizeManager.authorizeActionBoolean(getDSContext(), collection, Constants.ADMIN);
+	return getAuthorizeService().authorizeActionBoolean(getDSContext(), collection, Constants.ADMIN);
 }
 
 /**
@@ -372,7 +377,7 @@ function assertEditGroup(groupID)
  * administrator.
  */
 function isAdministrator() {
-	return AuthorizeServiceFactory.getInstance().getAuthorizeService().isAdmin(getDSContext());
+	return getAuthorizeService().isAdmin(getDSContext());
 }
 
 /**
@@ -2846,10 +2851,10 @@ function doDeleteCollectionRole(collectionID,role)
 	var groupID;
 
 	if (role == "DEFAULT_READ") {
-		groupID = FlowContainerUtils.getCollectionDefaultRead(getDSContext(), collectionID);
+		groupID = FlowContainerUtils.getCollectionDefaultRead(getDSContext(), getCollectionService().find(getDSContext(), collectionID)).getID();
 	}
 	else {
-		groupID = FlowContainerUtils.getCollectionRole(getDSContext(),collectionID, role);
+		groupID = FlowContainerUtils.getCollectionRole(getDSContext(),collectionID, role).getID();
 	}
 
 	sendPageAndWait("admin/collection/deleteRole",{"collectionID":collectionID,"role":role,"groupID":groupID});

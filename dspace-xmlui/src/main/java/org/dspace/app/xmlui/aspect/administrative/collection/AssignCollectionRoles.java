@@ -7,11 +7,6 @@
  */
 package org.dspace.app.xmlui.aspect.administrative.collection;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.UUID;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
@@ -19,17 +14,8 @@ import org.dspace.app.xmlui.aspect.administrative.FlowContainerUtils;
 import org.dspace.app.xmlui.cocoon.AbstractDSpaceTransformer;
 import org.dspace.app.xmlui.wing.Message;
 import org.dspace.app.xmlui.wing.WingException;
-import org.dspace.app.xmlui.wing.element.Body;
-import org.dspace.app.xmlui.wing.element.Button;
-import org.dspace.app.xmlui.wing.element.Cell;
-import org.dspace.app.xmlui.wing.element.Division;
-import org.dspace.app.xmlui.wing.element.List;
-import org.dspace.app.xmlui.wing.element.PageMeta;
-import org.dspace.app.xmlui.wing.element.Para;
-import org.dspace.app.xmlui.wing.element.Row;
-import org.dspace.app.xmlui.wing.element.Table;
+import org.dspace.app.xmlui.wing.element.*;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.authorize.AuthorizeServiceImpl;
 import org.dspace.authorize.factory.AuthorizeServiceFactory;
 import org.dspace.authorize.service.AuthorizeService;
 import org.dspace.content.Collection;
@@ -43,6 +29,11 @@ import org.dspace.eperson.service.GroupService;
 import org.dspace.xmlworkflow.Role;
 import org.dspace.xmlworkflow.WorkflowConfigurationException;
 import org.dspace.xmlworkflow.WorkflowUtils;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Presents the user (most likely a global administrator) with the form to edit
@@ -129,12 +120,7 @@ public class AssignCollectionRoles extends AbstractDSpaceTransformer
 		Group admins = thisCollection.getAdministrators();
 		Group submitters = thisCollection.getSubmitters();
 
-		Group defaultRead = null;
-		UUID defaultReadID = FlowContainerUtils.getCollectionDefaultRead(context, thisCollection);
-		if (defaultReadID != null)
-        {
-            defaultRead = groupService.find(context, defaultReadID);
-        }
+		Group defaultRead = FlowContainerUtils.getCollectionDefaultRead(context, thisCollection);
 		
 		// DIVISION: main
 	    Division main = body.addInteractiveDivision("collection-assign-roles",contextPath+"/admin/collection",Division.METHOD_POST,"primary administrative collection");

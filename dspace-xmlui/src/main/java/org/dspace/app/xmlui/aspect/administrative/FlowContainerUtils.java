@@ -553,38 +553,35 @@ public class FlowContainerUtils
 	 * @param collection The collection.
 	 * @return The id of the group associated with that particular role or -1
 	 */
-	public static UUID getCollectionDefaultRead(Context context, Collection collection) throws SQLException, AuthorizeException
+	public static Group getCollectionDefaultRead(Context context, Collection collection) throws SQLException, AuthorizeException
 	{
 
 		List<Group> itemGroups = authorizeService.getAuthorizedGroups(context, collection, Constants.DEFAULT_ITEM_READ);
 		List<Group> bitstreamGroups = authorizeService.getAuthorizedGroups(context, collection, Constants.DEFAULT_BITSTREAM_READ);
 		
-       UUID itemGroupID = null;
+       Group itemGroup = null;
+
         
 		// If there are more than one groups assigned either of these privileges then this role based method will not work.
         // The user will need to go to the authorization section to manually straighten this out.		
 		if (itemGroups.size() != 1 || bitstreamGroups.size() != 1)
 		{
-		    // do nothing the itemGroupID is already set to -1
+            itemGroup = null;
 		}
 		else
 		{
-	        Group itemGroup = itemGroups.get(0);
+	        itemGroup = itemGroups.get(0);
 	        Group bitstreamGroup = bitstreamGroups.get(0);
 	        
             // If the same group is not assigned both of these privileges then this role based method will not work. The user 
             // will need to go to the authorization section to manually straighten this out.
-	        if (itemGroup.getID() != bitstreamGroup.getID())
+	        if (!itemGroup.getID().equals(bitstreamGroup.getID()))
 	        {
-	            // do nothing the itemGroupID is already set to -1
-	        }
-	        else
-	        {
-	            itemGroupID = itemGroup.getID();
+                itemGroup = null;
 	        }
 		}
 
-		return itemGroupID;
+		return itemGroup;
 	}
 	
 	/**
@@ -598,9 +595,9 @@ public class FlowContainerUtils
 	public static UUID createCollectionDefaultReadGroup(Context context, UUID collectionID) throws SQLException, AuthorizeException, UIException
 	{
 		Collection collection = collectionService.find(context,collectionID);
-		UUID roleID = getCollectionDefaultRead(context, collection);
+		Group defaultRead = getCollectionDefaultRead(context, collection);
 		
-		if (roleID != null)
+		if (defaultRead != null && !defaultRead.getName().equals(Group.ANONYMOUS))
         {
             throw new UIException("Unable to create a new default read group because either the group already exists or multiple groups are assigned the default privileges.");
         }
@@ -636,18 +633,17 @@ public class FlowContainerUtils
 		FlowResult result = new FlowResult();
 		
 		Collection collection = collectionService.find(context,collectionID);
-		UUID roleID = getCollectionDefaultRead(context, collection);
+		Group defaultRead = getCollectionDefaultRead(context, collection);
 		
-		if (roleID == null)
+		if (defaultRead == null || defaultRead.getName().equals(Group.ANONYMOUS))
 		{
 			throw new UIException("Unable to delete the default read role because the role is either already assigned to the anonymous group or multiple groups are assigned the default privileges.");
 		}
 		
-		Group role = groupService.find(context, roleID);
 		Group anonymous = groupService.findByName(context, Group.ANONYMOUS);
 		
 		// Delete the old role, this will remove the default privileges.
-		groupService.delete(context, role);
+		groupService.delete(context, defaultRead);
 		
 		// Set anonymous as the default read group.
 		authorizeService.addPolicy(context, collection, Constants.DEFAULT_ITEM_READ, anonymous);
