@@ -595,7 +595,7 @@ function startEditCollection()
  */
 function startCreateCommunity()
 {
-	var communityID = UUID.fromString(cocoon.request.get("communityID"));
+	var communityID = cocoon.request.get("communityID");
 
     if(communityID != null) {
         communityID = UUID.fromString(communityID);
@@ -2939,7 +2939,7 @@ function doCreateCommunity(parentCommunityID)
 	// If we are not passed a communityID from the flow, we assume that is passed in from the sitemap
 	if (parentCommunityID == null && cocoon.request.getParameter("communityID") != null)
 	{
-		parentCommunityID = UUID.fromString(cocoon.request.getParameter("communityID"));
+        parentCommunityID = UUID.fromString(cocoon.request.getParameter("communityID"));
 	}
 
 	assertEditCommunity(parentCommunityID);
