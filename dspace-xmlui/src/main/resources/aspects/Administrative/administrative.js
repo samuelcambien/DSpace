@@ -22,7 +22,8 @@ importClass(Packages.org.dspace.content.Bundle);
 importClass(Packages.org.dspace.content.Item);
 importClass(Packages.org.dspace.content.Collection);
 importClass(Packages.org.dspace.content.Community);
-importClass(Packages.org.dspace.harvest.HarvestedCollection);
+importClass(Packages.org.dspace.harvest.service.HarvestedCollectionService);
+importClass(Packages.org.dspace.harvest.factory.HarvestServiceFactory);
 importClass(Packages.org.dspace.eperson.EPerson);
 importClass(Packages.org.dspace.eperson.Group);
 importClass(Packages.org.dspace.app.util.Util);
@@ -71,6 +72,11 @@ function getCommunityService()
 function getCollectionService()
 {
     return ContentServiceFactory.getInstance().getCollectionService();
+}
+
+function getHarvestedCollectionService()
+{
+    return HarvestServiceFactory.getInstance().getHarvestedCollectionService();
 }
 
 function getItemService()
@@ -1103,7 +1109,7 @@ function doManageMetadataRegistry()
         if (cocoon.request.get("submit_edit") && cocoon.request.get("schemaID"))
         {
             // Edit a specific schema
-            var schemaID = UUID.fromString(cocoon.request.get("schemaID"));
+            var schemaID = cocoon.request.get("schemaID");
             result = doEditMetadataSchema(schemaID)
         }
         else if (cocoon.request.get("submit_add"))
@@ -1151,7 +1157,7 @@ function doEditMetadataSchema(schemaID)
         {
             // select an existing field for editing. This will load it into the
             // form for editing.
-            updateID = UUID.fromString(cocoon.request.get("fieldID"));
+            updateID = cocoon.request.get("fieldID");
             highlightID = updateID;
         }
         else if (cocoon.request.get("submit_add"))
@@ -1162,7 +1168,7 @@ function doEditMetadataSchema(schemaID)
             var note = cocoon.request.get("newNote");
             // processes adding field
             result = FlowRegistryUtils.processAddMetadataField(getDSContext(),schemaID,element,qualifier,note);
-            highlightID = UUID.fromString(result.getParameter("fieldID"));
+            highlightID = result.getParameter("fieldID");
         }
         else if (cocoon.request.get("submit_update") && updateID >= 0)
         {
@@ -1239,7 +1245,7 @@ function doMoveMetadataFields(fieldIDs)
     if (cocoon.request.get("submit_move") && cocoon.request.get("to_schema"))
     {
         // Actually move the fields
-        var schemaID = UUID.fromString(cocoon.request.get("to_schema"));
+        var schemaID = cocoon.request.get("to_schema");
         var result = FlowRegistryUtils.processMoveMetadataField(getDSContext(), schemaID,fieldIDs);
         return result;
     }
@@ -1294,12 +1300,12 @@ function doManageFormatRegistry()
         }
         else if (cocoon.request.get("submit_edit") && cocoon.request.get("formatID"))
         {
-            var formatID = UUID.fromString(cocoon.request.get("formatID"));
+            var formatID = cocoon.request.get("formatID");
             result = doEditBitstreamFormat(formatID);
 
             // Highlight the format that was just edited.
             if (result != null && result.getParameter("formatID"))
-                highlightID = UUID.fromString(result.getParameter("formatID"));
+                highlightID = result.getParameter("formatID");
             else
                 highlightID = formatID;
         }
@@ -1310,7 +1316,7 @@ function doManageFormatRegistry()
 
              // Highlight the format that was just created.
             if (result != null && result.getParameter("formatID"))
-                highlightID = UUID.fromString(result.getParameter("formatID"));
+                highlightID = result.getParameter("formatID");
         }
         else if (cocoon.request.get("submit_delete") && cocoon.request.get("select_format"))
         {
@@ -2794,10 +2800,11 @@ function doEditCollectionHarvesting(collectionID)
 	do
 	{
 		// If this collection's havresting is not set up properly, redirect to the setup screen
-		if (HarvestedCollection.find(getDSContext(), collectionID) == null) {
+        var collection = getCollectionService().find(getDSContext(), collectionID);
+        if (getHarvestedCollectionService().find(getDSContext(), collection) == null) {
 			sendPageAndWait("admin/collection/toggleHarvesting",{"collectionID":collectionID},result);
 		}
-		else if (!HarvestedCollection.isHarvestable(getDSContext(), collectionID)) {
+		else if (!getHarvestedCollectionService().isHarvestable(getDSContext(), collection)) {
 			doSetupCollectionHarvesting(collectionID);
 		}
 		else {

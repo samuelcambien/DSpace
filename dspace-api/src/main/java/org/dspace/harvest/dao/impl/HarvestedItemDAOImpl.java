@@ -28,10 +28,11 @@ public class HarvestedItemDAOImpl extends AbstractHibernateDAO<HarvestedItem> im
     @Override
     public HarvestedItem findByOAIId(Context context, String itemOaiID, Collection collection) throws SQLException {
         Criteria criteria = createCriteria(context, HarvestedItem.class);
+        criteria.createAlias("item", "i");
         criteria.add(
                 Restrictions.and(
                         Restrictions.eq("oaiId", itemOaiID),
-                        Restrictions.eq("item.owningCollection", collection)
+                        Restrictions.eq("i.owningCollection", collection)
                 )
         );
         return singleResult(criteria);
