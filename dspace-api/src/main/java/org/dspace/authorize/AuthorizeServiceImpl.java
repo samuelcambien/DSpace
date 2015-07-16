@@ -578,7 +578,7 @@ public class AuthorizeServiceImpl implements AuthorizeService
     }
 
     @Override
-    public void createResourcePolicy(Context context, DSpaceObject dso, Group group, EPerson eperson, int type, String rpType) throws SQLException, AuthorizeException {
+    public ResourcePolicy createResourcePolicy(Context context, DSpaceObject dso, Group group, EPerson eperson, int type, String rpType) throws SQLException, AuthorizeException {
         if(group == null && eperson == null)
         {
             throw new IllegalArgumentException("We need at least an eperson or a group in order to create a resource policy.");
@@ -592,6 +592,8 @@ public class AuthorizeServiceImpl implements AuthorizeService
         myPolicy.setRpType(rpType);
         resourcePolicyService.update(context, myPolicy);
         serviceFactory.getDSpaceObjectService(dso).updateLastModified(context, dso);
+
+        return myPolicy;
     }
 
     @Override
@@ -612,7 +614,7 @@ public class AuthorizeServiceImpl implements AuthorizeService
 
         if (policy == null)
         {
-            createResourcePolicy(context, dso, group, ePerson, action, ResourcePolicy.TYPE_CUSTOM);
+            policy = createResourcePolicy(context, dso, group, ePerson, action, ResourcePolicy.TYPE_CUSTOM);
         }
         policy.setGroup(group);
         policy.setEPerson(ePerson);
