@@ -50,4 +50,6 @@
 
     <bean id="openURLTrackerLoggerServiceFactory" class="org.dspace.statistics.export.factory.OpenURLTrackerLoggerServiceFactoryImpl"/>
 
+    <bean id="musicServiceFactory" class="org.dspace.music.factory.impl.MusicServiceFactoryImpl"/>
+
 </beans>
