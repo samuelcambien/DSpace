@@ -11,6 +11,7 @@ import static org.dspace.app.rest.matcher.AlbumMatcher.matchAlbum;
 import static org.dspace.app.rest.model.AlbumRest.DATE_FORMAT;
 import static org.dspace.builder.AlbumBuilder.createAlbum;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,10 +39,8 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .withReleaseDate(DATE_FORMAT.parse("1988-04-07"))
                 .build();
         album2 = createAlbum(context, "test title 2", "test artist 2")
-                .withReleaseDate(DATE_FORMAT.parse("1988-04-07"))
                 .build();
         album3 = createAlbum(context, "test title 3", "test artist 3")
-                .withReleaseDate(DATE_FORMAT.parse("1988-04-07"))
                 .build();
     }
 
@@ -67,5 +66,31 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                         matchAlbum(album2),
                         matchAlbum(album3)
                 )));
+    }
+
+    @Test
+    public void testFindAllWithPagination() throws Exception {
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+
+        getClient(authToken)
+                .perform(get("/api/music/albums/")
+                        .param("size", "2")
+                        .param("page", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page.number", is(1)))
+                .andExpect(jsonPath("$.page.size", is(2)))
+                .andExpect(jsonPath("$.page.totalPages", is(2)))
+                .andExpect(jsonPath("$.page.totalElements", is(3)));
+
+        getClient(authToken)
+                .perform(get("/api/music/albums/")
+                        .param("size", "2")
+                        .param("page", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page.number", is(2)))
+                .andExpect(jsonPath("$.page.size", is(2)))
+                .andExpect(jsonPath("$.page.totalPages", is(2)))
+                .andExpect(jsonPath("$.page.totalElements", is(3)));
     }
 }
