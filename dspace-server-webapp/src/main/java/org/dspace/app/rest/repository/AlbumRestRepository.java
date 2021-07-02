@@ -18,6 +18,7 @@ import org.dspace.music.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,6 +42,7 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<AlbumRest> findAll(Context context, Pageable pageable) {
         int total = albumService.countTotal(context);
         List<Album> albums = albumService.findAll(context);
