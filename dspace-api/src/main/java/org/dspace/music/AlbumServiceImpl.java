@@ -76,6 +76,16 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public List<Album> findAll(Context context, int limit, int offset) {
+        try {
+            return albumDAO.findAll(context, Album.class, limit, offset);
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void delete(Context context, Album album) {
         try {
             albumDAO.delete(context, album);

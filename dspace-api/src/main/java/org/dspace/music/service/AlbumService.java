@@ -27,6 +27,8 @@ public interface AlbumService {
 
     List<Album> findAll(Context context);
 
+    List<Album> findAll(Context context, int limit, int offset);
+
     void delete(Context context, Album album);
 
     List<Album> findByArtist(Context context, String artist);

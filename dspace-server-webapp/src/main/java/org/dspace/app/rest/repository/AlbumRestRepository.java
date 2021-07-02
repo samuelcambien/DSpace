@@ -45,7 +45,7 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<AlbumRest> findAll(Context context, Pageable pageable) {
         int total = albumService.countTotal(context);
-        List<Album> albums = albumService.findAll(context);
+        List<Album> albums = albumService.findAll(context, pageable.getPageSize(), (int) pageable.getOffset());
         return converter.toRestPage(albums, pageable, total, utils.obtainProjection());
     }
 
