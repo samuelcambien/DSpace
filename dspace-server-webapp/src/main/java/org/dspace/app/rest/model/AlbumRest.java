@@ -7,20 +7,31 @@
  */
 package org.dspace.app.rest.model;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
+
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.dspace.app.rest.RestResourceController;
 import org.dspace.music.Album;
 
 /**
  * This class serves as a REST representation for the {@link Album} class
  */
+@LinksRest(links =
+        @LinkRest(
+                name = AlbumRest.ITEM,
+                method = "getAlbumItem"
+        )
+)
 public class AlbumRest extends BaseObjectRest<UUID> {
 
     public static final String NAME = "album";
     public static final String PLURAL_NAME = "albums";
     public static final String CATEGORY = RestAddressableModel.MUSIC;
+
+    public static final String ITEM = "item";
 
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 

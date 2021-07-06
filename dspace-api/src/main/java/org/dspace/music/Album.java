@@ -7,6 +7,7 @@
  */
 package org.dspace.music;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.Date;
@@ -15,11 +16,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.dspace.content.Item;
 import org.dspace.core.ReloadableEntity;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -45,6 +49,10 @@ public class Album implements ReloadableEntity<UUID> {
     @Column(name = "release_date")
     @Temporal(TIMESTAMP)
     private Date releaseDate;
+
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
 
     @Override
     public UUID getID() {
@@ -73,6 +81,14 @@ public class Album implements ReloadableEntity<UUID> {
 
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 
     /**
