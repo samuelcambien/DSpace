@@ -7,10 +7,12 @@
  */
 package org.dspace.app.rest.converter;
 
+import static org.apache.log4j.LogManager.getLogger;
 import static org.dspace.app.rest.model.AlbumRest.DATE_FORMAT;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.dspace.app.rest.model.AlbumRest;
 import org.dspace.app.rest.projection.Projection;
 import org.dspace.music.Album;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AlbumConverter implements DSpaceConverter<Album, AlbumRest> {
+
+    private static Logger log = getLogger(AlbumConverter.class);
 
     @Autowired
     private ConverterService converter;
@@ -40,6 +44,15 @@ public class AlbumConverter implements DSpaceConverter<Album, AlbumRest> {
     @Override
     public Class<Album> getModelClass() {
         return Album.class;
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return DATE_FORMAT.parse(date);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     public static String formatDate(Date date) {

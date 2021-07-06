@@ -43,6 +43,7 @@ public class AlbumRest extends BaseObjectRest<UUID> {
         return RestResourceController.class;
     }
 
+    @JsonProperty(access = READ_ONLY)
     public String getType() {
         return NAME;
     }
