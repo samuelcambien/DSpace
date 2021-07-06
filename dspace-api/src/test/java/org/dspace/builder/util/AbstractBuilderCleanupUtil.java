@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.dspace.builder.AbstractBuilder;
+import org.dspace.builder.AlbumBuilder;
 import org.dspace.builder.BitstreamBuilder;
 import org.dspace.builder.BitstreamFormatBuilder;
 import org.dspace.builder.BundleBuilder;
@@ -55,6 +56,7 @@ public class AbstractBuilderCleanupUtil {
     }
 
     private void initMap() {
+        map.put(AlbumBuilder.class.getName(), new LinkedList<>());
         map.put(ResourcePolicyBuilder.class.getName(), new LinkedList<>());
         map.put(RelationshipBuilder.class.getName(), new LinkedList<>());
         map.put(RelationshipTypeBuilder.class.getName(), new LinkedList<>());

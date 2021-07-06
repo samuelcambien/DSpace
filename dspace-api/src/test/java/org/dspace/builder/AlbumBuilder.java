@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.music.Album;
 import org.dspace.music.service.AlbumService;
@@ -31,6 +32,11 @@ public class AlbumBuilder extends AbstractBuilder<Album, AlbumService> {
 
     public AlbumBuilder withReleaseDate(Date releaseDate) {
         album.setReleaseDate(releaseDate);
+        return this;
+    }
+
+    public AlbumBuilder withItem(Item item) {
+        album.setItem(item);
         return this;
     }
 
