@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.music.Album;
 
@@ -31,5 +32,9 @@ public interface AlbumService {
 
     void delete(Context context, Album album);
 
-    List<Album> findByArtist(Context context, String artist);
+    List<Album> findByArtist(Context context, String artist, int limit, int offset);
+
+    int countByArtist(Context context, String artist);
+
+    Optional<Album> findByItem(Context context, Item item);
 }

@@ -10,6 +10,7 @@ package org.dspace.music.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.core.GenericDAO;
 import org.dspace.music.Album;
@@ -21,5 +22,9 @@ public interface AlbumDAO extends GenericDAO<Album> {
 
     int countRows(Context context) throws SQLException;
 
-    List<Album> findByArtist(Context context, String artist) throws SQLException;
+    List<Album> findByArtist(Context context, String artist, int limit, int offset) throws SQLException;
+
+    int countByArtist(Context context, String artist) throws SQLException;
+
+    Album findByItem(Context context, Item item) throws SQLException;
 }

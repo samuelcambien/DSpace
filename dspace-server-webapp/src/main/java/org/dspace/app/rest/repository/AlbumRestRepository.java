@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dspace.app.rest.Parameter;
+import org.dspace.app.rest.SearchRestMethod;
 import org.dspace.app.rest.converter.ConverterService;
 import org.dspace.app.rest.exception.TranslatableUnprocessableEntityException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
@@ -138,6 +140,18 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
         Album album = albumService.find(context, id).orElseThrow(() -> new ResourceNotFoundException(
                 AlbumRest.CATEGORY + "." + AlbumRest.NAME + " with id: " + id + " not found"));
         albumService.delete(context, album);
+    }
+
+    @SearchRestMethod(name = "findByArtist")
+    public Page<AlbumRest> findAlbumsByArtist(@Parameter(value = "artist", required = true) String artist,
+                                              Pageable pageable) {
+
+        Context context = obtainContext();
+        List<Album> albums = albumService.findByArtist(
+                context, artist, pageable.getPageSize(), (int) pageable.getOffset());
+        int total = albumService.countByArtist(context, artist);
+
+        return converterService.toRestPage(albums, pageable, total, utils.obtainProjection());
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.logging.log4j.Logger;
+import org.dspace.content.Item;
 import org.dspace.core.Context;
 import org.dspace.music.dao.AlbumDAO;
 import org.dspace.music.service.AlbumService;
@@ -96,9 +97,29 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public List<Album> findByArtist(Context context, String artist) {
+    public List<Album> findByArtist(Context context, String artist, int limit, int offset) {
         try {
-            return albumDAO.findByArtist(context, artist);
+            return albumDAO.findByArtist(context, artist, limit, offset);
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int countByArtist(Context context, String artist) {
+        try {
+            return albumDAO.countByArtist(context, artist);
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Optional<Album> findByItem(Context context, Item item) {
+        try {
+            return Optional.ofNullable(albumDAO.findByItem(context, item));
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

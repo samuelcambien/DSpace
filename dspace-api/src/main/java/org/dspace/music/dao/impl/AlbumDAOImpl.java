@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Query;
 
+import org.dspace.content.Item;
 import org.dspace.core.AbstractHibernateDAO;
 import org.dspace.core.Context;
 import org.dspace.music.Album;
@@ -28,10 +29,26 @@ public class AlbumDAOImpl extends AbstractHibernateDAO<Album> implements AlbumDA
     }
 
     @Override
-    public List<Album> findByArtist(Context context, String artist) throws SQLException {
+    public List<Album> findByArtist(Context context, String artist, int limit, int offset) throws SQLException {
         Query query = createQuery(context, "FROM Album WHERE artist = :artist");
         query.setParameter("artist", artist);
+        query.setMaxResults(limit);
+        query.setFirstResult(offset);
         return list(query);
+    }
+
+    @Override
+    public int countByArtist(Context context, String artist) throws SQLException {
+        Query query = createQuery(context, "SELECT count(*) FROM Album WHERE artist = :artist");
+        query.setParameter("artist", artist);
+        return count(query);
+    }
+
+    @Override
+    public Album findByItem(Context context, Item item) throws SQLException {
+        Query query = createQuery(context, "FROM Album WHERE item = :item");
+        query.setParameter("item", item);
+        return singleResult(query);
     }
 }
 
