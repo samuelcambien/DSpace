@@ -11,6 +11,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.dspace.app.rest.converter.AlbumConverter.parseDate;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dspace.app.rest.converter.ConverterService;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.AlbumRest;
+import org.dspace.app.rest.model.patch.Patch;
+import org.dspace.app.rest.repository.patch.ResourcePatch;
 import org.dspace.core.Context;
 import org.dspace.music.Album;
 import org.dspace.music.service.AlbumService;
@@ -41,6 +44,9 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
 
     @Autowired
     private ConverterService converterService;
+
+    @Autowired
+    private ResourcePatch<Album> resourcePatch;
 
     @Override
     public AlbumRest findOne(Context context, UUID uuid) {
@@ -114,6 +120,16 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
         album.setReleaseDate(parseDate(albumRest.getReleaseDate()));
 
         return converter.toRest(album, utils.obtainProjection());
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    protected void patch(Context context, HttpServletRequest request, String apiCategory, String model, UUID id,
+                    Patch patch) throws SQLException {
+
+        Album album = albumService.find(context, id).orElseThrow(() -> new ResourceNotFoundException(
+                AlbumRest.CATEGORY + "." + AlbumRest.NAME + " with id: " + id + " not found"));
+        resourcePatch.patch(context, album, patch.getOperations());
     }
 
     @Override
