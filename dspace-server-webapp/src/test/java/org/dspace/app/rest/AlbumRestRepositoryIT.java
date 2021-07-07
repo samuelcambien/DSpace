@@ -28,6 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Locale;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dspace.app.rest.model.AlbumRest;
 import org.dspace.app.rest.model.patch.AddOperation;
@@ -36,6 +38,7 @@ import org.dspace.app.rest.test.AbstractControllerIntegrationTest;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.Item;
+import org.dspace.core.I18nUtil;
 import org.dspace.music.Album;
 import org.dspace.music.service.AlbumService;
 import org.junit.Before;
@@ -195,8 +198,12 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(authToken)
                 .perform(post("/api/music/albums/")
                         .content(mapper.writeValueAsBytes(albumRest))
-                                .contentType(contentType))
-                .andExpect(status().isUnprocessableEntity());
+                        .contentType(contentType)
+                        .header("Accept-Language", "pl"))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().reason(is(I18nUtil.getMessage(
+                        "org.dspace.app.rest.exception.Album.title_missing", new Locale("pl")
+                ))));
     }
 
     @Test
