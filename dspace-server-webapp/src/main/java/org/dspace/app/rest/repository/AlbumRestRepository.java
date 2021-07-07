@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dspace.app.rest.converter.ConverterService;
+import org.dspace.app.rest.exception.TranslatableUnprocessableEntityException;
 import org.dspace.app.rest.exception.UnprocessableEntityException;
 import org.dspace.app.rest.model.AlbumRest;
 import org.dspace.app.rest.model.patch.Patch;
@@ -78,13 +79,7 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
             throw new UnprocessableEntityException("Error parsing request body", e);
         }
 
-        if (isBlank(albumRest.getTitle())) {
-            throw new UnprocessableEntityException("Required property missing: album title");
-        }
-
-        if (isBlank(albumRest.getArtist())) {
-            throw new UnprocessableEntityException("Required property missing: album artist");
-        }
+        checkRequiredProperties(albumRest);
 
         Album album = albumService.create(context, albumRest.getTitle(), albumRest.getArtist());
         album.setReleaseDate(parseDate(albumRest.getReleaseDate()));
@@ -103,13 +98,7 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
             throw new UnprocessableEntityException("Error parsing album: " + e.getMessage());
         }
 
-        if (isBlank(albumRest.getTitle())) {
-            throw new UnprocessableEntityException("Required property missing: album title");
-        }
-
-        if (isBlank(albumRest.getArtist())) {
-            throw new UnprocessableEntityException("Required property missing: album artist");
-        }
+        checkRequiredProperties(albumRest);
 
         Album album = albumService.find(context, id).orElseThrow(
             () -> new ResourceNotFoundException(apiCategory + "." + model + " with id: " + id + " not found")
@@ -120,6 +109,16 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
         album.setReleaseDate(parseDate(albumRest.getReleaseDate()));
 
         return converter.toRest(album, utils.obtainProjection());
+    }
+
+    private void checkRequiredProperties(AlbumRest albumRest) {
+        if (isBlank(albumRest.getTitle())) {
+            throw new TranslatableUnprocessableEntityException("org.dspace.app.rest.exception.Album.title_missing");
+        }
+
+        if (isBlank(albumRest.getArtist())) {
+            throw new TranslatableUnprocessableEntityException("org.dspace.app.rest.exception.Album.artist_missing");
+        }
     }
 
     @Override
