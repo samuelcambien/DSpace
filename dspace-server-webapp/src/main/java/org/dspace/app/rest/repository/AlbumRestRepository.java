@@ -117,6 +117,15 @@ public class AlbumRestRepository extends DSpaceRestRepository<AlbumRest, UUID> {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void delete(Context context, UUID id) {
+
+        Album album = albumService.find(context, id).orElseThrow(() -> new ResourceNotFoundException(
+                AlbumRest.CATEGORY + "." + AlbumRest.NAME + " with id: " + id + " not found"));
+        albumService.delete(context, album);
+    }
+
+    @Override
     public Class<AlbumRest> getDomainClass() {
         return AlbumRest.class;
     }
