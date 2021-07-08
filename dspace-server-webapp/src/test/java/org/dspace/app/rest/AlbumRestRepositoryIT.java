@@ -7,6 +7,7 @@
  */
 package org.dspace.app.rest;
 
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static java.util.Arrays.asList;
 import static java.util.UUID.randomUUID;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_PATCH_JSON;
@@ -54,6 +55,10 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
     private Album album1;
     private Album album2;
     private Album album3;
+    private Album album4;
+    private Album album5;
+    private Album album6;
+    private Album album7;
 
     @Before
     public void setup() throws Exception {
@@ -73,7 +78,15 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .build();
         album2 = createAlbum(context, "test title 2", "test artist 2")
                 .build();
-        album3 = createAlbum(context, "test title 3", "test artist 3")
+        album3 = createAlbum(context, "test title 3", "another test artist")
+                .build();
+        album4 = createAlbum(context, "test title 4", "another test artist")
+                .build();
+        album5 = createAlbum(context, "test title 5", "another test artist")
+                .build();
+        album6 = createAlbum(context, "test title 6", "another test artist")
+                .build();
+        album7 = createAlbum(context, "test title 7", "another test artist")
                 .build();
     }
 
@@ -97,7 +110,11 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.albums", containsInAnyOrder(
                         matchAlbum(album1),
                         matchAlbum(album2),
-                        matchAlbum(album3)
+                        matchAlbum(album3),
+                        matchAlbum(album4),
+                        matchAlbum(album5),
+                        matchAlbum(album6),
+                        matchAlbum(album7)
                 )));
     }
 
@@ -113,8 +130,8 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page.number", is(1)))
                 .andExpect(jsonPath("$.page.size", is(2)))
-                .andExpect(jsonPath("$.page.totalPages", is(2)))
-                .andExpect(jsonPath("$.page.totalElements", is(3)));
+                .andExpect(jsonPath("$.page.totalPages", is(4)))
+                .andExpect(jsonPath("$.page.totalElements", is(7)));
 
         getClient(authToken)
                 .perform(get("/api/music/albums/")
@@ -123,8 +140,8 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page.number", is(2)))
                 .andExpect(jsonPath("$.page.size", is(2)))
-                .andExpect(jsonPath("$.page.totalPages", is(2)))
-                .andExpect(jsonPath("$.page.totalElements", is(3)));
+                .andExpect(jsonPath("$.page.totalPages", is(4)))
+                .andExpect(jsonPath("$.page.totalElements", is(7)));
     }
 
     @Test
@@ -401,5 +418,32 @@ public class AlbumRestRepositoryIT extends AbstractControllerIntegrationTest {
         getClient(authToken)
                 .perform(delete("/api/music/albums/" + randomUUID()))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testFindByArtist() throws Exception {
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken)
+                .perform(get("/api/music/albums/search/findByArtist")
+                        .param("artist", "another test artist"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.albums", containsInAnyOrder(
+                        matchAlbum(album3),
+                        matchAlbum(album4),
+                        matchAlbum(album5),
+                        matchAlbum(album6),
+                        matchAlbum(album7)
+                )));
+    }
+
+    @Test
+    public void testSearchLinks() throws Exception {
+
+        String authToken = getAuthToken(admin.getEmail(), password);
+        getClient(authToken)
+                .perform(get("/api/music/albums/search"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._links", hasJsonPath("$.findByArtist")));
     }
 }
