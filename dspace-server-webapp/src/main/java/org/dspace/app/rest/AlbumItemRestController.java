@@ -34,6 +34,7 @@ import org.dspace.music.Album;
 import org.dspace.music.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,6 +63,7 @@ public class AlbumItemRestController {
     Utils utils;
 
     @RequestMapping(method = POST, consumes = "text/uri-list")
+    @PreAuthorize("hasPermission(#uuid, 'ALBUM', 'ITEM_WRITE')")
     public ItemRest addItem(@PathVariable UUID uuid, HttpServletRequest request)
             throws SQLException {
 
@@ -83,6 +85,7 @@ public class AlbumItemRestController {
     }
 
     @RequestMapping(method = PUT, consumes = "text/uri-list")
+    @PreAuthorize("hasPermission(#uuid, 'ALBUM', 'ITEM_WRITE')")
     public ItemRest moveItem(@PathVariable UUID uuid, HttpServletRequest request)
             throws SQLException {
 
@@ -98,6 +101,7 @@ public class AlbumItemRestController {
     }
 
     @RequestMapping(method = DELETE)
+    @PreAuthorize("hasPermission(#uuid, 'ALBUM', 'ITEM_WRITE')")
     public void removeItem(@PathVariable UUID uuid, HttpServletRequest request, HttpServletResponse response)
             throws SQLException {
 

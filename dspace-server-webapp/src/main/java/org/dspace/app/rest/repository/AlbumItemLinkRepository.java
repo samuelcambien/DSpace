@@ -38,7 +38,7 @@ public class AlbumItemLinkRepository extends AbstractDSpaceRestRepository implem
     @Autowired
     private AlbumService albumService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasPermission(#albumId, 'ALBUM', 'ITEM_READ')")
     public ItemRest getAlbumItem(
             @Nullable HttpServletRequest request,
             UUID albumId,
